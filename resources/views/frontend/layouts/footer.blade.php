@@ -34,10 +34,10 @@
             <ul class="pl-0 list-none   !mb-0">
                 <li><a class="text_light_color" href="">Chính sách bảo mật</a></li>
                 <li><a class="text_light_color" href="">Điều khoản và quy định</a></li>
-                <li><a class="text_light_color" href="">Chính sách hoàn trả</a></li>
-                <li><a class="text_light_color" href="">Chính sách bảo hành</a></li>
-                <li><a class="text_light_color" href="">Chính sách giao vận</a></li>
-                <li><a class="text_light_color"href="">Tài khoản công ty</a></li>
+                <li><a class="text_light_color" href="">Chính sách </a></li>
+                <li><a class="text_light_color" href="">Chính sách </a></li>
+                <li><a class="text_light_color" href="">Chính sách </a></li>
+                <li><a class="text_light_color"href="">Tài khoản</a></li>
 
             </ul>
           </div>
@@ -49,9 +49,7 @@
             <h4 class="widget-title text-white !mb-3">Thông tin khác</h4>
               <ul class="pl-0 list-none   !mb-0">
                 <li><a class="text_light_color" href="">Cập nhật hồ sơ</a></li>
-                <li><a class="text_light_color" href="">Giỏ hàng</a></li>
-                <li><a class="text_light_color" href="#">Đơn hàng</a></li>
-                <li><a class="text_light_color" href="#">Công nợ</a></li>
+                
                 <li><a class="text_light_color" href="">Liên hệ</a></li>
               </ul>
               <div class="py-5 newsletter-wrapper">

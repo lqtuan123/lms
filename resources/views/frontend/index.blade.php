@@ -1,6 +1,6 @@
 <?php
  
-  $setting =\App\Models\SettingDetail::find(1);
+  $setting =\app\Models\SettingDetail::find(1);
   $user = auth()->user();
 
 ?>
@@ -8,7 +8,6 @@
 @section('head_css')
 @endsection
 @section('content')
-  
-    
-
+@include('frontend.layouts.book')
 @endsection
+

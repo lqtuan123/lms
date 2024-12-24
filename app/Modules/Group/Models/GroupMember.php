@@ -2,22 +2,19 @@
 
 namespace App\Modules\Group\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class GroupMember extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'user_id',
+        'group_id',
+        'role',
+        'status',
+      
+    ];
 
-    protected $fillable = ['group_id', 'user_id', 'role', 'joined_at'];
-
-    public function group()
-    {
-        return $this->belongsTo(Group::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+   
 }

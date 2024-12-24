@@ -12,11 +12,18 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
-    public function __construct( )
-    {
-        // $theme = \App\Models\Themesetting::where('selected',1)->first();
-        // $this->front_view=$theme->title;//"frontend_tp";
+    // public function __construct( )
+    // {
+    //     // $theme = \App\Models\Themesetting::where('selected',1)->first();
+    //     // $this->front_view=$theme->title;//"frontend_tp";
        
+    // }
+    protected $front_template;
+    protected static $front_template_s = 'frontend';
+
+    public function __construct()
+    {
+        $this->front_template = 'frontend'; // Gán giá trị mặc định, thay đổi theo ý bạn.
     }
     
     public function check_function($func)

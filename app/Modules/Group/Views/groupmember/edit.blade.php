@@ -1,44 +1,144 @@
 @extends('backend.layouts.master')
+@section ('scriptop')
 
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="{{ asset('vendor/file-manager/css/file-manager.css') }}">
+<script src="{{ asset('vendor/file-manager/js/file-manager.js') }}"></script>
+
+@endsection
 @section('content')
-<div class="container">
-    <h1>Chỉnh sửa thành viên nhóm</h1>
-    
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
-    @endif
+<div>
+    <div class="intro-y flex items-center mt-8">
+        <h2 class="text-lg font-medium mr-auto">
+           cập nhật groupmember
+        </h2>
+    </div>
+    <div class="grid grid-cols-12 gap-12 mt-5">
+        <div class="intro-y col-span-12 lg:col-span-12">
+            <!-- BEGIN: Form Layout -->
+            <form method="post" action="{{ route('admin.groupmember.update', $groupmember->id) }}">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name='group_id' value="{{$group->id}}"/>
+                <div class="intro-y box p-5">
+                    {{-- Error Handling --}}
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+            
+                    {{-- Title Input --}}
+                    <div class=" mt-3 ">
+                        <label style="min-width:50px  " class="form-select-label" for="">
+                        Chọn khách hàng
+                        </label>
+                        <div class="flex">
+                            <input type="text" id='customer_search' value="{{$user->full_name}}"
+                                class="form-control py-3   " placeholder="Tên hoặc số điện thoại">
+                           
+                        </div>
+                        <input type="hidden" id="user_id" name="user_id" value="{{$user->id}}" />
+                        
+                    </div>
+            
+                    
+                     {{-- Type Code Dropdown --}}
+                     <div class="mt-3">
+                        <label for="role" class="form-label">Vai trò</label>
+                        <select id="role" name="role" class="form-select mt-2">
+                           
+                            @foreach($roles as $role)
+                                <option value="{{ $role->type_code }}" {{ old('type_code',$groupmember->role) == $role->type_code ? 'selected' : '' }}>
+                                    {{ $role->title }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('role')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
 
-    <form action="{{ route('admin.groupmember.update', ['groupId' => $groupId, 'id' => $groupMember->id]) }}" method="POST">
-        @csrf
-        @method('PATCH')
-
-        <div class="form-group">
-            <label for="full_name">Tên</label>
-            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $groupMember->full_name }}" required>
+            
+                    {{-- Status Select --}}
+                    <div class="mt-3">
+                        <label for="status" class="form-label">Tình trạng</label>
+                        <select id="status" name="status" class="form-select mt-2">
+                            <option value="active" {{ old('status',$groupmember->status) == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ old('status',$groupmember->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                        @error('status')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+            
+                    {{-- Submit Button --}}
+                    <div class="text-right mt-5">
+                        <button type="submit" class="btn btn-primary w-24">Lưu</button>
+                    </div>
+                </div>
+            </form>
+            
         </div>
-
-        <div class="form-group">
-            <label for="role">Vai trò</label>
-            <select class="form-control" id="role" name="role">
-                <option value="admin" {{ $groupMember->role == 'admin' ? 'selected' : '' }}>Admin</option>
-                <option value="member" {{ $groupMember->role == 'member' ? 'selected' : '' }}>Member</option>
-                <!-- Thêm các vai trò khác nếu cần -->
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="status">Trạng thái</label>
-            <select class="form-control" id="status" name="status">
-                <option value="active" {{ $groupMember->status == 'active' ? 'selected' : '' }}>Hoạt động</option>
-                <option value="inactive" {{ $groupMember->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Cập nhật</button>
-        <a href="{{ route('admin.groupmember.index', $groupId) }}" class="btn btn-secondary">Quay lại</a>
-    </form>
+    </div>
 </div>
+@endsection
+
+
+@section ('scripts')
+<link href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" rel="Stylesheet"> 
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js" ></script>
+<script>
+      $.ajaxSetup({
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+    });
+    $(document).ready(function(){ 
+
+    var customer_search = $('#customer_search');
+        customer_search.autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{route('user.jsearch')}}',
+                    data: {
+                        data: request.term,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        response( jQuery.map( data.msg, function( item ) {
+                            return {
+                            id: item.id,
+                            value: item.title,
+                        
+                            }
+                        }));
+                    }
+                });
+            },
+            response: function(event, ui) {
+            
+            },
+            select: function(event, ui) {
+
+            $('#user_id').val(ui.item.id);
+            
+            }
+        }).data('ui-autocomplete')._renderItem = function(ul, item){
+            $( ul ).addClass('dropdown-content overflow-y-auto h-52 z-index:900000');
+            return $("<li class='mt-10 dropdown-item  '></li>")
+                .data("item.autocomplete", item )
+                // .append('<div  style="clear:both"><div style="  pointer-events: none; width:50; float:left; "><img width="50" height="50" src="'+item.imgurl+'"/></div> <div style="float:left"> <span style=" pointer-events: none;">'+item.value+' </span> <br/> <span>số lượng: '+ item.qty +'</span> &nbsp;&nbsp;&nbsp;&nbsp; <span> giá: '+  Intl.NumberFormat('en-US').format(item.price)+'</div></div>' )
+                .append('<table style=" border:none; background:none" > <tr><td>'
+                +'<span   style="line-height:220%">'+ item.value +'</span></td></tr></table>')
+                .appendTo(ul);
+            };;
+        //////////end product search /////////////////////////
+
+    } );
+    
+</script>
 @endsection

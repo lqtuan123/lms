@@ -13,6 +13,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Routes for Book
     Route::resource('books', BookController::class)->parameters(['books' => 'id']);
     Route::get('books/{id}', [BookController::class, 'show'])->where('id', '[0-9]+')->name('books.show');
+    Route::delete('/admin/books/{bookId}/resource/{resourceId}', [BookController::class, 'removeResource'])->name('books.removeResource');
     Route::post('books_status', [BookController::class, 'bookStatus'])->name('books.status');
     Route::get('books_search', [BookController::class, 'bookSearch'])->name('books.search');
 
@@ -32,7 +33,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         ->name('booktransactions.process');
 });
 
-Route::prefix('front')->group(function() {
-    Route::get('/book', [BookFrontendController::class, 'index'])->name('front.book.index'); 
-    Route::get('/book/{id}', [BookFrontendController::class, 'show'])->name('front.book.show'); 
-});
+// Route::prefix('front')->group(function() {
+//     Route::get('/book', [BookFrontendController::class, 'index'])->name('front.book.index'); 
+//     Route::get('/book/{id}', [BookFrontendController::class, 'show'])->name('front.book.show'); 
+// });

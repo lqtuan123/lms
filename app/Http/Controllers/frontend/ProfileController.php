@@ -68,30 +68,30 @@ class ProfileController extends  Controller
         return view($this->front_view.'.profile.wishlist',$data);
     }
     //view addres book
-    public function addressbook()
-    {
-        $data['detail'] = \App\Models\SettingDetail::find(1);  
-        // $data['categories'] = \App\Models\Category::where('status','active')->where('parent_id',null)->get();
-          ////
-          $data['pagetitle']=" Address Book " ;
-          $data['links']=array();
-          $link = new \App\Models\Links();
-          $link->title='Danh sách địa chỉ';
-          $link->url='#';
-          array_push($data['links'],$link);
-          ///
-        $user  = auth()->user();
-        $data['profile'] = $user ;
-        // $sql_total_order = "select count(id) as total from orders where customer_id = ".$user->id." and status = 'active'   ";
-        // $data['totalorder']  = DB::select($sql_total_order)[0]->total ;
-        // $sql_total_preorder = "select count(id) as total from orders where customer_id = ".$user->id."  and status='pending'  ";
-        // $data['totalpendorder']  = DB::select($sql_total_preorder)[0]->total ;
-        // $sql_total_wishlist = "select count(id) as total from wishlists where user_id = ".$user->id."    ";
-        // $data['totalwishlist']  = DB::select($sql_total_wishlist)[0]->total ;
-        // $data['defaut_setting']  = \App\Models\UserSetting::where('user_id',$user->id)->first();
-        // $data['addressbooks']  = \App\Models\AddressBook::where('user_id',$user->id)->get();
-        return view($this->front_view.'.profile.addressbook',$data);
-    }
+    // public function addressbook()
+    // {
+    //     $data['detail'] = \App\Models\SettingDetail::find(1);  
+    //     // $data['categories'] = \App\Models\Category::where('status','active')->where('parent_id',null)->get();
+    //       ////
+    //       $data['pagetitle']=" Address Book " ;
+    //       $data['links']=array();
+    //       $link = new \App\Models\Links();
+    //       $link->title='Danh sách địa chỉ';
+    //       $link->url='#';
+    //       array_push($data['links'],$link);
+    //       ///
+    //     $user  = auth()->user();
+    //     $data['profile'] = $user ;
+    //     // $sql_total_order = "select count(id) as total from orders where customer_id = ".$user->id." and status = 'active'   ";
+    //     // $data['totalorder']  = DB::select($sql_total_order)[0]->total ;
+    //     // $sql_total_preorder = "select count(id) as total from orders where customer_id = ".$user->id."  and status='pending'  ";
+    //     // $data['totalpendorder']  = DB::select($sql_total_preorder)[0]->total ;
+    //     // $sql_total_wishlist = "select count(id) as total from wishlists where user_id = ".$user->id."    ";
+    //     // $data['totalwishlist']  = DB::select($sql_total_wishlist)[0]->total ;
+    //     // $data['defaut_setting']  = \App\Models\UserSetting::where('user_id',$user->id)->first();
+    //     // $data['addressbooks']  = \App\Models\AddressBook::where('user_id',$user->id)->get();
+    //     return view($this->front_view.'.profile.addressbook',$data);
+    // }
 
     public function updateProfile(Request $request)
     {
@@ -117,7 +117,7 @@ class ProfileController extends  Controller
         }
     }
 
-    public function viewDasboard()
+    public function viewDashboard()
     {
         $data['detail'] = \App\Models\SettingDetail::find(1);  
         // $data['categories'] = \App\Models\Category::where('status','active')->where('parent_id',null)->get();
@@ -169,73 +169,73 @@ class ProfileController extends  Controller
         $data['profile'] = $user ;
         return view($this->front_view.'.profile.edit',$data);
     }
-    public function setDefaultInvoice(Request $request)
-    {
-        $this->validate($request, [
-            'id' => 'required|numeric',
-        ]);
-        $id = $request->id;
-        $user  = auth()->user();
-        // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
-        // $address = \App\Models\AddressBook::find($id);
-        // if(!$address)
-        // {
-        //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
-        // }
-        // if(!$default_setting)
-        // {
-        //     $default_setting = new \App\Models\UserSetting();
-        //     $default_setting->user_id = $user->id;
+    // public function setDefaultInvoice(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'id' => 'required|numeric',
+    //     ]);
+    //     $id = $request->id;
+    //     $user  = auth()->user();
+    //     // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
+    //     // $address = \App\Models\AddressBook::find($id);
+    //     // if(!$address)
+    //     // {
+    //     //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
+    //     // }
+    //     // if(!$default_setting)
+    //     // {
+    //     //     $default_setting = new \App\Models\UserSetting();
+    //     //     $default_setting->user_id = $user->id;
          
-        // }
-        // $default_setting->invoice_id = $id;
-        // $default_setting->save();
-        return response()->json([ 'status'=>true,'msg'=>'Cập nhật thành công!']);
-    }
-    public function deleteAddress($id)
-    {
-        $user = auth()->user();
-        // $address = \App\Models\AddressBook::find($id);
-        // if(!$address)
-        // {
-        //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
-        // }
-        // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
-        // if($default_setting->ship_id == $id)
-        // {
-        //         $default_setting->ship_id= null;
-        // }
-        // if($default_setting->invoice_id == $id)
-        // {
-        //     $default_setting->invoice_id= null;
-        // }
-        // $default_setting->save();
-        // $address->delete();
-        return back()->with('success', "Xóa thành công!");
-    }
-    public function setDefaultShip(Request $request)
-    {
-        $this->validate($request, [
-            'id' => 'required|numeric',
-        ]);
-        $id = $request->id;
-        $user  = auth()->user();
-        // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
-        // $address = \App\Models\AddressBook::find($id);
-        // if(!$address)
-        // {
-        //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
-        // }
-        // if(!$default_setting)
-        // {
-        //     $default_setting = new \App\Models\UserSetting();
-        //     $default_setting->user_id = $user->id;
+    //     // }
+    //     // $default_setting->invoice_id = $id;
+    //     // $default_setting->save();
+    //     return response()->json([ 'status'=>true,'msg'=>'Cập nhật thành công!']);
+    // }
+    // public function deleteAddress($id)
+    // {
+    //     $user = auth()->user();
+    //     // $address = \App\Models\AddressBook::find($id);
+    //     // if(!$address)
+    //     // {
+    //     //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
+    //     // }
+    //     // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
+    //     // if($default_setting->ship_id == $id)
+    //     // {
+    //     //         $default_setting->ship_id= null;
+    //     // }
+    //     // if($default_setting->invoice_id == $id)
+    //     // {
+    //     //     $default_setting->invoice_id= null;
+    //     // }
+    //     // $default_setting->save();
+    //     // $address->delete();
+    //     return back()->with('success', "Xóa thành công!");
+    // }
+    // public function setDefaultShip(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'id' => 'required|numeric',
+    //     ]);
+    //     $id = $request->id;
+    //     $user  = auth()->user();
+    //     // $default_setting   = \App\Models\UserSetting::where('user_id',$user->id)->first();
+    //     // $address = \App\Models\AddressBook::find($id);
+    //     // if(!$address)
+    //     // {
+    //     //     return response()->json([ 'status'=>false,'msg'=>'Không tìm thấy dữ liệu']);
+    //     // }
+    //     // if(!$default_setting)
+    //     // {
+    //     //     $default_setting = new \App\Models\UserSetting();
+    //     //     $default_setting->user_id = $user->id;
          
-        // }
-        // $default_setting->ship_id = $id;
-        // $default_setting->save();
-        return response()->json([ 'status'=>true,'msg'=>'Cập nhật thành công!']);
-    }
+    //     // }
+    //     // $default_setting->ship_id = $id;
+    //     // $default_setting->save();
+    //     return response()->json([ 'status'=>true,'msg'=>'Cập nhật thành công!']);
+    // }
     public function changePassword(Request $request)
     {
         $this->validate($request, [
