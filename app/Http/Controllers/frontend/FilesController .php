@@ -132,68 +132,13 @@ class FilesController extends Controller
     }
     public function avartarUpload(Request $request)
     {
-           // Lấy thông tin file gốc
-           $originalFile = $request->file('file');
-           $originalName = $originalFile->getClientOriginalName();
-           $ext = '.' . $originalFile->getClientOriginalExtension();
-   
-           // Lấy tên file không có phần mở rộng
-           $filename = str_replace($ext, '', $originalName);
-   
-           // Kiểm tra file có tồn tại
-           if ($request->hasFile('file')) {
-               // Tạo đường dẫn file WebP tạm thời
-               $tempPath  = sys_get_temp_dir() . '/my_custom_name.webp';
-               // $tempImagePath = tempnam(sys_get_temp_dir(), 'image');
-               // Chuyển đổi file sang WebP
-               Image::make($originalFile)
-                   ->encode('webp', 90) // Chuyển sang WebP, chất lượng 90%
-                   ->save($tempPath);
-   
-               // Lưu file WebP lên S3
-               $s3Path =  $filename . '.webp';
-               $awsKey = env('AWS_ACCESS_KEY_ID');
-               $awsSecret = env('AWS_SECRET_ACCESS_KEY');
-               if ($awsKey && $awsSecret) {
-                   $disk = 's3';
-                   $folder = 'avatar';
-               } else {
-                   $disk = 'local';
-                   $folder = 'public/avatar';
-               }
-                
-               $filename = $s3Path ;
-   
-               // Lưu file tạm lên disk đã chọn
-               $link = Storage::disk($disk)->putFileAs(
-                   $folder,                     // Thư mục lưu file
-                   new \Illuminate\Http\File($tempPath), // Đọc file từ đường dẫn tạm
-                   $filename                    // Tên file
-               );
-               
-               // Lấy URL file vừa lưu
-               $link = Storage::disk($disk)->url($link);
-               
-               if ($disk === 'local') {
-                   $link = asset($link);
-               }
-               
-               // Xóa file tạm để giải phóng bộ nhớ
-               unlink($tempPath);
-               
-               return response()->json(['status'=>'true','link'=>$link]);
-           }
-           else
-           {
-               return response()->json(['status'=>'false','msg'=>'lỗi']);
-           }
-
-        // $request->validate([
-        //     'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:1048', // Adjust the validation rules as needed
-        // ]);
-        // $link = $request->hasFile('file') ? $this->store($request->file('file'), 'avatar') : null;
-        // $link = Storage::disk('s3')->url($link);
-        // return response()->json(['status'=>'true','link'=>$link]);
+        $filename = $request->file('file')->getClientOriginalName();
+        $ext = '.'.$request->file('file')->getClientOriginalExtension();
+       
+        $filename =  str_replace(  $ext , '',$filename);
+        $link = $request->hasFile('file') ? $this->store($request->file('file'), 'avatar',$filename) : null;
+       
+        return response()->json(['status'=>'true','link'=>$link]);
     }
     public function bannerUpload(Request $request)
     {

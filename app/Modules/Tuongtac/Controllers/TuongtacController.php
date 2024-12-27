@@ -24,7 +24,7 @@ class TuongtacController extends Controller
     }
     public static function getSctiptActionBar()
     {
-        return view('Tuongtac::'.static::$front_template_s.'.actionbar.script')->render();
+        return view('Tuongtac::frontend.actionbar.script')->render();
     }
 
     public function getVotes($itemId)
@@ -79,7 +79,7 @@ class TuongtacController extends Controller
         else
             $data['hasComment'] = $comments[0]->tong;
 
-        $html = view('Tuongtac::'.static::$front_template_s.'.actionbar.show',$data)->render();
+        $html = view('Tuongtac::frontend.actionbar.show',$data)->render();
         return $html;
     }
 }

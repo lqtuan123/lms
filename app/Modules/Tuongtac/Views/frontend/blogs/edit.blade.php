@@ -19,11 +19,11 @@
 </div>      
 <h4 class="mb-4">Điều chỉnh bài viết </h4>
 
-@if(session('success'))
+{{-- @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
     </div>
-@endif
+@endif --}}
 
 <form action="{{ route('front.tblogs.update',$post->id) }}" method="POST" enctype="multipart/form-data">
     @csrf

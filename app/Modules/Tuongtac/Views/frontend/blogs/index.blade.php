@@ -58,24 +58,24 @@ $adsense_code = '<ins class="adsbygoogle"
         <div class="post-card {{$post->status==0? 'postprivate':''}}" style="position: relative; padding-top:32px; margin-top:5px">
                 <!-- Hình ảnh đầu bài -->
                 <div class="action-buttons" style="position: absolute; top: -0px; right: 4px;z-index:1000">
-                    <a   style=" "><button onclick="openPopup('{{$post->slug}}')" class="deletebtn"> <i class="feather icon-feather-eye icon-extra-small  " style="background:white"></i> </button></a>
+                    <a   style=" "><button onclick="openPopup('{{$post->slug}}')" class="deletebtn"> <i class="fa fa-eye " style="background:white"></i> </button></a>
                             
                     @if(\Auth::id() == $post->author->id || (auth()->id() && auth()->user()->role=='admin'))
                     
                             <!-- Nút Edit -->
                             @if($post->status == 1)
-                                <a href="{{ route('front.tblogs.status', $post->id) }}" title=" ẩn bài viết " style=" "><button class="deletebtn"> <i class="feather icon-feather-x-circle icon-extra-small  " style="background:white"></i> </button></a>
+                                <a href="{{ route('front.tblogs.status', $post->id) }}" title=" ẩn bài viết " style=" "><button class="deletebtn"> <i class="fa fa-times-circle  " style="background:white"></i> </button></a>
                             @else
-                                <a href="{{ route('front.tblogs.status', $post->id) }}" title=" công khai bài viết " style=" "><button class="deletebtn"> <i class="feather icon-feather-check-circle icon-extra-small  " style="background:white"></i> </button></a>
+                                <a href="{{ route('front.tblogs.status', $post->id) }}" title=" công khai bài viết " style=" "><button class="deletebtn"> <i class="fa fa-check-circle  " style="background:white"></i> </button></a>
                     
                             @endif
-                            <a href="{{ route('front.tblogs.edit', $post->id) }}"  style=" "><button class="deletebtn"> <i class="feather icon-feather-edit icon-extra-small  " style="background:white"></i> </button></a>
+                            <a href="{{ route('front.tblogs.edit', $post->id) }}"  style=" "><button class="deletebtn"> <i class="fa fa-pencil  " style="background:white"></i> </button></a>
                             
                             <!-- Nút Delete -->
                             <form action="{{ route('front.tblogs.destroy', $post->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="deletebtn" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?');"><i class="feather icon-feather-trash icon-extra-small  " style="background:white"></i></button>
+                                <button type="submit" class="deletebtn" onclick="return confirm('Bạn có chắc muốn xóa bài viết này?');"><i class="fa fa-trash-o  " style="background:white"></i></button>
                             </form>
                     
                     @endif

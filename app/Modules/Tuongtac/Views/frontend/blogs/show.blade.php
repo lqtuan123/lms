@@ -5,13 +5,6 @@ use Carbon\Carbon;
 ?>
 @section('inner-content')
             
- 
-
-@if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
 <?php
     $images = json_decode($post->photo, true); // Giải mã JSON thành mảng
     $json_photo = json_encode($images);

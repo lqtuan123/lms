@@ -80,9 +80,9 @@ $adsense_code = '<ins class="adsbygoogle"
 <div class="container">
     <h1>Chỉnh sửa câu hỏi</h1>
 
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('front.surveys.updatequestion', $question->id) }}" method="POST">
         @csrf

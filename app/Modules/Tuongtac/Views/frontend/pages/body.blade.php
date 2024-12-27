@@ -1,7 +1,6 @@
-@extends('frontend.layouts.master')
-@section('head_css')
-@yield('botscript')
-<link rel="stylesheet" href="{{asset('frontend/assets_tp/css/custom8.css')}}" type="text/css" />
+@extends('frontend.layouts.master1')
+@section('css')
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/custom8.css') }}" type="text/css" />
 <style>
 .image-container {
     position: relative;

@@ -24,11 +24,11 @@ $adsense_code = '<ins class="adsbygoogle"
     @include('frontend.layouts.notification')
     <h1>Thêm Câu Hỏi và Câu Trả Lời</h1>
     
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('front.surveys.questionstore') }}" method="POST">
         @csrf

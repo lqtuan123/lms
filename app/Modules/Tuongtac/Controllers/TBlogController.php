@@ -108,7 +108,7 @@ class TBlogController extends Controller
             
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
-        return view('Tuongtac::'.$this->front_template.'.blogs.index',$data);
+        return view('Tuongtac::frontend.blogs.index',$data);
     }
     public function show($slug)
     {
@@ -173,7 +173,7 @@ class TBlogController extends Controller
         
         if($data['post']->resources)
             $data['link_download'] = \App\Modules\Resource\Controllers\FileDownloadController::downloadform($data['post']->resources );
-         return view('Tuongtac::'.$this->front_template.'.blogs.show',$data);
+         return view('Tuongtac::frontend.blogs.show',$data);
 
     }
     public function favblog()
@@ -244,7 +244,7 @@ class TBlogController extends Controller
             
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
-        return view('Tuongtac::'.$this->front_template.'.blogs.index',$data);
+        return view('Tuongtac::frontend.blogs.index',$data);
     }
     public function tag(Request $request,$tag)
     {
@@ -318,7 +318,7 @@ class TBlogController extends Controller
             
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
-        return view('Tuongtac::'.$this->front_template.'.blogs.index',$data);
+        return view('Tuongtac::frontend.blogs.index',$data);
     }
     public function index(Request $request)
     {
@@ -373,7 +373,7 @@ class TBlogController extends Controller
             
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
-        return view('Tuongtac::'.$this->front_template.'.blogs.index',$data);
+        return view('Tuongtac::frontend.blogs.index',$data);
     }
     public function addpageblog($id)
     {
@@ -403,7 +403,7 @@ class TBlogController extends Controller
          $data['tags'] = TTag::orderBy('title','ASC')->get();
         $data['toptags']  =  TTag::where('id','<=',5)->orderBy('hit')->get();
         
-        return view('Tuongtac::'.$this->front_template.'.blogs.create',$data);
+        return view('Tuongtac::frontend.blogs.create',$data);
     }
     public function check_quyendangbai($page)
     {
@@ -625,7 +625,7 @@ class TBlogController extends Controller
             }
             if($request->frompage)
                 $data['frompage'] = $request->frompage;
-            return view('Tuongtac::'.$this->front_template.'.blogs.edit',  $data);
+            return view('Tuongtac::frontend.blogs.edit',  $data);
         }
         else
         {

@@ -1,4 +1,4 @@
-<div class="wrapper  bg-[rgba(246,247,249,1)] ">
+{{-- <div class="wrapper  bg-[rgba(246,247,249,1)] ">
       <div class="container py-3 xl:!py-5 lg:!py-5 md:!py-5">
        
           <nav class="inline-block" aria-label="breadcrumb">
@@ -22,4 +22,32 @@
         <!-- /nav -->
       </div>
       <!-- /.container -->
-    </div>
+    </div> --}}
+
+    <div class="breadcrumb-section">
+      <div class="container">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="page-title">
+                      <h2>{{isset($pagetitle)?$pagetitle:""}} </h2>
+                  </div>
+              </div>
+              <div class="col-sm-8">
+                   
+                  <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                      <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{{route('home')}}">Trang chủ</a></li> 
+                        @if (isset($links))
+                          @foreach ($links as $link )
+                              <li class="breadcrumb-item"><a href="{{$link->url}}">{{$link->title}}</a></li> 
+                          @endforeach
+                          
+                        @endif
+                         
+                          
+                      </ol>
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </div>

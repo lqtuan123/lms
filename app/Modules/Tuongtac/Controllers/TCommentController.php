@@ -15,7 +15,7 @@ class TCommentController extends Controller
 {
     public function index()
     {
-        return view('Tuongtac::'.static::$front_template_s.'.index');
+        return view('Tuongtac::frontend.index');
     }
     /**
      * 'item_id',
@@ -162,7 +162,7 @@ class TCommentController extends Controller
             $data['curuser'] = auth()->user();
         }
        
-        $html = view('Tuongtac::'.static::$front_template_s.'.comments.show',$data)->render();
+        $html = view('Tuongtac::frontend.comments.show',$data)->render();
         return $html;
     }
     

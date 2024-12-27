@@ -38,6 +38,6 @@ class TNoticeController extends Controller
     public function getNotice(){
         $user = auth()->user();
         $data['notices'] = TNotice::where('user_id',$user->id)->where('seen',1)->orderBy('id','desc')->paginate($this->pagesize);
-        return view('Tuongtac::'.$this->front_template.'.notices.show',$data)->render();
+        return view('Tuongtac::frontend.notices.show',$data)->render();
     }
 }

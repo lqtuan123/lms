@@ -23,11 +23,11 @@ $adsense_code = '<ins class="adsbygoogle"
 <div class="container">
     <h3>Cập nhật nhóm thăm dò </h3>
     
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('front.surveys.updatesurvey',$survey->id) }}" method="POST">
         @csrf

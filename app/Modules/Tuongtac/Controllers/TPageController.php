@@ -107,7 +107,7 @@ class TPageController extends Controller
         // $data['menutags'] = TTag::where('slug','<>','rao-vat')->orderBy('hit')->limit(10)->get();
         $data['item_code'] = 'page';
         
-        return view('Tuongtac::'.$this->front_template.'.pages.survey',$data);
+        return view('Tuongtac::frontend.pages.survey',$data);
         
     }
     public function check_quyendieuchinh($page)
@@ -222,7 +222,7 @@ class TPageController extends Controller
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
      
-        return view('Tuongtac::'.$this->front_template.'.pages.index',$data);
+        return view('Tuongtac::frontend.pages.index',$data);
         
     }
 }

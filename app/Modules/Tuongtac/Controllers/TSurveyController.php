@@ -42,7 +42,7 @@ class TSurveyController extends Controller
         
         $data['item_id'] = $item_id;
         $data['item_code'] = $item_code;
-        return view('Tuongtac::'.$this->front_template.'.surveys.create', $data);
+        return view('Tuongtac::frontend.surveys.create', $data);
     }
     public function addquestion($id)
     {
@@ -70,7 +70,7 @@ class TSurveyController extends Controller
             return redirect()->back()->with('error','không tìm thấy nhóm thăm dò');
         }
         
-        return view('Tuongtac::'.$this->front_template.'.surveys.addquestion', $data);
+        return view('Tuongtac::frontend.surveys.addquestion', $data);
     }
     public function savequestion(Request $request)
     {
@@ -146,7 +146,7 @@ class TSurveyController extends Controller
             $data['page_up_title'] = "Thêm câu hỏi cho survey "  ;
             $data['survey_id'] = $id;
             $data['question'] = $question;
-            return view('Tuongtac::'.$this->front_template.'.surveys.editquestion', $data);
+            return view('Tuongtac::frontend.surveys.editquestion', $data);
         }
         else
         {
@@ -188,7 +188,7 @@ class TSurveyController extends Controller
         $data['questions'] = TQuestion::with('options')->where('survey_id',$survey->id)->get();
        
 
-        return view('Tuongtac::'.$this->front_template.'.surveys.show',$data);
+        return view('Tuongtac::frontend.surveys.show',$data);
     }
   
     public function check_quyendangbai($page)
@@ -351,7 +351,7 @@ class TSurveyController extends Controller
             $data['page_up_title'] = "Thêm thông tin thăm dò "  ;
             if($request->frompage)
                 $data['frompage'] = $request->frompage;
-            return view('Tuongtac::'.$this->front_template.'.surveys.edit',$data);
+            return view('Tuongtac::frontend.surveys.edit',$data);
         }
         else
         {

@@ -125,7 +125,7 @@ class TUserpageController extends Controller
             
         }
         $data['script_actionbar'] = \App\Modules\Tuongtac\Controllers\TuongtacController::getSctiptActionBar( );
-        return view('Tuongtac::'.$this->front_template.'.userpage.userpage',$data);
+        return view('Tuongtac::frontend.userpage.userpage',$data);
     }
     public function edituser( )
     {
@@ -149,7 +149,7 @@ class TUserpageController extends Controller
         $data['page_up_title']= "Thông tin cá nhân"  ;
 
         $data['profile'] = $user;
-        return view('Tuongtac::'.$this->front_template.'.userpage.profile',$data);
+        return view('Tuongtac::frontend.userpage.profile',$data);
     }
     public function user_hornor()
     {
@@ -181,7 +181,7 @@ class TUserpageController extends Controller
                   ->orderBy('t_userpages.point','desc')
                   ->skip(4)->take(36)->get() ;
         
-        return view('Tuongtac::'.$this->front_template.'.userpage.hornor',$data);
+        return view('Tuongtac::frontend.userpage.hornor',$data);
  
        
     }

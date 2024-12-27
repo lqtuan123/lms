@@ -38,13 +38,13 @@
     <div class="bookmark">
         @if($isBookmarked)
             <button class="btn-bookmark bookmarked" item_code="{{$item_code}}" data-post-id="{{ $item_id }}">
-                {{$isBookmarked}} <i class="feather icon-feather-bookmark icon-extra-small  " style="background:white">
+                {{$isBookmarked}} <i class="fa fa-bookmark  " style="background:white">
                 </i>
                 
             </button>
         @else
             <button class="btn-bookmark" item_code="{{$item_code}}" data-post-id="{{ $item_id }}">
-                <i class="feather icon-feather-bookmark icon-extra-small  " style="background:white">
+                <i class="fa fa-bookmark style="background:white">
                 </i>
             </button>
         @endif
