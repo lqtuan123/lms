@@ -1,0 +1,1305 @@
+:root {
+    --primary-color: #ff6f3d;
+    /* Màu cam chính */
+    --primary-hover: #e64a19;
+    /* Màu cam khi hover */
+    --secondary-bg: #f9f9f9;
+    /* Nền xám nhạt */
+    --header-bg: #ffffff;
+    /* Nền trắng cho header */
+    --hero-bg: #fef7f4;
+    /* Nền sáng nhẹ có cam */
+    --features-bg: #f9f9f9;
+    /* Nền xám nhạt cho vùng features */
+    --api-bg: #ffffff;
+    /* Nền trắng cho API section */
+    --footer-bg: #333333;
+    /* Nền đen cho footer */
+    --text-color: #333333;
+    /* Màu chữ đậm */
+    --footer-text-color: #ffffff;
+    /* Màu chữ trong footer */
+    --accent-color: #ff6f3d;
+    /* Màu nhấn cam */
+    --border-color: #e0e0e0;
+    /* Viền xám nhạt */
+    --hover-background: rgba(255, 255, 255, 0.2);
+    /* Màu nền khi hover */
+    --hover-background-dark: rgba(0, 0, 0, 0.1);
+    /* Màu nền hover tối */
+    --button-hover-bg: #c62828;
+    /* Nút đỏ khi hover */
+    --notification-color: red;
+    /* Màu cho số thông báo */
+    --success-color: green;
+    --warning-color: #FFA726;
+    --base-color: rgb(0, 191, 255);
+}
+
+.mcontainer {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+/* modal */
+
+.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 400px;
+}
+
+.popular-posts .menu a {
+    color: black;
+}
+
+.sub-menu a,
+.menu a:hover {
+    color: var(--base-color);
+
+}
+
+.popup-modal {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.popup-modal[style*="display: flex;"] {
+    opacity: 1;
+}
+
+/* Overlay - Nền đen */
+.popup-modal {
+    display: none;
+    /* Ẩn mặc định */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Nền đen mờ */
+    z-index: 1001;
+    /* Đặt trên mọi thành phần khác */
+    justify-content: center;
+    align-items: center;
+}
+
+/* Nội dung popup */
+.popup-content {
+    background: white;
+    width: 99%;
+    max-width: 800px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    /* Hiển thị thanh cuộn nếu nội dung quá dài */
+    max-height: 90%;
+    /* Giới hạn chiều cao */
+    position: relative;
+}
+
+/* Nút "Close" - Cố định góc phải trên */
+.close-popup {
+    position: fixed;
+    /* Đặt cố định */
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    z-index: 1001;
+    /* Trên nội dung popup */
+    font-weight: bold;
+}
+
+/* Tiêu đề */
+#popup-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Nội dung */
+#popup-body {
+    font-size: 120% !important;
+    line-height: 1.5 !important;
+    color: #555 !important;
+}
+
+#popup-body * {
+    font-size: inherit !important;
+    /* Kế thừa font-size từ #popup-body */
+    line-height: inherit !important;
+    /* Kế thừa line-height */
+    color: inherit !important;
+    /* Kế thừa màu */
+}
+
+/*  */
+.mcontainer h1 {
+    font-size: 3rem;
+}
+
+.mcontainer h2 {
+    font-size: 2.5rem;
+}
+
+.mcontainer h3 {
+    font-size: 2.0rem;
+}
+
+.mcontainer h4 {
+    font-size: 1.8rem;
+}
+
+/* trang ca nhan */
+/* Avatar bên trái */
+.user-post-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    max-width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.avatar {
+    flex-shrink: 0;
+    margin-right: 15px;
+}
+
+.avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ccc;
+}
+
+/* Phần thông tin bên phải */
+.info {
+    display: flex;
+    flex-direction: column;
+}
+
+.info .name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 4px 0;
+}
+
+.info p {
+    margin: 0px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.info p span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* slide anh */
+
+.thumbnail-container {
+    display: flex;
+    justify-content: center;
+    /* Căn giữa các hình */
+    gap: 10px;
+    /* Khoảng cách giữa các hình */
+    margin-top: 15px;
+    /* Tạo khoảng cách giữa phần hình lớn và thumbnail */
+}
+
+/* Thumbnail */
+.thumbnail {
+    width: 50px;
+    /* Chiều rộng mỗi thumbnail */
+    height: 50px;
+    /* Chiều cao mỗi thumbnail */
+    object-fit: cover;
+    /* Giữ tỷ lệ hình ảnh */
+    border-radius: 5px;
+    /* Bo góc */
+    border: 2px solid transparent;
+    /* Viền mặc định */
+    cursor: pointer;
+    /* Thay đổi con trỏ chuột */
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover hiệu ứng */
+.thumbnail:hover {
+    transform: scale(1.1);
+    /* Phóng to nhẹ khi hover */
+    border-color: var(--base-color);
+    ;
+    /* Đổi viền sang màu xanh */
+}
+
+/* Hình được chọn */
+.thumbnail.active {
+    border-color: #ff5722;
+    /* Viền nổi bật cho hình được chọn */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Hiệu ứng đổ bóng */
+}
+
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.lightbox-img {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+.lightbox .close {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: white;
+
+    font-size: 35px;
+    cursor: pointer;
+}
+
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    color: white;
+    font-size: 30px;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+}
+
+.prev {
+    left: 40px !important;
+}
+
+.next {
+    right: 40px !important;
+}
+
+/*  */
+.help-span {
+    font-size: 0.7rem;
+    /* Cỡ chữ nhỏ */
+    color: #6c757d;
+    /* Màu nhạt (xám nhạt) */
+    font-style: italic;
+    /* In nghiêng */
+    line-height: 1.5;
+    /* Tăng khoảng cách dòng để dễ đọc */
+    display: block;
+    /* Đặt span trên một dòng riêng (nếu cần) */
+    margin-top: 5px;
+    /* Khoảng cách phía trên */
+    font-style: italic;
+
+}
+
+/* vinh danh thanh vien */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 32px;
+    color: #333;
+}
+
+.top-users,
+.all-users {
+    margin-top: 20px;
+}
+
+.top-users h2,
+.all-users h2 {
+    font-size: 24px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Grid layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.grid-item {
+    text-align: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Top member highlight */
+.top-member {
+    background-color: #ffe5b4;
+    border-color: #f0a500;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+p {
+    font-size: 14px;
+    color: #666;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    /* Tối thiểu 150px */
+    gap: 15px;
+}
+
+@media (min-width: 768px) {
+    .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        /* Tối thiểu 200px */
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        /* 4 cột trên desktop */
+    }
+}
+
+/* tag button */
+.tags-container {
+    margin-bottom: 20px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.tag-button {
+    background-color: white;
+    /* Nền trắng */
+    color: #555;
+    /* Chữ màu xanh */
+    border: 1px dashed var(--base-color);
+    /* Viền xanh nét đứt */
+    padding: 1px 8px;
+    border-radius: 20px;
+    /* Bo tròn góc */
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hiệu ứng khi hover */
+.tag-button:hover {
+    background-color: var(--base-color);
+    /* Nền chuyển xanh khi hover */
+    color: white;
+    /* Chữ chuyển sang trắng khi hover */
+    border-color: var(--base-color);
+    /* Viền chuyển sang màu xanh */
+}
+
+/* popular post */
+
+.popular-post-item:hover {
+    background-color: #f0f8ff;
+    /* Nền sáng khi hover */
+    border-radius: 5px;
+    padding: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.popular-posts {
+    background-color: #f9f9f9;
+    /* Màu nền */
+    border: 1px solid #ddd;
+    /* Đường viền */
+    border-radius: 8px;
+    /* Bo góc */
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Đổ bóng */
+}
+
+.popular-posts h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Danh sách bài viết */
+.popular-posts ul {
+    list-style: none;
+    /* Xóa dấu chấm mặc định */
+    padding: 0;
+    margin: 0;
+}
+
+.popular-posts li {
+    margin-bottom: 15px;
+}
+
+.popular-posts a:hover {
+    text-decoration: none !important;
+}
+
+.popular-posts li:last-child {
+    margin-bottom: 0;
+}
+
+/* Mỗi bài viết */
+.popular-post-item {
+    display: flex;
+    /* Hiển thị theo hàng ngang */
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Hình ảnh thu nhỏ */
+.popular-post-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    /* Đảm bảo ảnh vừa khung */
+    border-radius: 5px;
+    /* Bo góc ảnh */
+}
+
+/* Tiêu đề bài viết */
+.popular-post-title {
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.popular-post-title:hover {
+    color: var(--base-color);
+    text-decoration: none;
+}
+
+/* Đường phân cách */
+.popular-posts li:not(:last-child) {
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/*  */
+.back-button {
+    margin-bottom: 15px;
+    /* Tạo khoảng cách dưới nút */
+}
+
+.back-button a {
+    text-decoration: none;
+    color: white;
+    background-color: var(--base-color);
+    padding: 10px 15px;
+    border-radius: 5px;
+    /* font-size: 14px; */
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.back-button a:hover {
+    background-color: var(--base-color_tran);
+    color: white !important;
+    border-color: var(--base-color);
+}
+
+/* vote */
+.rating-container {
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    direction: rtl;
+    /* Đảo ngược thứ tự để sử dụng + selector */
+}
+
+.rating-container .star {
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.rating-container .star.selected {
+    color: #ffcc00;
+}
+
+.rating-container .star:hover,
+.rating-container .star:hover~.star {
+    color: #ffcc00;
+}
+
+/* Giữ nguyên trạng thái khi đã bấm chọn */
+.star.selected,
+.star.selected~.star {
+    color: #ffcc00;
+    /* Màu vàng khi được chọn */
+}
+
+.postprivate {
+    border: 1px dashed black !important;
+}
+
+/* spinner */
+
+#spinner {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    /* Màu nền */
+    border-top: 4px solid var(--base-color);
+    /* Màu của spinner */
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+/* Hiệu ứng quay */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* bookmark */
+
+.btn-bookmark {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.btn-bookmark.bookmarked {
+    color: var(--base-color);
+}
+
+.hascomment {
+    color: var(--base-color);
+}
+
+.btn-bookmark i {
+    /* font-size: 24px; */
+}
+
+/* reaction */
+
+/* Motion ngắn (hiển thị mặc định) */
+.motion-short {
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Motion đầy đủ (ẩn mặc định) */
+.motion-full {
+    display: none;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+/* Hiển thị đầy đủ motion khi hover
+    /* .motion-container:hover .motion-full {
+        display: block;
+    } */
+
+/* Ẩn motion ngắn khi hover */
+/* .motion-container:hover .motion-short {
+        display: none;
+    } */
+
+.btn-reaction.active {
+    transform: scale(1.2);
+    color: var(--base-color);
+}
+
+.reactions {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.reaction-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-reaction {
+    background: none;
+    border: none;
+    /* font-size: 24px; */
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btn-reaction:hover {
+    transform: scale(1.2);
+}
+
+.reaction-counts {
+    margin-left: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.reaction-counts span {
+    font-size: 16px;
+}
+
+/* comment */
+
+.comments-section textarea {
+    max-height: 100px;
+    min-height: 100px;
+}
+
+.comments-section h3 {
+    font-size: 1.6rem;
+}
+
+.tag {
+    display: inline-block;
+    background: #f1f1f1;
+    color: var(--base-color);
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 0.9rem;
+}
+
+.tag:hover {
+    background: var(--base-color);
+    color: #fff;
+}
+
+.deletebtn {
+    border: none;
+    background: white;
+}
+
+.dlt_btn {
+    cursor: pointer;
+}
+
+/* Container của Dropzone */
+.dropzone {
+    border: 2px dashed var(--base-color);
+    border-radius: 10px;
+    background: #f9f9f9;
+    padding: 20px;
+    text-align: center;
+    overflow: hidden;
+    /* Ngăn nội dung tràn ra ngoài */
+}
+
+/* Ảnh preview */
+.dropzone .dz-preview .dz-image img {
+    max-width: 100%;
+    /* Đảm bảo ảnh không vượt quá chiều rộng container */
+    max-height: 150px;
+    /* Giới hạn chiều cao */
+    border-radius: 8px;
+    /* Bo góc */
+    object-fit: cover;
+    /* Giữ tỷ lệ ảnh mà không bị méo */
+}
+
+/* Nút "Xóa" trong preview */
+.dropzone .dz-preview .dz-remove {
+    font-size: 12px;
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+/* Giới hạn kích thước preview */
+.dropzone .dz-preview {
+    margin: 10px;
+    display: inline-block;
+    /* Hiển thị các ảnh theo dòng ngang */
+    vertical-align: top;
+    text-align: center;
+}
+
+
+/* topbar */
+.cover-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+}
+
+.cover-image .upload-text {
+    font-weight: bold;
+    color: var(--base-color);
+    cursor: pointer;
+}
+
+/* .post-title {
+            font-size: 2rem;
+            font-weight: bold;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        } */
+
+textarea {
+    resize: none;
+    min-height: 300px;
+}
+
+.form-actions button {
+    margin-right: 10px;
+}
+
+button.btn-primary {
+    background: var(--base-color);
+    color: white;
+}
+
+button.btn-primary:hover {
+    background: var(--base-color);
+    ;
+}
+
+button.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+a.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+button.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+/* Thanh bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* Form tìm kiếm */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input {
+    padding: 4px 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 300px;
+}
+
+.btn-search {
+    padding: 8px 12px;
+    background-color: var(--base-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-search:hover {
+    background-color: var(--base-color_tran);
+}
+
+/* Nút thêm bài viết */
+.btn-add {
+    padding: 8px 12px;
+    background-color: var(--base-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    /* font-size: 14px; */
+}
+
+.btn-add:hover {
+    background-color: var(--base-color_tran);
+}
+
+/* Left Menu */
+.left-menu {
+    width: 20%;
+    background: #fff;
+    /* border-right: 1px solid #ddd; */
+    padding-top: 20px;
+    position: relative;
+}
+
+/* Right Menu */
+.right-menu {
+    width: 20%;
+    background: #fff;
+    /* border-left: 1px solid #ddd; */
+    padding-top: 20px;
+}
+
+
+.left-menu .menu-toggle {
+    display: none;
+    /* Ẩn nút toggle trên màn hình lớn */
+    position: absolute;
+    top: -15px;
+    left: 5px;
+    background: var(--base-color);
+    color: white;
+    border: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.left-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.left-menu ul li {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.left-menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Style submenu */
+.left-menu .submenu {
+    list-style: none;
+    /* Xóa dấu chấm mặc định của ul */
+    padding-left: 20px;
+    /* Thụt lề để tạo cấp */
+    margin: 5px 0;
+    display: block;
+    /* Ẩn submenu mặc định */
+    cursor: pointer;
+}
+
+/* Icon ngẫu nhiên */
+.left-menu .submenu li {
+    display: flex;
+    align-items: center;
+}
+
+.left-menu .random-icon {
+    margin-right: 8px;
+    /* Khoảng cách giữa icon và text */
+    font-size: 16px;
+}
+
+/* Hover để hiển thị submenu */
+.left-menu>li:hover>.submenu {
+    display: block;
+    /* Hiện submenu khi hover */
+}
+
+/* Thêm hiệu ứng hover */
+.left-menu>li:hover {
+    cursor: pointer;
+    color: var(--base-color);
+    /* Đổi màu chữ khi hover */
+    font-weight: bold;
+}
+
+/* Main Content */
+.main-content {
+    width: 60%;
+    padding: 20px;
+}
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+    margin-bottom: 5px;
+}
+
+.post-card:hover {
+    box-shadow: 0 4px 8px rgba(9, 191, 223, 0.35);
+}
+
+.post-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--base-color);
+}
+
+.post-card h2 a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-card h2 a:hover {
+    text-decoration: none;
+
+}
+
+.post-card p {
+    color: #666;
+    font-size: 1rem;
+}
+
+
+.right-menu .section {
+    margin-bottom: 20px;
+}
+
+.right-menu h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.right-menu ul {
+    list-style: none;
+}
+
+.right-menu ul li {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.right-menu ul li a {
+    text-decoration: none;
+    color: var(--base-color);
+}
+
+.right-menu ul li a:hover {
+    text-decoration: none;
+}
+
+
+/* Tổng quan */
+/* .post-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.2s;
+}
+
+.post-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+} */
+
+/* Tác giả */
+
+.post-author {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.post-author img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-content h2 {
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.post-content h2 a {
+    text-decoration: none;
+    color: inherit;
+
+}
+
+.post-content h2 a:hover {
+    text-decoration: none;
+    transform: scale(1.1);
+    color: var(--base-color);
+}
+
+.post-tags span {
+    font-size: 0.85rem;
+    color: var(--base-color);
+    background: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-right: 5px;
+}
+
+.post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+    border-top: 1px solid #f1f1f1;
+    padding-top: 15px;
+}
+
+
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.author-info h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.author-info p {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Nội dung bài viết */
+.post-content {
+    margin-bottom: 15px;
+}
+
+.post-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.post-title:hover {
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+.post-image {
+    width: 100%;
+    height: 300px;
+    /* Chiều cao cố định */
+    overflow: hidden;
+    /* Ẩn phần hình ảnh vượt quá */
+    position: relative;
+    border-radius: 8px 8px 0 0;
+    /* Bo góc trên */
+}
+
+.post-image {
+    border: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+.post-image img {
+    width: 100%;
+    /* Hình ảnh luôn chiếm toàn bộ chiều rộng */
+    height: 100%;
+    /* Hình ảnh sẽ lấp đầy khung */
+    object-fit: cover;
+    /* Đảm bảo hình ảnh luôn căn giữa và giữ tỉ lệ */
+    object-position: center;
+    /* Căn giữa hình ảnh */
+}
+
+.post-tags span {
+    font-size: 0.85rem;
+    color: var(--base-color);
+    background: #f1f1f1;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-right: 5px;
+}
+
+/* Hành động */
+
+
+.reactions span,
+.add-comment span,
+.read-time span,
+.bookmark span {
+    margin-left: 5px;
+}
+
+.bookmark span {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.bookmark span:hover {
+    color: var(--base-color);
+}
+
+.left-hidden-ul {
+    display: none;
+}
+
+/* Responsive cho màn hình nhỏ */
+@media screen and (max-width: 768px) {
+    .left-hidden-ul {
+        display: block;
+    }
+
+    .mcontainer {
+        flex-wrap: wrap;
+        /* Các phần tử xếp chồng lên nhau */
+        padding: 0px;
+    }
+
+    .btn-add {
+        margin: 10px;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+        /* Các phần tử xếp chồng lên nhau */
+        padding: 10px;
+    }
+
+    /* Left Menu */
+    .left-menu {
+        width: 100%;
+        border-right: none;
+        border-bottom: none;
+        padding: 10px;
+    }
+
+    .left-menu .menu {
+        display: none;
+        /* Ẩn menu ban đầu */
+    }
+
+    .left-menu .menu.active {
+        display: block;
+        /* Hiển thị menu khi toggle */
+    }
+
+    .left-menu .menu-toggle {
+        display: block;
+        /* Hiển thị nút toggle */
+
+    }
+
+    /* Main Content */
+    .main-content {
+        width: 100%;
+    }
+
+    /* Right Menu */
+    .right-menu {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
+    
+}
+

@@ -1,0 +1,30 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('t_tag_items', function (Blueprint $table) {
+            $table->id();
+            $table->integer('tag_id') ; 
+            $table->integer('item_id'); // Tên tag, không trùng lặp
+            $table->string('item_code'); // Tên tag, không trùng lặp
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('t_tag_items');
+    }
+};
