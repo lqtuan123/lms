@@ -37,7 +37,7 @@ class TTagController extends Controller
             }
             $data['tag_id'] = $tag->id;
             $data['item_id'] = $item_id;
-            $data['item_code'] =$item_code;
+            $data['item_code'] = $item_code;
             TTagItem::create($data);
             $tag->hit += 1;
             $tag->save();

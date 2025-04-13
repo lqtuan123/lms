@@ -1,184 +1,58 @@
-{{-- 
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="{{$setting->short_name}}">
-  <meta content="INDEX,FOLLOW" name="robots" />
-  <meta name="copyright" content="{{$setting->site_url}}" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <meta http-equiv="audience" content="General" />
-  <meta name="resource-type" content="Document" />
-  <meta name="distribution" content="Global" />
-  <meta name="revisit-after" content="1 days" />
-  <meta name="GENERATOR" content="{{$setting->short_name}}" />
-  <meta name="keywords" content= "{{isset($keyword)?$keyword:$setting->keyword}}"/>
-  <meta name="description" content= "{{isset($description)?strip_tags($description):$setting->memory}}"/>
-  
-  <!-- Facebook Meta Tags -->
-  <meta property="og:title" content=' {{isset($page_up_title)?$page_up_title:$setting->web_title}}' />
-  <meta property="og:description" content="{{isset($description)?strip_tags($description):$setting->memory}}" />
-  <meta property="og:image" content="{{isset($ogimage)?$ogimage:$setting->logo}}" />
-  <meta property="og:url" content='{{"https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"}}'>
-  <meta property="og:type" content="website">
-
-  <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="twitter:domain" content="{{$setting->site_url}}">
-  <meta property="twitter:url" content='{{"https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"}}'>
-  <meta name="twitter:title" content=' {{isset($page_up_title)?$page_up_title:$setting->web_title}}' />
-  <meta name="twitter:description" content="{{isset($description)?strip_tags($description):$setting->memory}}" />
-  <meta name="twitter:image" content="{{isset($ogimage)?$ogimage:$setting->logo}}" />
-      
-  <link href="{{$setting->icon}}" rel="shortcut icon">
-  <link rel="shortcut icon" href="{{$setting->icon}}" type="image/x-icon" />
-  <title>{{isset($page_up_title)?$page_up_title:""}} {{$setting->web_title}} </title>
-
-  <!-- google fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- fonts -->
-	<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets_tp/fonts/unicons/unicons.css')}}">
-  <link rel="stylesheet" href="{{asset('frontend/assets_tp/css/plugins.css')}}">
-  <link rel="stylesheet" href="{{asset('frontend/assets_tp/style.css')}}">
-  <link rel="stylesheet" href="{{asset('frontend/assets_tp/css/icon.css')}}">
-  <style>
-    .tooltip {
-      background: transparent !important;
-      padding: 0 !important;
-
-      }
-      :root {
-      --primary-color: #343f52;
-      --secondary-color: {{env('THEME_COLOR')}};
-      --background-color: #eff7fa;
-      --text-color: #2d3748;
-      --text-light-color: #acacac;
-    }
-    price{
-      color: var(--secondary-color);
-    }
-    a{
-      color: {{env('THEME_COLOR')?env('THEME_COLOR'):'#3f78e0'}}  ;
-    }
-    a:hover{
-      color: {{env('THEME_COLOR')?env('THEME_COLOR'):'#3f78e0'}} !important ;
-    }
-    .text_light_color{
-      color: var(--text-light-color);
-    }
-    .primarytextcolor{
-      color: var(--primary-color);
-    }
-    .secondarytextcolor{
-      color: {{env('THEME_COLOR')?env('THEME_COLOR'):'#3f78e0'}};
-    }
-    .secondarybackgroundcolor{
-      background-color: {{env('THEME_COLOR')?env('THEME_COLOR'):'#3f78e0'}};
-    }
-    .navbar-expand-lg.navbar-light .dropdown:not(.dropdown-submenu)>.dropdown-toggle:after {
-        --tw-text-opacity: 1;
-        color: {{env('THEME_COLOR')?env('THEME_COLOR'):'rgb(63 120 224 / var(--tw-text-opacity))'}};
-    }
-    .title_color{ color: var(--primary-color)} 
-    .title_color:hover{ 
-      color: var(--secondary-color)
-    }
-    .nav_color:hover{
-      color: var(--secondary-color)
-      
-    }
-    .lead_color{}
-    
-    .leading_title_color::before {
-        content: var(--tw-content);
-        --tw-bg-opacity: 1;
-        background-color: {{env('THEME_COLOR')?env('THEME_COLOR'):'#3f78e0'}};
-    }
-    .stroke {
-        stroke: {{env('THEME_COLOR')?env('THEME_COLOR'):'#54a8c7'}};
-    }
-    a .btn, a .btn:hover, a .btn:disabled, a .btn:active{
-      border-color: var(--secondary-color);
-    }
-    @if (env('SHOW_CART') == 0)
-        @if (auth()->user() && auth()->user()->full_name != 'demo1')
-            .cart-box{
-                display:none !important;
-            }
-            .item-cart,   #btn_add_to_cart{
-                display:none !important;
-            }
-        @endif
-        @if (!auth()->user())
-            .cart-box{
-                display:none !important;
-            }
-            .item-cart,   #btn_add_to_cart{
-                display:none !important;
-            }
-        @endif
-    @endif
-  </style>
- 
-  --}}
-
-
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="{{ $detail->short_name }}">
-<meta content="INDEX,FOLLOW" name="robots" />
-<meta name="copyright" content="{{ $detail->site_url }}" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<meta http-equiv="audience" content="General" />
-<meta name="resource-type" content="Document" />
-<meta name="distribution" content="Global" />
-<meta name="revisit-after" content="1 days" />
-<meta name="GENERATOR" content="{{ $detail->short_name }}" />
-<meta name="keywords" content= "{{ isset($keyword) ? $keyword : $detail->keyword }}" />
-<meta name="description" content= "{{ isset($description) ? strip_tags($description) : $detail->memory }}" />
+<meta name="author" content="{{ $detail->short_name ?? 'Default Author' }}">
+<meta name="robots" content="INDEX,FOLLOW">
+<meta name="copyright" content="{{ $detail->site_url ?? url('/') }}">
+<meta name="revisit-after" content="1 days">
+<meta name="keywords" content="{{ $keyword ?? ($detail->keyword ?? '') }}">
+<meta name="description" content="{{ strip_tags($description ?? ($detail->memory ?? '')) }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Facebook Meta Tags -->
-<meta property="og:title" content=' {{ isset($page_up_title) ? $page_up_title : $detail->web_title }}' />
-<meta property="og:description" content="{{ isset($description) ? strip_tags($description) : $detail->memory }}" />
-<meta property="og:image" content="{{ isset($ogimage) ? $ogimage : $detail->logo }}" />
-<meta property="og:url" content='{{ "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" }}'>
+
+<!-- Open Graph (Facebook) -->
+<meta property="og:title" content="{{ $page_up_title ?? $detail->web_title }}">
+<meta property="og:description" content="{{ strip_tags($description ?? ($detail->memory ?? '')) }}">
+<meta property="og:image" content="{{ $ogimage ?? $detail->logo }}">
+<meta property="og:url" content="{{ url()->current() }}">
 <meta property="og:type" content="website">
 
 <!-- Twitter Meta Tags -->
 <meta name="twitter:card" content="summary_large_image">
-<meta property="twitter:domain" content="{{ $detail->site_url }}">
-<meta property="twitter:url" content='{{ "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" }}'>
-<meta name="twitter:title" content=' {{ isset($page_up_title) ? $page_up_title : $detail->web_title }}' />
-<meta name="twitter:description" content="{{ isset($description) ? strip_tags($description) : $detail->memory }}" />
-<meta name="twitter:image" content="{{ isset($ogimage) ? $ogimage : $detail->logo }}" />
+<meta property="twitter:domain" content="{{ $detail->site_url ?? url('/') }}">
+<meta property="twitter:url" content="{{ url()->current() }}">
+<meta name="twitter:title" content="{{ $page_up_title ?? $detail->web_title }}">
+<meta name="twitter:description" content="{{ strip_tags($description ?? ($detail->memory ?? '')) }}">
+<meta name="twitter:image" content="{{ $ogimage ?? $detail->logo }}">
 
-<link href="{{ $detail->icon }}" rel="shortcut icon">
-<link rel="shortcut icon" href="{{ $detail->icon }}" type="image/x-icon" />
-<title>{{ isset($page_up_title) ? $page_up_title : '' }} {{ $detail->web_title }} </title>
+<!-- Favicon -->
+<link rel="shortcut icon" href="{{ $detail->icon }}" type="image/x-icon">
 
-<!--Google font-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!-- Title -->
+<title>{{ ($page_up_title ?? '') . ' ' . $detail->web_title }}</title>
+
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+<!-- Stylesheets -->
+
+<link rel="stylesheet" href="{{ asset('frontend/assets_f/style.css') }}">
 
 
-
-<!-- Icons -->
-<link rel="stylesheet" type="text/css" href="{{ asset('frontend/dist/app.css') }}">
-<style>
-    html {
-        overflow-y: scroll;
-    }
-
-    body {
-        overflow-y: overlay;
-    }
-</style>
 
 @yield('css')
 @yield('scriptop')
+
+

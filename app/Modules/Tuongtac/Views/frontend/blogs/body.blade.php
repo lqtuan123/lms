@@ -58,6 +58,25 @@
 @endsection
 @section('content')
     {{-- @include('frontend.layouts.page_title') --}}
+    <section class="hero-section position-relative padding-large"
+        style="background-image: url('{{ asset('frontend/assets_f/images/banner-image-bg-1.jpg') }}');
+    background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
+        <div class="hero-content">
+            <div class="container">
+                <div class="row">
+                    <div class="text-center">
+                        <h1>Book</h1>
+                        <div class="breadcrumbs">
+                            <span class="item">
+                                <a href="{{ route('home') }}">Home > </a>
+                            </span>
+                            <span class="item text-decoration-underline">Blogs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section style="padding-top:0px">
         <div class="mcontainer dev">

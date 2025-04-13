@@ -16,12 +16,9 @@ class TVoteItem extends Model
         'count',
         'point',
         'votes',
-         
+
     ];
     protected $casts = [
         'votes' => 'array', // Chuyển đổi thành mảng tự động
     ];
-    
 }
- 
- 

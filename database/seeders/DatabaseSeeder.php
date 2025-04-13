@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
 
         DB::table('setting_details')->insert([
             [   
-                'company_name'=>"Tên công ty",
-                'web_title'=>"Tên công ty",
-                'phone'=>'0500363732',
+                'company_name'=>"Bookly-LMS",
+                'web_title'=>"Bookly-LMS",
+                'phone'=>'0384339011',
                 'address'=>'Ywang Buôn Ma Thuột, Đăk Lăk',
             ],
         ]);
@@ -102,15 +102,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            
-            
-            HinhThucThiSeeder::class,
+        
             ResourceSeeder::class,
-            DonviSeeder::class,
-            ChuyennganhSeeder::class,
-            NganhSeeder::class,
-            EventTypeSeeder::class,
             TMotionSeeder::class,
+
         ]);
 
     

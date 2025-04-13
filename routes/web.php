@@ -1,143 +1,189 @@
 <?php
 
-use App\Http\Controllers\frontend\LoginController;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// Route::get('/admin', function () {
-//     //xuly 
-//     return view('backend.index');
-// });
-Route::get('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'viewlogin'])->name('admin.login');
-Route::post('/admin/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('admin.checklogin');
-
-Route::group(['prefix' => 'admin/', 'middleware' => 'admin.auth', 'as' => 'admin.'], function () {
-    Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('home');
-    Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
-
-    Route::get('/dasboard', [App\Http\Controllers\AdminController::class, 'index'])->name('dasboard');
-
-    //User section
-    Route::resource('user', \App\Http\Controllers\UserController::class);
-    Route::post('user_status', [\App\Http\Controllers\UserController::class, 'userStatus'])->name('user.status');
-    Route::get('user_search', [\App\Http\Controllers\UserController::class, 'userSearch'])->name('user.search');
-    Route::get('user_sort', [\App\Http\Controllers\UserController::class, 'userSort'])->name('user.sort');
-    Route::post('user_detail', [\App\Http\Controllers\UserController::class, 'userDetail'])->name('user.detail');
-    Route::post('user_profile', [\App\Http\Controllers\UserController::class, 'userUpdateProfile'])->name('user.profileupdate');
-    Route::get('user_profile', [\App\Http\Controllers\UserController::class, 'userViewProfile'])->name('user.profileview');
-    ///UGroup section
-    Route::resource('ugroup', \App\Http\Controllers\UGroupController::class);
-    Route::post('ugroup_status', [\App\Http\Controllers\UGroupController::class, 'ugroupStatus'])->name('ugroup.status');
-    Route::get('ugroup_search', [\App\Http\Controllers\UGroupController::class, 'ugroupSearch'])->name('ugroup.search');
-
-    ///Role section
-    Route::resource('role', \App\Http\Controllers\RoleController::class);
-    Route::post('role_status', [\App\Http\Controllers\RoleController::class, 'roleStatus'])->name('role.status');
-    Route::get('role_search', [\App\Http\Controllers\RoleController::class, 'roleSearch'])->name('role.search');
-    Route::get('role_function\{id}', [\App\Http\Controllers\RoleController::class, 'roleFunction'])->name('role.function');
-    Route::get('role_selectall\{id}', [\App\Http\Controllers\RoleController::class, 'roleSelectall'])->name('role.selectall');
-
-    Route::post('functionstatus', [\App\Http\Controllers\RoleController::class, 'roleFucntionStatus'])->name('role.functionstatus');
-
-    ///cfunction section
-    Route::resource('cmdfunction', \App\Http\Controllers\CFunctionController::class);
-    Route::post('cmdfunction_status', [\App\Http\Controllers\CFunctionController::class, 'cmdfunctionStatus'])->name('cmdfunction.status');
-    Route::get('cmdfunction_search', [\App\Http\Controllers\CFunctionController::class, 'cmdfunctionSearch'])->name('cmdfunction.search');
-
-    /// Setting  section
-    Route::resource('setting', \App\Http\Controllers\SettingController::class);
-
-    /////file upload/////////
-
-    Route::post('avatar-upload', [\App\Http\Controllers\FilesController::class, 'avartarUpload'])->name('upload.avatar');
-
-    Route::post('product-upload', [\App\Http\Controllers\FilesController::class, 'productUpload'])->name('upload.product');
-    Route::post('upload-ckeditor', [\App\Http\Controllers\FilesController::class, 'ckeditorUpload'])->name('upload.ckeditor');
-
-    Route::get('user_jsearch', [\App\Http\Controllers\UserController::class, 'userJsearch'])->name('user.jsearch');
-});
-
-// use App\Modules\Blog\Controllers\BlogController;
-// use App\Modules\Blog\Controllers\BlogCategoryController;
-// Route::group( ['prefix'=>'admin/'  , 'as' => 'admin.' ],function(){
-
-//      ///BlogCategory section
-//      Route::resource('blogcategory',  BlogCategoryController::class);
-//      Route::post('blogcategory_status',[ BlogCategoryController::class,'blogcatStatus'])->name('blogcategory.status');
-//      Route::get('blogcategory_search',[ BlogCategoryController::class,'blogcatSearch'])->name('blogcategory.search');
-//      ///Blog section
-//      Route::resource('blog', BlogController::class);
-//      Route::post('blog_status',[ BlogController::class,'blogStatus'])->name('blog.status');
-//      Route::get('blog_search',[ BlogController::class,'blogSearch'])->name('blog.search');
-
-
-// });
-
-Route::get('/', [App\Http\Controllers\Frontend\IndexController::class, 'home'])->name('home');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-Route::get('front/login', [App\Http\Controllers\Frontend\IndexController::class, 'viewLogin'])->name('front.login');
-Route::post('front/login', [App\Http\Controllers\Frontend\IndexController::class, 'login'])->name('front.login.submit');
-Route::get('front/register', [App\Http\Controllers\Frontend\IndexController::class, 'viewRegister'])->name('front.register');
-Route::post('front/register', [App\Http\Controllers\Frontend\IndexController::class, 'saveUser'])->name('front.register.submit');
-
-// Hiển thị hồ sơ người dùng (Dashboard)
-Route::get('front/profile', [App\Http\Controllers\Frontend\ProfileController::class, 'viewDashboard'])->name('front.profile');
-Route::post('front/profile/changepassword', [App\Http\Controllers\Frontend\ProfileController::class, 'changePassword'])->name('front.profile.changepass');
-Route::get('front/profile/edit', [App\Http\Controllers\Frontend\ProfileController::class, 'createEdit'])->name('front.profile.edit');
-Route::post('front/profile/updatetax', [App\Http\Controllers\Frontend\ProfileController::class, 'updateTax'])->name('front.profile.updatetax');
-Route::post('front/profile/updatedescription', [App\Http\Controllers\Frontend\ProfileController::class, 'updateDescription'])->name('front.profile.updatedescription');
-Route::post('front/profile/updatename', [App\Http\Controllers\Frontend\ProfileController::class, 'updateName'])->name('front.profile.updatename');
-Route::post('front/profile/update', [App\Http\Controllers\Frontend\ProfileController::class, 'updateProfile'])->name('front.profile.update');
-Route::post('avatar-upload', [App\Http\Controllers\Frontend\FilesController::class, 'avartarUpload'])->name('front.upload.avatar');
-
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UGroupController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\CFunctionController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\FilesController;
+use App\Http\Controllers\Frontend\IndexController;
+use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\BookFrontendController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Frontend\FilesFrontendController;
+use App\Http\Controllers\Frontend\GroupFrontendController;
+use Illuminate\Http\Request;
 
-Route::prefix('front')->group(function () {
-    Route::get('/book', [BookFrontendController::class, 'index'])->name('front.book.index');
-    Route::get('/book/{id}', [BookFrontendController::class, 'show'])->name('front.book.show');
+use App\Models\Comment;
+use App\Modules\Book\Models\Book;
+use App\Modules\Tuongtac\Controllers\TRecommendController;
+
+// Authentication Routes
+Route::get('/admin/login', [LoginController::class, 'viewlogin'])->name('admin.login');
+Route::post('/admin/login', [LoginController::class, 'login'])->name('admin.checklogin');
+Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+
+// Admin Routes
+Route::group(['prefix' => 'admin', 'middleware' => 'admin.auth', 'as' => 'admin.'], function () {
+    Route::get('/', [AdminController::class, 'index'])->name('home');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+
+    // User Management
+    Route::resource('user', UserController::class);
+    Route::post('user/status', [UserController::class, 'userStatus'])->name('user.status');
+    Route::get('user/search', [UserController::class, 'userSearch'])->name('user.search');
+    Route::get('user/sort', [UserController::class, 'userSort'])->name('user.sort');
+    Route::post('user/detail', [UserController::class, 'userDetail'])->name('user.detail');
+    Route::post('user/profile', [UserController::class, 'userUpdateProfile'])->name('user.profile.update');
+    Route::get('user/profile', [UserController::class, 'userViewProfile'])->name('user.profile.view');
+    Route::get('user/jsearch', [UserController::class, 'userJsearch'])->name('user.jsearch');
+
+    // Group Management
+    Route::resource('ugroup', UGroupController::class);
+    Route::post('ugroup/status', [UGroupController::class, 'ugroupStatus'])->name('ugroup.status');
+    Route::get('ugroup/search', [UGroupController::class, 'ugroupSearch'])->name('ugroup.search');
+
+    // Role Management
+    Route::resource('role', RoleController::class);
+    Route::post('role/status', [RoleController::class, 'roleStatus'])->name('role.status');
+    Route::get('role/search', [RoleController::class, 'roleSearch'])->name('role.search');
+    Route::get('role/function/{id}', [RoleController::class, 'roleFunction'])->name('role.function');
+    Route::get('role/selectall/{id}', [RoleController::class, 'roleSelectall'])->name('role.selectall');
+    Route::post('role/functionstatus', [RoleController::class, 'roleFucntionStatus'])->name('role.functionstatus');
+
+    // Function Management
+    Route::resource('cmdfunction', CFunctionController::class);
+    Route::post('cmdfunction/status', [CFunctionController::class, 'cmdfunctionStatus'])->name('cmdfunction.status');
+    Route::get('cmdfunction/search', [CFunctionController::class, 'cmdfunctionSearch'])->name('cmdfunction.search');
+
+    // Settings
+    Route::resource('setting', SettingController::class);
+
+    // File Uploads
+    Route::post('avatar-upload', [FilesController::class, 'avartarUpload'])->name('upload.avatar');
+    Route::post('product-upload', [FilesController::class, 'productUpload'])->name('upload.product');
+    Route::post('upload-ckeditor', [FilesController::class, 'ckeditorUpload'])->name('upload.ckeditor');
 });
 
-Route::post('upload-ckeditor', [\App\Http\Controllers\Frontend\FilesController::class, 'ckeditorUpload'])->name('upload.ckeditor');
+// Frontend Routes
+Route::get('/', [IndexController::class, 'home'])->name('home');
+Route::get('front/login', [IndexController::class, 'viewLogin'])->name('front.login');
+Route::post('front/login', [IndexController::class, 'login'])->name('front.login.submit');
+Route::get('front/register', [IndexController::class, 'viewRegister'])->name('front.register');
+Route::post('front/register', [IndexController::class, 'saveUser'])->name('front.register.submit');
+Route::post('/front/logout', [App\Http\Controllers\Frontend\LoginController::class, 'logout'])->name('logout');
+Route::post('upload-ckeditor', [\App\Http\Controllers\Frontend\FilesFrontendController::class, 'ckeditorUpload'])->name('upload.ckeditor');
 
-use Illuminate\Http\Request;
-use App\Models\Book;
-use App\Models\Comment;
+// Public file upload routes
+Route::post('/public/avatar-upload', [\App\Http\Controllers\Frontend\FilesFrontendController::class, 'avatarUpload'])->name('public.upload.avatar');
 
+// User Profile
+Route::prefix('front/profile')->group(function () {
+    Route::get('/', [ProfileController::class, 'viewDashboard'])->name('front.profile');
+    Route::post('/changepassword', [ProfileController::class, 'changePassword'])->name('front.profile.changepass');
+    Route::get('/edit', [ProfileController::class, 'createEdit'])->name('front.profile.edit');
+    Route::post('/updatedescription', [ProfileController::class, 'updateDescription'])->name('front.profile.updatedescription');
+    Route::post('/updatename', [ProfileController::class, 'updateName'])->name('front.profile.updatename');
+    Route::post('/update', [ProfileController::class, 'updateProfile'])->name('front.profile.update');
+    Route::post('/avatar-upload', [FilesFrontendController::class, 'avatarUpload'])->name('front.upload.avatar');
+});
+
+// Book Management
+Route::prefix('front/book')->group(function () {
+    Route::get('/', [BookFrontendController::class, 'index'])->name('front.book.index');
+    Route::get('/create', [BookFrontendController::class, 'create'])->name('front.book.create');
+    Route::get('/recentBook', [BookFrontendController::class, 'showRecentBooks'])->name('front.book.recentBook');
+    Route::post('/store', [BookFrontendController::class, 'store'])->name('front.book.store');
+    Route::get('/{id}', [BookFrontendController::class, 'show'])->name('front.book.show');
+    Route::get('/type/{slug}', [BookFrontendController::class, 'booksByType'])->name('front.book.byType');
+    Route::post('/bookmark', [BookFrontendController::class, 'bookMark'])->name('front.book.bookmark');
+    Route::post('/vote', [BookFrontendController::class, 'vote'])->name('front.book.vote');
+});
+
+// Mark book as read
 Route::post('/books/mark-as-read', function (Request $request) {
     $bookId = $request->input('book_id');
-    $book = \DB::find($bookId);
-
+    $book = Book::find($bookId);
     if ($book) {
-        // Lấy danh sách sách đã đọc từ session
         $recentlyReadBooks = session('recently_read_books', collect());
-
-        // Kiểm tra nếu sách chưa có trong danh sách thì thêm vào
         if (!$recentlyReadBooks->contains('id', $book->id)) {
             $recentlyReadBooks->prepend($book);
-            $recentlyReadBooks = $recentlyReadBooks->take(10); // Giữ tối đa 10 sách gần đây
-            session(['recently_read_books' => $recentlyReadBooks]);
+            session(['recently_read_books' => $recentlyReadBooks->take(10)]);
         }
     }
-
     return response()->json(['success' => true]);
 })->name('front.book.markAsRead');
-
-
-use App\Http\Controllers\CommentController;
-use App\Modules\Book\Controllers\BookController;
-
-Route::post('/comments/store', [CommentController::class, 'store'])->name('comments.store');
-Route::get('/book-type/{slug}', [BookFrontendController::class, 'booksByType'])->name('front.book.byType');
-
-
 
 Route::get('/books/a-search', [BookFrontendController::class, 'advancedSearch'])
     ->name('frontend.book.search');
 Route::get('/books/advanced-search', [BookFrontendController::class, 'advancedSearch'])
     ->name('frontend.book.advanced-search');
-
 Route::get('/books/search', [BookFrontendController::class, 'Search'])
     ->name('front.book.search');
+
+// Comments
+Route::post('/comments/store', [CommentController::class, 'store'])->name('comments.store');
+
+// Group routes (Nhóm)
+Route::prefix('group')->name('group.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'create'])->name('create');
+    Route::post('/', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'store'])->name('store');
+    Route::get('/{id}', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'update'])->name('update');
+    Route::delete('/{id}', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'destroy'])->name('destroy');
+    
+    // Group membership routes
+    Route::post('/{id}/join', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'join'])->name('join');
+    Route::post('/{id}/request-join', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'requestJoinGroup'])->name('request-join');
+    Route::post('/{id}/leave', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'leaveGroup'])->name('leave');
+    Route::post('/{id}/approve-member', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'approveMember'])->name('approve-member');
+    Route::post('/{id}/remove-member', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'removeMember'])->name('remove-member');
+    Route::post('/{id}/promote-moderator', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'promoteModerator'])->name('promote-moderator');
+    Route::post('/{id}/demote-moderator', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'demoteModerator'])->name('demote-moderator');
+    Route::post('/{id}/reject-member', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'rejectMember'])->name('reject-member');
+    
+    // Group post routes
+    Route::post('/vote', [App\Http\Controllers\Frontend\GroupFrontendController::class, 'vote'])->name('vote');
+});
+
+use App\Http\Controllers\Frontend\UserBookController;
+
+Route::prefix('user/books')->middleware(['auth'])->group(function () {
+    Route::get('/', [UserBookController::class, 'index'])->name('user.books.index');
+    Route::get('{id}/edit', [UserBookController::class, 'edit'])->name('user.books.edit');
+    Route::put('{id}', [UserBookController::class, 'update'])->name('user.books.update');
+    Route::delete('{id}', [UserBookController::class, 'destroy'])->name('user.books.destroy');
+    Route::post('{id}/status', [UserBookController::class, 'toggleStatus'])->name('user.books.status');
+    Route::delete('/resource/{resourceId}', [UserBookController::class, 'deleteResource'])
+        ->name('user.books.resource.destroy');
+});
+
+Route::get('/books/filter', [BookFrontendController::class, 'booksByMultiTypes'])->name('front.book.filter');
+
+// Contact Routes
+Route::get('/contact', function () {
+    return view('frontend.contact');
+})->name('contact');
+
+Route::post('/contact', function (Illuminate\Http\Request $request) {
+    // Validate the request
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'subject' => 'required|string|max:255',
+        'message' => 'required|string',
+        'phone' => 'nullable|string|max:20',
+    ]);
+    
+    // Here you can add logic to save the contact to database
+    // or send email to administrators
+    
+    // For now, just redirect back with success message
+    return back()->with('success', 'Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.');
+})->name('contact.submit');
+

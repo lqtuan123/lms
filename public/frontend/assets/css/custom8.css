@@ -318,12 +318,12 @@
 }
 
 /* vinh danh thanh vien */
-.container {
+ .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
-
+/*
 .title {
     text-align: center;
     margin-bottom: 30px;
@@ -341,7 +341,7 @@
     font-size: 24px;
     color: #555;
     margin-bottom: 15px;
-}
+} */
 
 /* Grid layout */
 .grid-container {
@@ -662,8 +662,8 @@ p {
 .motion-full {
     display: none;
     position: absolute;
-    bottom: -20px;
-    left: 0;
+    bottom: 30px;
+    left: 5px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -673,15 +673,15 @@ p {
     z-index: 1000;
 }
 
-/* Hiển thị đầy đủ motion khi hover
-    /* .motion-container:hover .motion-full {
+/* Hiển thị đầy đủ motion khi hover*/
+    .motion-container:hover .motion-full {
         display: block;
-    } */
+    }
 
 /* Ẩn motion ngắn khi hover */
-/* .motion-container:hover .motion-short {
+.motion-container:hover .motion-short {
         display: none;
-    } */
+    }
 
 .btn-reaction.active {
     transform: scale(1.2);
@@ -748,6 +748,7 @@ p {
 }
 
 .deletebtn {
+    margin-top: 3px;
     border: none;
     background: white;
 }
@@ -879,10 +880,10 @@ button.btn-danger {
 }
 
 .search-input {
-    padding: 4px 4px;
+    padding: 7px 7px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 300px;
+    width: 440px;
 }
 
 .btn-search {
@@ -1099,6 +1100,14 @@ button.btn-danger {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    margin-top: 30px;
+}
+
+.author-info h3{
+    font-weight: bold;
+}
+.author-info p {
+    margin-top: 10px; /* Tạo khoảng cách 10px giữa h3 và p */
 }
 
 .post-author img {
@@ -1110,14 +1119,14 @@ button.btn-danger {
 
 .post-content h2 {
     font-size: 1.5rem;
-    margin: 0 0 10px 0;
+    margin: 40px 0 25px 0;
     color: #333;
 }
 
 .post-content h2 a {
     text-decoration: none;
     color: inherit;
-
+        
 }
 
 .post-content h2 a:hover {
@@ -1195,6 +1204,9 @@ button.btn-danger {
 .post-image {
     border: 1px solid #ddd;
     border-radius: 8px 8px 0 0;
+    /* margin: 10px 200px 20px 10px; */
+    margin-right: 20px;
+    margin-bottom: 10px;
 }
 
 .post-image img {

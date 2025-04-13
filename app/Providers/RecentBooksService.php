@@ -7,18 +7,20 @@ use App\Modules\Book\Models\Book;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 
 class RecentBooksService
 {
     const COOKIE_NAME = 'recent_books';
-    const MAX_BOOKS = 5;
+    const MAX_BOOKS = 20;
     const COOKIE_DURATION = 43200; // 30 ngày
 
     public function addBook($bookId)
     {
         try {
-            if (auth()->check()) {
-                $this->addBookForUser(auth()->id(), $bookId);
+            if (Auth::check()) {
+                $this->addBookForUser(Auth::id(), $bookId);
             } else {
                 $this->addBookToCookie($bookId);
             }
@@ -48,11 +50,29 @@ class RecentBooksService
         }
     }
 
+    public function getAllRecentBooks($perPage = 20)
+    {
+        $books = Auth::check()
+            ? $this->getUserRecentBooks(Auth::id())
+            : $this->getCookieRecentBooks();
+
+        $page = request()->get('page', 1);
+        $paginated = new LengthAwarePaginator(
+            $books->forPage($page, $perPage)->values(),
+            $books->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return $paginated;
+    }
+
     public function getRecentBooks()
     {
         try {
-            if (auth()->check()) {
-                $books = $this->getUserRecentBooks(auth()->id());
+            if (Auth::check()) {
+                $books = $this->getUserRecentBooks(Auth::id());
             } else {
                 $books = $this->getCookieRecentBooks();
             }
@@ -73,6 +93,8 @@ class RecentBooksService
                 ->pluck('book_id');
 
             return Book::whereIn('id', $recentBookIds)
+                ->where('status', 'active')
+                ->where('block', 'no')
                 ->get()
                 ->sortBy(function ($book) use ($recentBookIds) {
                     return array_search($book->id, $recentBookIds->toArray());
@@ -107,6 +129,8 @@ class RecentBooksService
             }
 
             return Book::whereIn('id', $bookIds)
+                ->where('status', 'active')
+                ->where('block', 'no')
                 ->get()
                 ->sortBy(function ($book) use ($bookIds) {
                     return array_search($book->id, $bookIds);
@@ -137,8 +161,8 @@ class RecentBooksService
     public function clearRecentBooks()
     {
         try {
-            if (auth()->check()) {
-                $this->clearUserRecentBooks(auth()->id());
+            if (Auth::check()) {
+                $this->clearUserRecentBooks(Auth::id());
             } else {
                 $this->clearCookieRecentBooks();
             }
@@ -153,8 +177,8 @@ class RecentBooksService
     public function removeBook($bookId)
     {
         try {
-            if (auth()->check()) {
-                $this->removeUserBook(auth()->id(), $bookId);
+            if (Auth::check()) {
+                $this->removeUserBook(Auth::id(), $bookId);
             } else {
                 $this->removeBookFromCookie($bookId);
             }

@@ -3,14 +3,14 @@
 namespace App\Modules\Group\Controllers;
 
 use App\Http\Controllers\Controller;
- 
- 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Http\File;
-use  App\Modules\Group\Models\Group;
-use  App\Modules\Group\Models\GroupType;
+use App\Modules\Group\Models\Group;
+use App\Modules\Group\Models\GroupType;
+use Illuminate\Support\Facades\Auth;
+
 class FrontGroupController extends Controller
 {
     protected $pagesize;
@@ -23,7 +23,7 @@ class FrontGroupController extends Controller
     {
         $data['detail'] = \App\Models\SettingDetail::find(1);  
         $data['categories'] = \App\Models\Category::where('status','active')->where('parent_id',null)->get();
-        $user  = auth()->user();
+        $user = Auth::user();
          ////
          $data['pagetitle']="Danh sách nhóm ITCCTV "  ;
          

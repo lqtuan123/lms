@@ -12,6 +12,9 @@ use App\Models\Agency;
 class HelperController extends Controller
 {
     protected $s3;
+    protected $title;
+    protected $domain;
+    protected $image_name;
     public function __construct( )
     {
         $this->s3 = "itcctv.s3.";
@@ -61,7 +64,7 @@ class HelperController extends Controller
             else
             {
                 
-                $fileController = new \App\Http\Controllers\Frontend\FilesController();
+                $fileController = new \App\Http\Controllers\Frontend\FilesFrontendController();
                 try{
                     
                     $uploadedImagePath = $fileController->blogimageUpload($url);

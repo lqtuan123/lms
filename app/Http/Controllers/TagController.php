@@ -127,28 +127,54 @@ class TagController extends Controller
     {
         if(!$tag_ids || count($tag_ids) == 0)
             return;
+        
+        // Lấy danh sách tag_ids hiện tại của book để tránh trùng lặp
+        $existingTagIds = DB::table('tag_books')
+            ->where('book_id', $book_id)
+            ->pluck('tag_id')
+            ->toArray();
+        
         foreach($tag_ids as $tag_id)
         {
-            $tag = Tag::find($tag_id);
+            // Kiểm tra nếu là số (ID) hoặc chuỗi (title)
+            if (is_numeric($tag_id)) {
+                $tag = Tag::find($tag_id);
+            } else {
+                // Nếu là chuỗi, tìm theo title
+                $tag = Tag::where('title', $tag_id)->first();
+            }
+            
             if(!$tag)
             {
+                // Tạo tag mới
                 $datatag['title'] = $tag_id;
-                $slug = Str::slug( $datatag['title'] );
-                $slug_count = Tag::where('slug',$slug)->count();
-                if($slug_count > 0)
-                {
-                    $slug .= time().'-'.$slug;
+                $slug = Str::slug($datatag['title']);
+                
+                // Tạo slug unique
+                $originalSlug = $slug;
+                $counter = 1;
+                while (Tag::where('slug', $slug)->exists()) {
+                    $slug = $originalSlug . '-' . $counter;
+                    $counter++;
                 }
+                
                 $datatag['slug'] = $slug;
+                $datatag['status'] = 'active';
+                $datatag['hit'] = 1;
                 
                 $tag = Tag::create($datatag);
-                sleep(1);
             }
-            $data['tag_id'] = $tag->id;
-            $data['book_id'] = $book_id;
-            \App\Modules\Book\Models\TagBook::create($data);
-            $tag->hit += 1;
-            $tag->save();
+            
+            // Kiểm tra nếu tag đã tồn tại cho book này
+            if (!in_array($tag->id, $existingTagIds)) {
+                $data['tag_id'] = $tag->id;
+                $data['book_id'] = $book_id;
+                \App\Modules\Book\Models\TagBook::create($data);
+                
+                // Tăng hit
+                $tag->hit += 1;
+                $tag->save();
+            }
         }
     }
     public function update_book_tag($book_id,$tag_ids)

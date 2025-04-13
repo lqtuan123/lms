@@ -12,7 +12,7 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'slug', 'photo', 'summary', 'content', 'tags', 'resources', 'status', 'user_id', 'book_type_id','views'];
+    protected $fillable = ['title', 'slug', 'photo', 'summary', 'content', 'resources', 'status', 'user_id', 'book_type_id', 'views','block'];
 
     protected $casts = [
         'tags' => 'array',
@@ -38,12 +38,18 @@ class Book extends Model
     public static function getRecommended($limit = 6)
     {
         return self::orderBy('views', 'desc')
-                   ->inRandomOrder()
-                   ->limit($limit)
-                   ->get();
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
     }
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'tag_books');
+        return $this->belongsToMany(Tag::class, 'tag_books', 'book_id', 'tag_id');
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(\App\Modules\Tuongtac\Models\TRecommend::class, 'item_id', 'id')
+            ->where('item_code', 'book');
     }
 }

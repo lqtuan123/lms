@@ -118,32 +118,54 @@ class GroupController extends Controller
         {
             return redirect()->route('unauthorized');
         }
+        
+        // Tạo slug từ title
         $slug = Str::slug($request->input('title'));
-        $slug_count = Group::where('slug',$slug)->count();
-        if ( $slug_count > 0)
+        
+        // Kiểm tra xem slug đã tồn tại chưa
+        $slug_count = Group::where('slug', $slug)->count();
+        if ($slug_count > 0)
         {
-            return redirect()->back()->withInput()->withErrors(['error' => 'Tên nhóm đã có, cần đổi tên!']);
+            // Thêm một chuỗi duy nhất vào slug nếu đã tồn tại
+            $slug = $slug . '-' . uniqid();
         }
 
-        $validatedData['slug'] =$slug;
+        // Gán slug vào dữ liệu đã xác thực
+        $validatedData['slug'] = $slug;
+        
+        // Mặc định is_private = 0 nếu không được chọn
         if(!isset($validatedData['is_private']))
             $validatedData['is_private'] = 0;
 
+        // Sử dụng ảnh mặc định nếu không có ảnh
         if($request->photo == null)
             $validatedData['photo'] = asset('backend/assets/dist/images/profile-6.jpg');
         
+        // Gán ID của người tạo group
         $validatedData['author_id'] = auth()->user()->id;
-    // Save data to the database
+        
+        // Khởi tạo các trường JSON nếu cần
+        $validatedData['members'] = json_encode([]);
+        $validatedData['pending_members'] = json_encode([]);
+        
+        // Đảm bảo description không null
+        if(!isset($validatedData['description']))
+            $validatedData['description'] = '';
+        
+        // Save data to the database
         try {
             // Lưu dữ liệu vào database
             Group::create($validatedData);
 
             // Redirect với thông báo thành công
-            return redirect()->route('admin.group.index')->with('success', 'Nhóm loại đã được tạo thành công!');
+            return redirect()->route('admin.group.index')->with('success', 'Nhóm đã được tạo thành công!');
             
         } catch (\Exception $e) {
-            // Quay lại form với thông báo lỗi nếu có lỗi
-            return redirect()->back()->withErrors(['error' => 'Có lỗi xảy ra khi lưu dữ liệu.']);
+            // Log lỗi để debug
+            \Log::error('Lỗi khi tạo group: ' . $e->getMessage());
+            
+            // Quay lại form với thông báo lỗi
+            return redirect()->back()->withInput()->withErrors(['error' => 'Có lỗi xảy ra khi lưu dữ liệu: ' . $e->getMessage()]);
         }
     }
     public function edit(string $id)

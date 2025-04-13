@@ -34,17 +34,31 @@ class TuongtacController extends Controller
 
     public static function getActionBar($item_id, $item_code )
     {
-       
+        
+        if ($userId = auth()->id()){
+            $mark = \DB::select('select count(id) as tong from t_recommends where user_id='.$userId.' and item_id ='.$item_id.' and item_code="'.$item_code.'"');
+            if($mark[0] ->tong == 0){
+                $data['isBookmarked'] = 0;
+            }
+            else{
+                $data['isBookmarked'] = 1;
+            }
+        }else{
+            $data['isBookmarked'] = 0;
+        }
+
+        
         // $comments = Tcomment::where('item_id',$item_id)->where('item_code',$item_code)
         //     ->where('status','active')->where('parent_id',0)->get();
         $data['item_id'] = $item_id;
         $data['item_code'] = $item_code;
         $data['isBookmarked'] = TRecommend::hasBookmarked($item_id,$item_code);
-        $recomments =  \DB::select('select count(id) as tong from t_recommends where item_id ='.$item_id.' and item_code="'.$item_code.'"');
-        if($recomments[0]->tong == 0)
-            $data['isBookmarked'] = 0;
+        $recommends =  \DB::select('select count(id) as tong from t_recommends where item_id ='.$item_id.' and item_code="'.$item_code.'"');
+        
+        if($recommends[0] ->tong == 0)
+            $data['tong'] = null;
         else
-            $data['isBookmarked'] = $recomments[0]->tong;
+            $data['tong'] = $recommends[0]->tong;
 
         $data['reactions'] = TMotion::all();
         $motion = TMotionItem::where('item_id',$item_id)->where('item_code',$item_code)->first();

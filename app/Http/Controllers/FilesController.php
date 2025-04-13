@@ -1,74 +1,74 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Http\File;
+
 class FilesController extends Controller
 {
     //
     public function ckeditorUpload(Request $request)
     {
         $request->validate([
-            'upload' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust the validation rules as needed
+            'upload' => 'required|image|mimes:jpeg,png,jpg,gif|max:204800',
         ]);
-    
-        if ($request->hasFile('upload')) {
 
+        if ($request->hasFile('upload')) {
             $filename_ten = $request->file('upload')->getClientOriginalName();
-            $ext = '.'.$request->file('upload')->getClientOriginalExtension();
-            $filename =  str_replace(  $ext , '',$filename_ten);
-            $filename = $filename . '_' .Str::random(5) .   $ext;
+            $ext = '.' . $request->file('upload')->getClientOriginalExtension();
+            $filename = str_replace($ext, '', $filename_ten);
+            $filename = $filename . '_' . Str::random(5) . $ext;
+
             $awsKey = env('AWS_ACCESS_KEY_ID');
             $awsSecret = env('AWS_SECRET_ACCESS_KEY');
-            if ($awsKey && $awsSecret) {
-                // Store the file on S3
-                $disk = 's3';
-                $folder='ckupload';
-            } else {
-                // Store the file locally
-                $disk = 'local';
-                $folder='public/ckupload';
-            }
-            $file = $request->file('upload');
-            $url  = $file->storeAs(
-                $folder,
-                $filename,
-                $disk
-            );
-            $url = Storage::disk($disk)->url($url);
-            if($disk == 'local')
-            {
-                $url = asset( $url);
-            }
-            return response()->json(['fileName' => $filename_ten, 'uploaded'=> 1, 'url' => $url]);
-        }
-        return response()->json($response);
-    }
 
+            if ($awsKey && $awsSecret) {
+                $disk = 's3';
+                $folder = 'ckupload';
+            } else {
+                $disk = 'local';
+                $folder = 'public/ckupload';
+            }
+
+            $file = $request->file('upload');
+            $url = $file->storeAs($folder, $filename, $disk);
+            $url = Storage::disk($disk)->url($url);
+
+            if ($disk == 'local') {
+                $url = asset($url);
+            }
+
+            return response()->json(['fileName' => $filename_ten, 'uploaded' => 1, 'url' => $url]);
+        }
+
+        // Trả về lỗi nếu không có file được tải lên
+        return response()->json(['uploaded' => 0, 'error' => ['message' => 'No file uploaded']]);
+    }
     public function avartarUpload(Request $request)
     {
         $filename = $request->file('file')->getClientOriginalName();
-        $ext = '.'.$request->file('file')->getClientOriginalExtension();
-       
-        $filename =  str_replace(  $ext , '',$filename);
+        $ext = '.' . $request->file('file')->getClientOriginalExtension();
+
+        $filename =  str_replace($ext, '', $filename);
         // echo $filename;
-        $link = $request->hasFile('file') ? $this->store($request->file('file'), 'avatar',$filename) : null;
-       
-        return response()->json(['status'=>'true','link'=>$link]);
+        $link = $request->hasFile('file') ? $this->store($request->file('file'), 'avatar', $filename) : null;
+
+        return response()->json(['status' => 'true', 'link' => $link]);
     }
     public function productUpload(Request $request)
     {
-        
+
         $filename = $request->file('file')->getClientOriginalName();
-        $ext = '.'.$request->file('file')->getClientOriginalExtension();
-        $filename =  str_replace(  $ext , '',$filename);
-       
+        $ext = '.' . $request->file('file')->getClientOriginalExtension();
+        $filename =  str_replace($ext, '', $filename);
+
         $link = $request->hasFile('file') ? $this->store($request->file('file'), 'products', $filename) : null;
-        
-        return response()->json(['status'=>'true','link'=>$link]);
+
+        return response()->json(['status' => 'true', 'link' => $link]);
     }
     public function blogimageUpload($url)
     {
@@ -95,19 +95,18 @@ class FilesController extends Controller
         if ($awsKey && $awsSecret) {
             // Store the file on S3
             $disk = 's3';
-            $folder='blogs';
+            $folder = 'blogs';
         } else {
             // Store the file locally
             $disk = 'local';
-            $folder='public/ckupload';
+            $folder = 'public/ckupload';
         }
-        
+
         // Upload the temporary file to S3
-        $s3Path = Storage::disk( $disk)->putFile($folder, new File($tempImagePath) );
-        $s3Path = Storage::disk( $disk)->url( $s3Path);
-        if($disk == 'local')
-        {
-            $s3Path = asset( $s3Path);
+        $s3Path = Storage::disk($disk)->putFile($folder, new File($tempImagePath));
+        $s3Path = Storage::disk($disk)->url($s3Path);
+        if ($disk == 'local') {
+            $s3Path = asset($s3Path);
         }
         // Delete the temporary file
         unlink($tempImagePath);
@@ -140,12 +139,12 @@ class FilesController extends Controller
     public function FileUpload(Request $request)
     {
         $filename = $request->file('file')->getClientOriginalName();
-        $ext = '.'.$request->file('file')->getClientOriginalExtension();
-        $filename =  str_replace(  $ext , '',$filename);
+        $ext = '.' . $request->file('file')->getClientOriginalExtension();
+        $filename =  str_replace($ext, '', $filename);
 
-        $link = $request->hasFile('file') ? $this->store($request->file('file'), 'Categories',$filename) : null;
-        
-        return response()->json(['success'=>$link]);
+        $link = $request->hasFile('file') ? $this->store($request->file('file'), 'Categories', $filename) : null;
+
+        return response()->json(['success' => $link]);
     }
     public function store(UploadedFile $file, $folder = null, $filename = null)
     {
@@ -157,22 +156,21 @@ class FilesController extends Controller
         } else {
             // Store the file locally
             $disk = 'local';
-            $folder = 'public/'.$folder;
+            $folder = 'public/' . $folder;
         }
-        $name = !is_null($filename) ? $filename.'_'.Str::random(5) : Str::random(25);
+        $name = !is_null($filename) ? $filename . '_' . Str::random(5) : Str::random(25);
         $link =  $file->storeAs(
             $folder,
             $name . "." . $file->getClientOriginalExtension(),
             $disk
         );
-        $link = Storage::disk( $disk)->url($link);
-        if($disk == 'local')
-        {
-            $link = asset( $link);
+        $link = Storage::disk($disk)->url($link);
+        if ($disk == 'local') {
+            $link = asset($link);
         }
-        return $link;
-     
         
+        return $link;
+
     }
-  
+
 }

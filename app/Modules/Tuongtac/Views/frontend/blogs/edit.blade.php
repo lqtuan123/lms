@@ -10,6 +10,69 @@
 
 <!-- Tom Select JS -->
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+<style>
+    .dropzone {
+        border: 2px dashed #0087F7;
+        border-radius: 5px;
+        background: white;
+        min-height: 150px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .dropzone .dz-message {
+        font-weight: 400;
+        font-size: 16px;
+        color: #646c9a;
+    }
+    
+    .dropzone .dz-preview .dz-error-message {
+        font-size: 12px;
+    }
+    
+    .upload-status {
+        display: none;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    
+    .success-msg {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .error-msg {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+    
+    .dlt_btn {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: #ff5252;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+    }
+    
+    .product_photo {
+        position: relative;
+    }
+    
+    .image-preview {
+        display: inline-block;
+        position: relative;
+        margin: 10px;
+    }
+</style>
 @endsection
 @section('inner-content')
 <div class="back-button">
@@ -32,6 +95,7 @@
     <div class="">
         <label>Upload hình ảnh</label>
         <div class="dropzone" id="imageDropzone"></div>
+        <div id="uploadStatus" class="upload-status"></div>
     </div>
     <?php
        $images = json_decode($post->photo, true); // Giải mã JSON thành mảng
@@ -40,11 +104,11 @@
     <div class="flex ">
         @foreach ( $images as $photo)
         @if($photo!='')
-        <div   style="width:50px; height:50px; margin:10px" class="image-fit cursor-pointer zoom-in">
-            <div  class="product_photo">
-                <img class="rounded-md "  style="width:50px; height:50px" src="{{$photo}}">
+        <div class="image-preview">
+            <div class="product_photo">
+                <img class="rounded-md" style="width:50px; height:50px" src="{{$photo}}">
             </div>
-            <div title="Xóa hình này?" data-photo="{{$photo}}"   class="dlt_btn">  x</div>  
+            <div title="Xóa hình này?" data-photo="{{$photo}}" class="dlt_btn">x</div>  
         </div>
         @endif
         @endforeach
@@ -130,35 +194,99 @@
     Dropzone.autoDiscover = false; // Ngăn Dropzone tự động kích hoạt
 
     var uploadedimages = [];
-     
+    const uploadStatus = document.getElementById('uploadStatus');
      
     @if($post->photo!= null && $post->photo!='null')
-        uploadedimages =    @json($images); // Mảng để lưu tên file ảnh đã upload
+        try {
+            uploadedimages = @json($images) || []; // Mảng để lưu tên file ảnh đã upload
+            // Đảm bảo uploadedimages là mảng
+            if (typeof uploadedimages === 'string') {
+                uploadedimages = [uploadedimages];
+            } else if (!Array.isArray(uploadedimages)) {
+                uploadedimages = [];
+            }
+            // Cập nhật giá trị ban đầu cho input hidden
+            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages);
+        } catch (e) {
+            console.error("Lỗi khi phân tích JSON:", e);
+            uploadedimages = [];
+            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages);
+        }
     @endif
   
   
     const imageDropzone = new Dropzone("#imageDropzone", {
         url: "{{ route('front.upload.avatar') }}", // Route xử lý upload
-        maxFilesize: 2, // Kích thước file tối đa (MB)
+        paramName: "photo",
+        maxFilesize: 5, // Tăng kích thước file tối đa (MB)
         acceptedFiles: 'image/*', // Chỉ chấp nhận file ảnh
         addRemoveLinks: true, // Hiển thị nút xóa ảnh
         dictDefaultMessage: "Kéo thả ảnh vào đây hoặc nhấp để chọn",
         dictRemoveFile: "Xóa ảnh",
         thumbnailWidth: 150, // Chiều rộng tối đa của preview ảnh
         thumbnailHeight: 150, // Chiều cao tối đa của preview ảnh
+        maxFiles: 5, // Giới hạn số lượng ảnh
         headers: {
             'X-CSRF-TOKEN': "{{ csrf_token() }}" // CSRF Token để bảo vệ form
         },
+        init: function() {
+            this.on("addedfile", function(file) {
+                uploadStatus.style.display = "none";
+            });
+            
+            this.on("error", function(file, errorMessage) {
+                uploadStatus.className = "upload-status error-msg";
+                uploadStatus.textContent = "Lỗi tải lên: " + (typeof errorMessage === 'string' ? errorMessage : (errorMessage.message || "Lỗi không xác định"));
+                uploadStatus.style.display = "block";
+                console.error("Lỗi Dropzone:", errorMessage);
+            });
+            
+            this.on("success", function(file, response) {
+                uploadStatus.className = "upload-status success-msg";
+                uploadStatus.textContent = "Tải lên thành công!";
+                uploadStatus.style.display = "block";
+                setTimeout(() => { uploadStatus.style.display = "none"; }, 3000);
+                
+                if (response && response.status && response.link) {
+                    uploadedimages.push(response.link);
+                    document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages);
+                    console.log("Ảnh đã được thêm vào:", response.link);
+                    console.log("Danh sách ảnh hiện tại:", uploadedimages);
+                    console.log("Giá trị input:", document.getElementById('uploadedimages').value);
+                }
+            });
+            
+            this.on("maxfilesexceeded", function(file) {
+                this.removeFile(file);
+                alert("Bạn chỉ có thể tải lên tối đa 5 ảnh!");
+            });
+        },
         success: function (file, response) {
-            // Lưu tên file trả về từ server
-            uploadedimages.push(response.link);
-            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages); // Lưu vào input ẩn
+            // Xử lý đã được chuyển vào event listener success ở trên
         },
         removedfile: function (file) {
-            // Xóa file khỏi mảng khi người dùng xóa ảnh
-            const filename = file.upload.filename;
-            uploadedimages.splice(uploadedimages.indexOf(filename), 1);
-            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages); // Cập nhật input ẩn
+            let filename = '';
+            
+            // Xác định tên tệp từ phản hồi hoặc từ đối tượng file
+            if (file.xhr && file.xhr.response) {
+                try {
+                    let response = JSON.parse(file.xhr.response);
+                    filename = response.link;
+                } catch (e) {
+                    console.error("Lỗi phân tích phản hồi:", e);
+                }
+            } else if (file.upload && file.upload.filename) {
+                filename = file.upload.filename;
+            }
+            
+            // Xóa tệp khỏi mảng uploadedimages nếu tìm thấy
+            if (filename && uploadedimages.includes(filename)) {
+                uploadedimages = uploadedimages.filter(item => item !== filename);
+                document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages);
+                console.log("Ảnh đã bị xóa:", filename);
+                console.log("Danh sách ảnh hiện tại:", uploadedimages);
+                console.log("Giá trị input:", document.getElementById('uploadedimages').value);
+            }
 
             // Xóa ảnh khỏi giao diện
             file.previewElement.remove();
@@ -252,22 +380,38 @@ fileInput.addEventListener("change", function () {
    });
 </script>
 <script>
-    
-    //  uploadedimages = @json($images);
-    // document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages); // Cập nhật input ẩn
-    // alert(  document.getElementById('uploadedimages').value);
+    // Xử lý khi nhấp vào nút xóa một hình ảnh đã tải lên trước đó
     $(".dlt_btn").click(function(){
-        $(this).parent().remove();   
-        var link_photo = "";
+        const parent = $(this).parent().parent();
+        parent.remove();   
         
         const filename = $(this).data("photo");
-            // alert(filename);
-            uploadedimages.splice(uploadedimages.indexOf(filename), 1);
-            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages); // Cập nhật input ẩn
-
-        $('#photo_old').val(link_photo);
+        // Xóa tệp khỏi mảng uploadedimages
+        if (filename && uploadedimages.includes(filename)) {
+            uploadedimages = uploadedimages.filter(item => item !== filename);
+            document.getElementById('uploadedimages').value = JSON.stringify(uploadedimages);
+            console.log("Ảnh đã bị xóa (từ preview):", filename);
+            console.log("Danh sách ảnh hiện tại:", uploadedimages);
+            console.log("Giá trị input:", document.getElementById('uploadedimages').value);
+        }
     });
-
-     
+    
+    // Thêm kiểm tra trước khi gửi form
+    $('form').on('submit', function(e) {
+        // Kiểm tra xem trường photo có được thiết lập chính xác không
+        let photoValue = document.getElementById('uploadedimages').value;
+        console.log("Giá trị trường photo khi gửi form:", photoValue);
+        
+        // Đảm bảo giá trị là một mảng JSON hợp lệ
+        try {
+            let photos = JSON.parse(photoValue);
+            if (!Array.isArray(photos)) {
+                document.getElementById('uploadedimages').value = JSON.stringify([]);
+            }
+        } catch (e) {
+            console.error("Lỗi định dạng JSON trong trường photo:", e);
+            document.getElementById('uploadedimages').value = JSON.stringify([]);
+        }
+    });
 </script>
 @endsection

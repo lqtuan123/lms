@@ -128,8 +128,8 @@
                         <form action="{{ route('front.book.search') }}" method="GET">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <input type="text" name="title" class="form-control"
-                                        placeholder="Nhập tên sách cần tìm..." value="{{ request('title') }}">
+                                    <input type="text" class="form-control" placeholder="Nhập tên sách cần tìm..."
+                                        id="book_title" name="book_title" value="{{ request('book_title') }}">
                                 </div>
                                 <div class="col-md-4 d-flex">
                                     <button type="submit" class="btn btn-primary me-2">Tìm kiếm</button>

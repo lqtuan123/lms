@@ -7,6 +7,23 @@
 
     <div class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2">
         <a href="{{ route('admin.books.create') }}" class="btn btn-primary shadow-md mr-2">Thêm sách</a>
+        
+        <!-- Dropdown lọc theo danh mục -->
+        <div class="dropdown mr-2">
+            <form action="{{ route('admin.books.index') }}" method="get">
+                <div class="flex items-center">
+                    <select name="type_id" class="form-select w-full form-select-md" onchange="this.form.submit()">
+                        <option value="">-- Chọn danh mục --</option>
+                        @foreach($bookTypes as $bookType)
+                            <option value="{{ $bookType->id }}" {{ isset($selected_type) && $selected_type == $bookType->id ? 'selected' : '' }}>
+                                {{ $bookType->title }} ({{ $bookType->books->count() }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        </div>
+        
         <div class="hidden md:block mx-auto text-slate-500">Hiển thị trang {{ $books->currentPage() }} trong
             {{ $books->lastPage() }} trang</div>
         <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
@@ -33,7 +50,8 @@
             .summary-cell {
                 max-width: 100px;
                 overflow: hidden;
-                text-overflow: ellipsis; /* Hiển thị "..." */
+                text-overflow: ellipsis;
+                /* Hiển thị "..." */
                 white-space: nowrap;
             }
         </style>
@@ -48,6 +66,7 @@
                     <th class=" whitespace-nowrap">TÓM TẮT</th>
                     <th class="whitespace-nowrap">URL</th>
                     <th class="text-center whitespace-nowrap">TRẠNG THÁI</th>
+                    <th class="text-center whitespace-nowrap">ẨN</th>
                     <th class="text-center whitespace-nowrap">HÀNH ĐỘNG</th>
                 </tr>
             </thead>
@@ -55,7 +74,8 @@
                 @foreach ($books as $book)
                     <tr class="intro-x">
                         <td class="title-cell">
-                            <a href="{{ route('admin.books.show', $book->id) }}"  class="font-medium whitespace-nowrap">{{ $book->title }}</a>
+                            <a href="{{ route('admin.books.show', $book->id) }}"
+                                class="font-medium whitespace-nowrap">{{ $book->title }}</a>
                         </td>
 
                         <td class="text-center ">
@@ -64,7 +84,7 @@
 
                         <td class="text-left">{{ $book->user ? $book->user->full_name : 'N/A' }}</td>
 
-                        <td class="text-left">{{ $book->bookType ? $book->bookType->title : 'N/A' }}</td> 
+                        <td class="text-left">{{ $book->bookType ? $book->bookType->title : 'N/A' }}</td>
 
                         <td class="summary-cell">{{ $book->summary ?? 'N/A' }}</td>
 
@@ -83,6 +103,26 @@
                             <input type="checkbox" data-toggle="switchbutton" data-onlabel="active" data-offlabel="inactive"
                                 {{ $book->status == 'active' ? 'checked' : '' }} data-size="sm" name="toggle"
                                 value="{{ $book->id }}" data-style="ios">
+                        </td>
+
+                        {{-- <td>
+                            @if ($book->block === 'yes')
+                                <span class="badge bg-danger">Đã ẩn</span>
+                            @else
+                                <span class="badge bg-success">Hiển thị</span>
+                            @endif
+                        </td> --}}
+                        <td>
+                            <!-- Nút toggle ẩn/hiện -->
+                            <form action="{{ route('admin.books.toggleBlock', $book->id) }}" method="POST"
+                                style="display:inline;">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit"
+                                    class="btn btn-sm {{ $book->block === 'yes' ? 'btn-success' : 'btn-warning' }}">
+                                    {{ $book->block === 'yes' ? 'Hiện lại' : 'Ẩn sách' }}
+                                </button>
+                            </form>
                         </td>
 
                         <td class="table-report__action ">

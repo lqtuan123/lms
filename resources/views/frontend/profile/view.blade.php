@@ -1,253 +1,252 @@
 <?php
- 
-  $setting =\App\Models\SettingDetail::find(1);
-  $user = auth()->user();
+
+$setting = \App\Models\SettingDetail::find(1);
+$user = auth()->user();
 
 ?>
+
 @extends('frontend.layouts.master')
-@section('head_css')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
-<style>
-    .image-fit {
-    position: relative;
-}
-.image-fit > img {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    -o-object-fit: cover;
-    object-fit: cover;
-}
-.rounded-full {
-    border-radius: 9999px;
-}
-.w-12 {
-    width: 3rem;
-}
+@section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css">
+    <style>
+        /* Container chính */
+        .wrapper {
+            padding: 30px 0;
+        }
 
-.h-12 {
-    height: 3rem;
-}
-.p-5 {
-    padding: 1.25rem;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.items-center {
-    align-items: center;
-}
-.flex {
-    display: flex;
-}
-.relative {
-    position: relative;
-}
-.ml-4 {
-    margin-left: 1rem;
-}
-.mr-auto {
-    margin-right: auto;
-}
-.content h3{
-    text-transform: uppercase;
-    font-size:130%;
-    color:black;
-    font-weight:700;
-}
-.dropzone.dz-clickable {
-    cursor: pointer;
-}
-.dropzone {
-    border-style: dashed;
-    border-color: rgb(var(--color-slate-200) / 0.6);
-}
+        /* Form hồ sơ */
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
 
- 
-.dropzone, .dropzone * {
-    box-sizing: border-box;
-}
-.dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
-    cursor: pointer;
-}
+        .profile-form {
+            flex: 1;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
-.dropzone .dz-message {
-    text-align: center;
-    margin: 2em 0;
-}
-.dropzone.dz-clickable * {
-    cursor: default;
-}
-.dropzone, .dropzone * {
-    box-sizing: border-box;
-}
-.dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
-    cursor: pointer;
-}
+        /* Các ô nhập liệu */
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-.dropzone.dz-clickable * {
-    cursor: default;
-}
-.dropzone, .dropzone * {
-    box-sizing: border-box;
-}
-.font-medium {
-    font-weight: 500;
-}
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
 
-</style>  
-<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
 
+        /* Avatar */
+        .avatar-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ddd;
+            display: block;
+            margin: 0 auto 10px;
+        }
+
+        /* Dropzone */
+        #mydropzone {
+            background: #f9f9f9;
+            border: 2px dashed #007bff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #007bff;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #mydropzone:hover {
+            background: #eef7ff;
+        }
+
+        /* Dropzone preview */
+        .dz-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .dz-preview img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+
+        .dz-preview button {
+            margin-top: 5px;
+        }
+
+        /* Nút cập nhật */
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #218838;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            flex-basis: 250px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                margin-top: 20px;
+            }
+        }
+    </style>
 @endsection
+
 @section('content')
-@include('frontend.layouts.breadcrumb')
-<section class="wrapper !bg-[#ffffff] py-[5rem] xl:!py-5 lg:!py-5 md:!py-5  ">
-    <div class="container py-[0rem] xl:!py-0 lg:!py-0 md:!py-0">
-        <div class="flex flex-wrap mx-[-15px] xl:mx-[-35px] lg:mx-[-20px]">
-            <div class="  xl:w-9/12 lg:w-9/12 md:w-0/12 w-full flex-[0_0_auto] xl:px-[10px] lg:px-[5px] px-[5px] max-w-full xl:order-2 lg:order-2">
-                <div class="row align-items-center">
-                    <form method="POST" action = "{{route('front.profile.update')}}">
-                        @csrf
-                        <div class="flex flex-wrap mx-[-15px]">
-                            <div class="xl:w-10/12 w-full flex-[0_0_auto] px-[15px] max-w-full !mx-auto">
-                                <div class="flex flex-wrap mx-[-15px] mt-[-50px] xl:mx-[-35px] lg:mx-[-20px]">
-                                    <div class="xl:w-8/12 lg:w-8/12 w-full flex-[0_0_auto] xl:px-[35px] lg:px-[20px] px-[15px] max-w-full mt-[50px]">
-                                        <div class="flex flex-wrap mx-[-10px]">
-                                            <div class="xl:w-6/12 lg:w-6/12 md:w-6/12 w-full flex-[0_0_auto] px-[15px] max-w-full">
-                                                <div class="form-floating relative !mb-4">
-                                                    <input name="full_name"   type="text"  value="{{$profile->full_name}}" required class=" form-control  relative block w-full text-[.75rem] font-medium text-[#60697b] bg-[#fefefe] bg-clip-padding border shadow-[0_0_1.25rem_rgba(30,34,40,0.04)] rounded-[0.4rem] border-solid border-[rgba(8,60,130,0.07)] transition-[border-color] duration-[0.15s] ease-in-out focus:text-[#60697b] focus:bg-[rgba(255,255,255,.03)] focus:shadow-[0_0_1.25rem_rgba(30,34,40,0.04),unset] focus:!border-[rgba(63,120,224,0.5)] focus-visible:!border-[rgba(63,120,224,0.5)] focus-visible:!outline-0 placeholder:text-[#959ca9] placeholder:opacity-100 m-0 !pr-9 p-[.6rem_1rem] h-[calc(2.5rem_+_2px)] min-h-[calc(2.5rem_+_2px)] leading-[1.25]" placeholder="họ tên" required="">
-                                                    <label for="form_name1" class="text-[#959ca9] mb-2 inline-block text-[.75rem] absolute z-[2] h-full overflow-hidden text-start text-ellipsis whitespace-nowrap pointer-events-none border origin-[0_0] px-4 py-[0.6rem] border-solid border-transparent left-0 top-0 font-Manrope">Tên đầy đủ *</label>
-                                                
-                                                </div>
-                                                <div class="form-floating relative !mb-4">
-                                                    <input name="email" disabled  type="email"  value="{{$profile->email}}" required class=" form-control  relative block w-full text-[.75rem] font-medium text-[#60697b] bg-[#fefefe] bg-clip-padding border shadow-[0_0_1.25rem_rgba(30,34,40,0.04)] rounded-[0.4rem] border-solid border-[rgba(8,60,130,0.07)] transition-[border-color] duration-[0.15s] ease-in-out focus:text-[#60697b] focus:bg-[rgba(255,255,255,.03)] focus:shadow-[0_0_1.25rem_rgba(30,34,40,0.04),unset] focus:!border-[rgba(63,120,224,0.5)] focus-visible:!border-[rgba(63,120,224,0.5)] focus-visible:!outline-0 placeholder:text-[#959ca9] placeholder:opacity-100 m-0 !pr-9 p-[.6rem_1rem] h-[calc(2.5rem_+_2px)] min-h-[calc(2.5rem_+_2px)] leading-[1.25]" placeholder="email" required="">
-                                                    <label for="form_name1" class="text-[#959ca9] mb-2 inline-block text-[.75rem] absolute z-[2] h-full overflow-hidden text-start text-ellipsis whitespace-nowrap pointer-events-none border origin-[0_0] px-4 py-[0.6rem] border-solid border-transparent left-0 top-0 font-Manrope">Email *</label>
-                                                
-                                                </div>
-                                            
-                                            </div>
-                                            <!-- /column -->
-                                            <div class="xl:w-6/12 lg:w-6/12 md:w-6/12 w-full flex-[0_0_auto] px-[15px] max-w-full">
-                                                <div class="form-floating relative !mb-4">
-                                                    <input name="phone"    type="text"  value="{{$profile->phone}}" required class=" form-control  relative block w-full text-[.75rem] font-medium text-[#60697b] bg-[#fefefe] bg-clip-padding border shadow-[0_0_1.25rem_rgba(30,34,40,0.04)] rounded-[0.4rem] border-solid border-[rgba(8,60,130,0.07)] transition-[border-color] duration-[0.15s] ease-in-out focus:text-[#60697b] focus:bg-[rgba(255,255,255,.03)] focus:shadow-[0_0_1.25rem_rgba(30,34,40,0.04),unset] focus:!border-[rgba(63,120,224,0.5)] focus-visible:!border-[rgba(63,120,224,0.5)] focus-visible:!outline-0 placeholder:text-[#959ca9] placeholder:opacity-100 m-0 !pr-9 p-[.6rem_1rem] h-[calc(2.5rem_+_2px)] min-h-[calc(2.5rem_+_2px)] leading-[1.25]" placeholder="điện thoại" required="">
-                                                    <label for="form_name1" class="text-[#959ca9] mb-2 inline-block text-[.75rem] absolute z-[2] h-full overflow-hidden text-start text-ellipsis whitespace-nowrap pointer-events-none border origin-[0_0] px-4 py-[0.6rem] border-solid border-transparent left-0 top-0 font-Manrope">Điện thoại *</label>
-                                                
-                                                </div>
-                                                <div class="form-floating relative !mb-4">
-                                                    <input name="address"   type="text"  value="{{$profile->address}}" required class=" form-control  relative block w-full text-[.75rem] font-medium text-[#60697b] bg-[#fefefe] bg-clip-padding border shadow-[0_0_1.25rem_rgba(30,34,40,0.04)] rounded-[0.4rem] border-solid border-[rgba(8,60,130,0.07)] transition-[border-color] duration-[0.15s] ease-in-out focus:text-[#60697b] focus:bg-[rgba(255,255,255,.03)] focus:shadow-[0_0_1.25rem_rgba(30,34,40,0.04),unset] focus:!border-[rgba(63,120,224,0.5)] focus-visible:!border-[rgba(63,120,224,0.5)] focus-visible:!outline-0 placeholder:text-[#959ca9] placeholder:opacity-100 m-0 !pr-9 p-[.6rem_1rem] h-[calc(2.5rem_+_2px)] min-h-[calc(2.5rem_+_2px)] leading-[1.25]" placeholder="địa chỉ" required="">
-                                                    <label for="form_name1" class="text-[#959ca9] mb-2 inline-block text-[.75rem] absolute z-[2] h-full overflow-hidden text-start text-ellipsis whitespace-nowrap pointer-events-none border origin-[0_0] px-4 py-[0.6rem] border-solid border-transparent left-0 top-0 font-Manrope">Địa chỉ *</label>
-                                                
-                                                </div>
-                                            </div>
-                                            <!-- /column -->
-                                            
-                                            <!-- /column -->
-                                             
-                                            <!-- /column -->
-                                            <div class="w-full flex-[0_0_auto] px-[15px] max-w-full">
-                                            <div class="form-floating relative !mb-4">
-                                                    <input name="description"   type="text"  value="{{$profile->description}}" required class=" form-control  relative block w-full text-[.75rem] font-medium text-[#60697b] bg-[#fefefe] bg-clip-padding border shadow-[0_0_1.25rem_rgba(30,34,40,0.04)] rounded-[0.4rem] border-solid border-[rgba(8,60,130,0.07)] transition-[border-color] duration-[0.15s] ease-in-out focus:text-[#60697b] focus:bg-[rgba(255,255,255,.03)] focus:shadow-[0_0_1.25rem_rgba(30,34,40,0.04),unset] focus:!border-[rgba(63,120,224,0.5)] focus-visible:!border-[rgba(63,120,224,0.5)] focus-visible:!outline-0 placeholder:text-[#959ca9] placeholder:opacity-100 m-0 !pr-9 p-[.6rem_1rem] h-[calc(2.5rem_+_2px)] min-h-[calc(2.5rem_+_2px)] leading-[1.25]" placeholder="mô tả" required="">
-                                                    <label for="form_name1" class="text-[#959ca9] mb-2 inline-block text-[.75rem] absolute z-[2] h-full overflow-hidden text-start text-ellipsis whitespace-nowrap pointer-events-none border origin-[0_0] px-4 py-[0.6rem] border-solid border-transparent left-0 top-0 font-Manrope">Mô tả *</label>
-                                                
-                                                </div>
-                                            </div>
-                                            <div class="xl:w-4/12 lg:w-4/12 w-full flex-[0_0_auto] xl:px-[35px] lg:px-[20px] px-[15px] max-w-full mt-[50px]">
-                                                <div class="items-center">
-                                                    <img class="avatar !w-[5rem]" src="{{$profile->photo}}" alt="" />
-                                                </div>
-                                                <div class="px-4 pb-4 mt-5 flex items-center  cursor-pointer relative">
-                                                    <div data-single="true" id="mydropzone" class="dropzone"    url="{{route('front.upload.avatar')}}" >
-                                                        <div class="fallback"> 
-                                                            <input name="file" type="file" /> 
-                                                        </div>
-                                                        <div class="dz-message" data-dz-message>
-                                                            <div class=" font-medium">
-                                                                Kéo thả hoặc chọn ảnh.
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                    
-                                                <input type="hidden" id="photo" name="photo" value="{{$profile->photo}}"/>
-                                                <div class="mx-auto cursor-pointer relative mt-5">
-                                                    Cập nhật ảnh đại diện. Bổ trống nếu bạn không muốn thay đổi.
-                                                </div>
-                                            </div>
-                                            <div class="w-full flex-[0_0_auto] px-[15px] max-w-full">
-                                                <input type="submit" class="btn btn-primary text-white !bg-[#3f78e0] border-[#3f78e0] hover:text-white hover:bg-[#3f78e0] hover:border-[#3f78e0] focus:shadow-[rgba(92,140,229,1)] active:text-white active:bg-[#3f78e0] active:border-[#3f78e0] disabled:text-white disabled:bg-[#3f78e0] disabled:border-[#3f78e0] !rounded-[50rem] btn-send !mb-3 hover:translate-y-[-0.15rem] hover:shadow-[0_0.25rem_0.75rem_rgba(30,34,40,0.15)]" value="Cập nhật">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--/column -->
-                                    
-                                <!--/column -->
-                                </div>
-                                <!--/.row -->
-                            </div>
-                            <!-- /column -->
-                        </div>
-                    </form>
-                    
-                </div>
+    @include('frontend.layouts.breadcrumb')
+
+    <div class="container">
+
+        <div class="profile-container">
+            <div class="profile-form">
+                <form method="POST" action="{{ route('front.profile.update') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="form-group">
+                        <label for="full_name">Tên đầy đủ *</label>
+                        <input name="full_name" type="text" value="{{ $profile->full_name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input name="email" type="email" value="{{ $profile->email }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Điện thoại *</label>
+                        <input name="phone" type="text" value="{{ $profile->phone }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ *</label>
+                        <input name="address" type="text" value="{{ $profile->address }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Mô tả *</label>
+                        <input name="description" type="text" value="{{ $profile->description }}" required>
+                    </div>
+
+                    <div class="avatar-container">
+                        <img class="avatar" id="avatar-preview" src="{{ $profile->photo }}" alt="Avatar">
+                        <div id="mydropzone" class="dropzone"></div>
+                    </div>
+
+                    <input type="hidden" id="photo" name="photo" value="{{ $profile->photo }}">
+                    <input type="submit" class="btn-submit" value="Cập nhật">
+                </form>
             </div>
-            <aside class="  xl:w-3/12 lg:w-3/12 md:w-0/12 w-full flex-[0_0_auto] xl:px-[5px] lg:px-[5px] px-[5px] max-w-full sidebar mt-0 xl:!mt-0 lg:!mt-0">
+
+            <aside class="sidebar">
                 @include('frontend.layouts.leftaccount')
             </aside>
         </div>
     </div>
-</section>
 @endsection
 
 @section('scripts')
- 
- 
-<script>
- Dropzone.autoDiscover = false;
-    
-    // Dropzone class:
-    var myDropzone = new Dropzone("div#mydropzone", { url: "{{route('front.upload.avatar')}}"});
-        // previewsContainer: ".dropzone-previews",
-        // Dropzone.instances[0].options.url = "{{route('front.upload.avatar')}}";
-        Dropzone.instances[0].options.multiple = false;
-        Dropzone.instances[0].options.autoQueue= true;
-        Dropzone.instances[0].options.maxFilesize =  1; // MB
-        Dropzone.instances[0].options.maxFiles =1;
-        Dropzone.instances[0].options.dictDefaultMessage = 'Drop images anywhere to upload (6 images Max)';
-        Dropzone.instances[0].options.acceptedFiles= "image/jpeg,image/png,image/gif";
-        Dropzone.instances[0].options.previewTemplate =  '<div class=" d-flex flex-column  position-relative">'
-                                        +' <img    data-dz-thumbnail >'
-                                        
-                                    +' </div>';
-        // Dropzone.instances[0].options.previewTemplate =  '<li><figure><img data-dz-thumbnail /><i title="Remove Image" class="icon-trash" data-dz-remove ></i></figure></li>';      
-        Dropzone.instances[0].options.addRemoveLinks =  true;
-        Dropzone.instances[0].options.headers= {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
 
-        Dropzone.instances[0].on("addedfile", function (file ) {
-        // Example: Handle success event
-        console.log('File addedfile successfully!' );
+        document.addEventListener("DOMContentLoaded", function() {
+            var myDropzone = new Dropzone("#mydropzone", {
+                url: "{{ route('front.upload.avatar') }}",
+                paramName: "photo",
+                maxFilesize: 2,
+                maxFiles: 1,
+                acceptedFiles: "image/jpeg,image/png,image/gif",
+                autoProcessQueue: true,
+                addRemoveLinks: true,
+                dictDefaultMessage: "Kéo thả ảnh vào đây hoặc click để tải lên",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                previewTemplate: `
+            <div class="dz-preview dz-file-preview">
+                <img data-dz-thumbnail class="img-thumbnail" style="max-width: 100px;">
+                <button type="button" class="btn btn-danger btn-sm mt-2" data-dz-remove>Xóa</button>
+            </div>
+        `,
+                init: function() {
+                    var dropzoneInstance = this;
+
+                    // Khi một file mới được thêm vào, xóa file cũ nếu có
+                    this.on("addedfile", function(file) {
+                        if (this.files.length > 1) {
+                            this.removeFile(this.files[0]); // Xóa file cũ nhất
+                        }
+                    });
+
+                    // Khi file tải lên thành công
+                    this.on("success", function(file, response) {
+                        if (response.status === true) {
+                            document.getElementById("photo").value = response.link;
+                            document.getElementById("avatar-preview").src = response.link;
+                            console.log("Upload thành công:", response.link);
+                        }
+                    });
+
+                    // Khi file bị xóa
+                    this.on("removedfile", function() {
+                        document.getElementById("photo").value = "";
+                        document.getElementById("avatar-preview").src =
+                            "{{ $profile->photo ?? asset('default-avatar.png') }}";
+                        console.log("File removed");
+                    });
+
+                    // Khi có lỗi xảy ra
+                    this.on("error", function(file, message) {
+                        console.error("Lỗi upload:", message);
+                    });
+                }
+            });
         });
-        Dropzone.instances[0].on("success", function (file, response) {
-        // Example: Handle success event
-        // file.previewElement.innerHTML = "";
-        if(response.status == "true")
-        $('#photo').val(response.link);
-        console.log('File success successfully!' +response.link);
-        });
-        Dropzone.instances[0].on("removedfile", function (file ) {
-        $('#photo').val('');
-        console.log('File removed successfully!'  );
-        });
-        Dropzone.instances[0].on("error", function (file, message) {
-        // Example: Handle success event
-        file.previewElement.innerHTML = "";
-        console.log(file);
-
-        console.log('error !' +message);
-        });
-        console.log(Dropzone.instances[0].options   );
-
-        // console.log(Dropzone.optionsForElement);
-
-</script>
-
- 
+    </script>
 @endsection

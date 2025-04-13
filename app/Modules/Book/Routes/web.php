@@ -33,7 +33,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         ->name('booktransactions.process');
 });
 
-// Route::prefix('front')->group(function() {
-//     Route::get('/book', [BookFrontendController::class, 'index'])->name('front.book.index'); 
-//     Route::get('/book/{id}', [BookFrontendController::class, 'show'])->name('front.book.show'); 
-// });
+
+Route::patch('/admin/books/{id}/toggle-block', [BookController::class, 'toggleBlock'])->name('admin.books.toggleBlock');

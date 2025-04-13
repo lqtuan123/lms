@@ -1,4 +1,3 @@
-
 <?php
 use App\Modules\Group\Models\Group;
  $groups = Group::where('status','active')->paginate(20);
@@ -9,7 +8,8 @@ use App\Modules\Group\Models\Group;
         <nav class="menu">
             <ul>
                 <li><a href="{{route('front.tblogs.index')}}">Cộng đồng</a> </li>
-                 <li><a href="{{route('front.userpages.edituser')}}">Nhóm thành viên</a>
+                <li><a href="{{route('front.tpage.viewgroup', $page->slug)}}">Danh sách nhóm</a></li>
+                <li><a href="{{route('front.userpages.edituser')}}">Nhóm thành viên</a>
                     <ul class="submenu">
                         @foreach($groups as $group)
                         <li><i class="random-icon">🔥</i> <a href="{{ $group->getPageUrl($group->id)}}" >{{Str::limit($group->title, 20) }} </a></li>

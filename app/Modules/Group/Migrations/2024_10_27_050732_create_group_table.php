@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('slug');
             $table->text('description');
+            $table->json('moderators')->nullable();
+            $table->json('members')->nullable(); 
             $table->integer('is_private')->default(0);;
             $table->integer('author_id')->default(0);
             $table->enum('status',['active','inactive'])->default('active');

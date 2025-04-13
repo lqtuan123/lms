@@ -1,53 +1,32 @@
-{{-- <div class="wrapper  bg-[rgba(246,247,249,1)] ">
-      <div class="container py-3 xl:!py-5 lg:!py-5 md:!py-5">
-       
-          <nav class="inline-block" aria-label="breadcrumb">
-          <ol class="breadcrumb  flex flex-wrap bg-[none] p-0 !rounded-none list-none !mb-0">
-            <li class="breadcrumb-item flex text-[#60697b]"><a class=" text-inherit nav_color" href="{{route('home')}}">Trang chủ</a></li>
-            @foreach ($links as $link )
-            <li class="breadcrumb-item flex text-[#60697b] pl-2 before:font-normal before:flex before:items-center before:text-[rgba(96,105,123,0.35)] before:content-['\e931'] before:text-[0.9rem] before:-mt-px before:pr-2 before:font-Unicons active" aria-current="page">
-              @if ($link->url != '#')
-              <a class=" text-inherit nav_color" href="{{$link->url}}">
-              @endif
-                {{$link->title}}
-              @if ($link->url != '#')
-              </a>
-              @endif
-              
-            </li>
-            @endforeach
-           
-          </ol>
-        </nav>  
-        <!-- /nav -->
-      </div>
-      <!-- /.container -->
-    </div> --}}
-
-    <div class="breadcrumb-section">
-      <div class="container">
-          <div class="row">
-              <div class="col-sm-4">
-                  <div class="page-title">
-                      <h2>{{isset($pagetitle)?$pagetitle:""}} </h2>
-                  </div>
-              </div>
-              <div class="col-sm-8">
-                   
-                  <nav aria-label="breadcrumb" class="theme-breadcrumb">
-                      <ol class="breadcrumb">
-                      <li class="breadcrumb-item"><a href="{{route('home')}}">Trang chủ</a></li> 
-                        @if (isset($links))
-                          @foreach ($links as $link )
-                              <li class="breadcrumb-item"><a href="{{$link->url}}">{{$link->title}}</a></li> 
-                          @endforeach
-                          
-                        @endif
-                         
-                          
-                      </ol>
-                  </nav>
-              </div>
+<div class="bg-gray-100 py-3 xl:py-5 lg:py-5 md:py-5">
+  <div class="container mx-auto">
+      <div class="flex flex-wrap items-center justify-between">
+          <!-- Tiêu đề trang -->
+          <div>
+              <h2 class="text-xl font-semibold text-gray-800">{{ $pagetitle ?? "" }}</h2>
           </div>
+
+          <!-- Breadcrumb -->
+          <nav aria-label="breadcrumb">
+              <ol class="flex items-center space-x-2 text-gray-600">
+                  <li>
+                      <a href="{{ route('home') }}" class="text-blue-600 hover:underline">Trang chủ</a>
+                  </li>
+                  
+                  @if (!empty($links))
+                      @foreach ($links as $link)
+                          <li class="flex items-center">
+                              <span class="mx-1 text-gray-400">/</span>
+                              @if ($link->url !== '#')
+                                  <a href="{{ $link->url }}" class="text-blue-600 hover:underline">{{ $link->title }}</a>
+                              @else
+                                  <span>{{ $link->title }}</span>
+                              @endif
+                          </li>
+                      @endforeach
+                  @endif
+              </ol>
+          </nav>
       </div>
   </div>
+</div>

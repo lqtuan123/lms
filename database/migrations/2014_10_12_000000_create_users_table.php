@@ -24,16 +24,12 @@ return new class extends Migration
             $table->string('phone') ;
             $table->string('address')->nullable();
             $table->mediumtext('description')->nullable();
-            $table->integer('ship_id')->nullable();
+
             $table->integer('ugroup_id')->nullable();
             $table->string('role')->default('customer');
-            $table->BigInteger('budget')->default(0);
+
             $table->BigInteger('totalpoint')->default(0);
-            $table->BigInteger('totalrevenue')->default(0);
-            $table->BigInteger('totalinvoice')->default(0);
-            $table->string('taxcode')->nullable();
-            $table->string('taxname')->nullable();
-            $table->string('taxaddress')->nullable();
+
             $table->enum('status',['active','inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();

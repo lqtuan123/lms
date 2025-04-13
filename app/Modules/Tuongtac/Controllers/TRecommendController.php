@@ -25,7 +25,7 @@ class TRecommendController extends Controller
         }
         $request->validate([
             'item_id' => 'required|integer', 
-              'item_code'=> 'required|string', 
+            'item_code'=> 'required|string', 
            
         ]);
         $data= $request->all();
@@ -33,8 +33,7 @@ class TRecommendController extends Controller
         $itemCode = $data['item_code']; // Loại mục (ví dụ: blog)
         $postId = $data['item_id'];
 
-        ///
-        TUserpage::add_points(auth()->id(),1);
+       
         
         // Kiểm tra xem bài viết đã được bookmark chưa
         $bookmarkExists = \DB::table('t_recommends')

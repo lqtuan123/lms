@@ -7,17 +7,17 @@
             </span>
         </div>
     </a>
-    <a href="" class="card mb-4 lift">
+    <a href="{{ route('front.book.index') }}?filter=bookmark" class="card mb-4 lift">
         <div class="card-body p-5">
             <span class="flex flex-wrap mx-[-15px]  items-center">
-            <i style="font-size:200%" class="uil uil-file-alt"></i>  &nbsp;&nbsp;&nbsp;&nbsp; Danh sách yêu thích
+            <i style="font-size:200%" class="uil uil-bookmark"></i>  &nbsp;&nbsp;&nbsp;&nbsp; Danh sách yêu thích
             </span>
         </div>
     </a>
-    <a href="" class="card mb-4 lift">
+    <a href="{{ route('user.books.index') }}" class="card mb-4 lift">
         <div class="card-body p-5">
             <span class="flex flex-wrap mx-[-15px]  items-center">
-            <i style="font-size:200%" class="uil uil-file-alt"></i>  &nbsp;&nbsp;&nbsp;&nbsp; Danh sách địa chỉ
+            <i style="font-size:200%" class="uil uil-file-alt"></i>  &nbsp;&nbsp;&nbsp;&nbsp; Sách đã đăng
             </span>
         </div>
     </a>

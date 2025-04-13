@@ -2,19 +2,17 @@
 
 namespace App\Modules\Exercise\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Modules\Exercise\Models\TuLuanDapan; 
+use App\Modules\Teaching_2\Models\HocPhan; // Import model Module
 use App\Models\User; // Import model User
-use App\Modules\Teaching_2\Models\Module; // Import model Module
 
-class Tuluancauhoi extends Model
+class TuLuanCauHoi extends Model
 {
+    //
     use HasFactory;
-
-    // Đặt tên bảng nếu khác với quy tắc đặt tên tự động
-    protected $table = 'tulancauhoi';
-
-    // Các cột có thể được gán hàng loạt
+    protected $table = 'tu_luan_cauhois';
     protected $fillable = [
         'content',
         'hocphan_id',
@@ -22,22 +20,17 @@ class Tuluancauhoi extends Model
         'tags',
         'resources',
     ];
+    public function hocphan()
+    {
+        return $this->belongsTo(HocPhan::class, 'hocphan_id');
+    }
 
-    // Nếu bạn muốn sử dụng JSON cho tags và resources
-    protected $casts = [
-        'tags' => 'array',
-        'resources' => 'array',
-    ];
-
-    // Định nghĩa quan hệ với model User
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id'); // Khóa ngoại là user_id
+        return $this->belongsTo(User::class, 'user_id');
     }
-
-    // Định nghĩa quan hệ với model Module
-    public function module()
-    {
-        return $this->belongsTo(Module::class, 'hocphan_id'); // Khóa ngoại là hocphan_id
-    }
+    public function answers()
+{
+    return $this->hasMany(TuLuanDapan::class, 'tu_luan_id');
+}
 }

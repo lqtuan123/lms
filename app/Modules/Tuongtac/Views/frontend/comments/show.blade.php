@@ -65,14 +65,17 @@
 
      .comment-author {
          font-weight: bold;
-         margin-bottom: 5px;
+         
          color: #007bff;
+         padding-left: 10px;
+         
      }
 
      .comment-text {
          margin-bottom: 10px;
          color: #333;
          font-size: 14px;
+         margin-left: 40px;
      }
 
      .comment-actions {
@@ -142,12 +145,14 @@
          font-weight: bold;
          margin-bottom: 5px;
          color: #007bff;
+         margin-left: 10px;
      }
 
      .reply-text {
          margin-bottom: 10px;
          color: #333;
          font-size: 14px;
+         margin-left: 40px;
      }
 
      .reply-actions {
@@ -197,6 +202,18 @@
      .comment_cancel_btn:hover {
          background-color: #c82333;
      }
+     .comment-user{ 
+        display: flex;
+        align-items: center;
+    
+     }
+
+     .comment-image .img-comment{
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        
+     }
  </style>
  <div class="comments-section">
      <h3>Bình luận</h3>
@@ -218,7 +235,7 @@
                  $diffInDays = $createdAt->diffInDays();
                  $thoigian = '';
                  if ($diffInMinutes < 60) {
-                     $thoigian = $diffInMinutes . ' phút trước';
+                     $thoigian = intval($diffInMinutes) . ' phút trước';
                  } elseif ($diffInHours < 24) {
                      $thoigian = floor($diffInHours) . ' tiếng trước';
                  } else {
@@ -226,7 +243,10 @@
                  }
              @endphp
              <div id='acomment-{{ $item_id }}-{{ $comment->id }}' class="comment">
-                 <div class="comment-author">{{ $comment->full_name }}</div>
+                <div class="comment-user">
+                    <div class="comment-image"><img src="{{ $comment->photo }}" alt="" class="img-comment"></div>
+                 <div class="comment-author" >{{ $comment->full_name }}</div>
+                </div>
                  <div id="comment-text-{{ $comment->id }}"class="comment-text">{{ $comment->content }}</div>
                  <div class="comment-actions">
                      <span onclick="replyComment({{ $comment->id }})">Phản hồi</span>
@@ -254,16 +274,20 @@
                              $diffInDays = $createdAt->diffInDays();
                              $thoigiansub = '';
                              if ($diffInMinutes < 60) {
-                                 $thoigian = $diffInMinutes . ' phút trước';
+                                $thoigiansub = intval($diffInMinutes) . ' phút trước';
+
                              } elseif ($diffInHours < 24) {
-                                 $thoigian = floor($diffInHours) . ' tiếng trước';
+                                 $thoigiansub = floor($diffInHours) . ' tiếng trước';
                              } else {
-                                 $thoigian = floor($diffInDays) . ' ngày trước';
+                                 $thoigiansub = floor($diffInDays) . ' ngày trước';
                              }
                          @endphp
                          <div id='acomment-{{ $item_id }}-{{ $subcomment->id }}' class="replies">
                              <div class="reply">
+                                <div class="comment-user">
+                                <div class="comment-image"><img src="{{ $subcomment->photo }}" alt="" class="img-comment"></div>
                                  <div class="reply-author">{{ $subcomment->full_name }}</div>
+                                </div>
                                  <div class="reply-text" id ="reply-text-{{ $subcomment->id }}">
                                      {{ $subcomment->content }}</div>
                                  <div class="reply-actions">

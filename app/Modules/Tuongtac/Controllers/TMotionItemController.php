@@ -26,7 +26,7 @@ class TMotionItemController extends Controller
         }
         $request->validate([
             'item_id' => 'required|integer', 
-              'item_code'=> 'required|string', 
+            'item_code'=> 'required|string', 
             'reaction_id' => 'required|string', // Ví dụ: 'like', 'love', ...
         ]);
         $validReactions = TMotion::pluck('title')->toArray();

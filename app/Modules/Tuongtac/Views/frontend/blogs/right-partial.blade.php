@@ -24,17 +24,18 @@ use Illuminate\Support\Str;
                     <li><a href="{{route('front.tblogs.myblog')}}">Bài viết của tôi</a></li>
                     <li> <a href="{{route('front.tblogs.favblog')}}" >Bài viết quan tâm</a></li>
                     <li><a href="{{route('front.userpages.hornor')}}">Người dùng vinh danh</a></li>
-                    <li><a href="{{route('front.userpages.edituser')}}">Thông tin tài khoản</a></li>
+                    {{-- <li><a href="{{route('front.userpages.edituser')}}">Thông tin tài khoản</a></li> --}}
+                    <li><a href="{{ route('front.tblogs.trendblog') }}">Bài viết xu hướng</a></li>
                 </ul>
             </nav>
         </div>
     </div>
     <div class="section">
         <div class="popular-posts">
-            <h3>Nhóm thành viên</h3>
+            <h3><a href="{{ route('group.index') }}">Nhóm thành viên</a></h3>
             <ul class="submenu">
                 @foreach($groups as $group)
-                <li><i class="random-icon">🔥</i> <a href="{{ $group->getPageUrl($group->id)}}" >{{Str::limit($group->title, 20) }} </a></li>
+                <li><i class="random-icon">🔥</i> <a href="{{ route('group.show', $group->id) }}" >{{Str::limit($group->title, 20) }} </a></li>
                 @endforeach
             </ul>
         </div>

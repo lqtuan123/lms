@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -29,18 +30,15 @@ class User extends Authenticatable
         'phone',
         'address',
         'description',
-        'ship_id',
+
         'ugroup_id',
         'role',
-        'budget',
+
         'totalpoint',
-        'totalrevenue',
-        'taxcode',
-        'taxname',
-        'taxaddress',
+
         'status',
     ];
-    
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -61,34 +59,42 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public static function deleteUser($user_id){
+    public static function deleteUser($user_id)
+    {
         $user = User::find($user_id);
-        if(auth()->user()->role =='admin')
-        {
+        if (auth()->user()->role == 'admin') {
             $user->delete();
             return 1;
-        }
-        else{
+        } else {
             $user->status = "inactive";
             $user->save();
             return 0;
         }
-            
-        
+
     }
     public static function c_create($data)
     {
-        
         $pro = User::create($data);
-        $pro->code = "CUS" . sprintf('%09d',$pro->id);
+        $pro->code = "CUS" . sprintf('%09d', $pro->id);
         $pro->save();
-       
-        
-       
+
         return $pro;
     }
     
-    
-}   
+    /**
+     * Get the user's name.
+     * If name attribute doesn't exist, returns full_name
+     */
+    public function getNameAttribute($value)
+    {
+        // If there's a name value, return it
+        if (!empty($value)) {
+            return $value;
+        }
+        
+        // Otherwise return full_name
+        return $this->full_name;
+    }
+}
 
 

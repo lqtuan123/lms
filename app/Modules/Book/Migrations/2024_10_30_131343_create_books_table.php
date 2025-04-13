@@ -15,7 +15,7 @@ class CreateBooksTable extends Migration
             $table->string('photo')->nullable();
             $table->text('summary')->nullable();
             $table->longText('content')->nullable();
-            $table->json('tags')->nullable(); 
+            $table->enum('block', ['yes', 'no'])->default('no');
             $table->json('resources')->nullable(); 
             $table->enum('status',['active','inactive'])->default('active');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

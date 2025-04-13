@@ -46,7 +46,7 @@
     </td>
     <td class="text-left">{{ $item->chuongTrinhdaotao->title ?? 'N/A' }}</td>
     <td class="text-left">{{ $item->loai ?? 'N/A' }}</td>
-    <td class="text-left">{{ $item->hocky ?? 'N/A' }}</td>
+    <td class="text-left">{{ $item->hocKy->so_hoc_ky ?? 'N/A' }}</td>
 
     <!-- Hiển thị học phần tiên quyết -->
     <td class="text-left">
@@ -67,10 +67,10 @@
         @php
             $hocphansongsong = json_decode($item->hocphansongsong, true);
         @endphp
-        @if($hocphansongsong && isset($hocphansongsong['id']))
+        @if($hocphansongsong && isset($hocphansongsong['parallel']))
             {{ implode(', ', array_map(function($id) use ($hocPhanList) {
                 return $hocPhanList[$id] ?? 'N/A';
-            }, $hocphansongsong['id'])) }}
+            }, $hocphansongsong['parallel'])) }}
         @else
             N/A
         @endif
@@ -193,7 +193,6 @@
         });
   
 });  
-    
 </script>
- 
+
 @endsection

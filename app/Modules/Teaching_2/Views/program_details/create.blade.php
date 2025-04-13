@@ -51,11 +51,16 @@
                 <!-- Chọn Học Kỳ -->
                 <div class="mt-3">
                     <label for="hoc_ky" class="form-label">Học kỳ</label>
-                    <select id="hoc_ky" name="hocky" class="form-control">
+                    <select id="hoc_ky" name="hoc_ky_id" class="form-control">
                         <option value="">Chọn học kỳ</option>
-                        @for ($i = 1; $i <= 10; $i++)
+                        {{-- @for ($i = 1; $i <= 10; $i++)
                             <option value="{{ $i }}" {{ old('hocky') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                        @endfor
+                        @endfor --}}
+                        @foreach($hocKy as $hoc_ky)
+                            <option value="{{ $hoc_ky->id }}" {{ old('hoc_ky_id') == $hoc_ky->id ? 'selected' : '' }}>
+                                {{ $hoc_ky->so_hoc_ky }}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
         
@@ -80,7 +85,7 @@
                         @endforeach
                     </select>
                 </div>
-            
+
                 <!-- Học Phần Song Song -->
                 <div class="mt-3">
                     <label for="hocphansongsong" class="form-label">Học phần song song:</label>
@@ -92,6 +97,7 @@
                         @endforeach
                     </select>
                 </div>
+
         
                 <!-- Hiển thị lỗi nếu có -->
                 <div class="mt-3">
@@ -121,18 +127,38 @@
 @section('scripts')
 
 <script>
-    $(document).ready(function() {
-    $('#hocphantienquyet').select2({
-        placeholder: "Chọn các học phần tiên quyết",
-        allowClear: true
+    // Khởi tạo cho học phần tiên quyết
+    var selectTienQuyet = new TomSelect('#hocphantienquyet', {
+        maxItems: null,
+        allowEmptyOption: true,
+        plugins: ['remove_button'],
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        onItemAdd: function() {
+            this.setTextboxValue('');
+            this.refreshOptions();
+        },
+        create: true
     });
 
-    $('#hocphansongsong').select2({
-        placeholder: "Chọn các học phần song song",
-        allowClear: true
+    // Khởi tạo cho học phần song song
+    var selectSongSong = new TomSelect('#hocphansongsong', {
+        maxItems: null,
+        allowEmptyOption: true,
+        plugins: ['remove_button'],
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        onItemAdd: function() {
+            this.setTextboxValue('');
+            this.refreshOptions();
+        },
+        create: true
     });
-});
-
+    
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/i18n/vi.min.js"></script>
 

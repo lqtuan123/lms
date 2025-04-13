@@ -16,4 +16,11 @@ class BookType extends Model
     {
         return $this->hasMany(Book::class);
     }
+
+    public function activeBooks(): HasMany
+    {
+        return $this->hasMany(Book::class)
+                    ->where('status', 'active')
+                    ->where('block', 'no');
+    }
 }

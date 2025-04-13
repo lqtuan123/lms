@@ -1,5 +1,5 @@
 <div class="post-actions">
-    <style>
+    {{-- <style>
         .motion-container {
             position: relative;
             /* Giữ vị trí cha để con tuyệt đối */
@@ -22,7 +22,7 @@
             display: block;
             /* Hiển thị khi hover container */
         }
-    </style>
+    </style> --}}
     <div class="motion-container" id="motion-{{ $item_id }}" data-id="{{ $item_id }}">
         <div class="motion-short">
             <button class="btn-reaction" item_code="{{ $item_code }}" data-id="{{ $item_id }}"
@@ -54,31 +54,46 @@
     </div>
     <div class="add-comment">
         <span style="cursor: pointer;" onclick="toggleCommentBox({{ $item_id }})"
-            class="{{ $hasComment ? 'hascomment' : '' }}">
-            {{ $hasComment ? $hasComment : '💬' }} bình luận</span>
+            class="">💬
+            {{ $hasComment == 0 ? '' : $hasComment  }} bình luận
+
     </div>
-    <div class="read-time rating-container" item_code="{{ $item_code }}" data-post-id="{{ $item_id }}">
+    {{-- <div class="read-time rating-container" item_code="{{ $item_code }}" data-post-id="{{ $item_id }}">
         <span id="vote-count-{{ $item_id }}">{{ isset($voteRecord) ? $voteRecord->count : '' }}</span>
         @for ($i = 1; $i <= 5; $i++)
             <i class="star {{ $i >= (isset($voteRecord) ? $voteRecord->point : 6) ? 'selected' : '' }}"
                 data-value="{{ $i }}">★</i>
         @endfor
 
-    </div>
+    </div> --}}
 
     <div class="bookmark">
-        @if ($isBookmarked)
-            <button class="btn-bookmark bookmarked" item_code="{{ $item_code }}"
-                data-post-id="{{ $item_id }}">
-                {{ $isBookmarked }} <i class="fa fa-bookmark  " style="background:white">
-                </i>
+        @auth
+            @if ($isBookmarked)
+                <button class="btn-bookmark bookmarked" item_code="{{ $item_code }}"
+                    data-post-id="{{ $item_id }}">
+                    {{ $tong }} <i class="fa fa-bookmark  " style="background:white">
+                    </i>
 
-            </button>
-        @else
-            <button class="btn-bookmark" item_code="{{ $item_code }}" data-post-id="{{ $item_id }}">
+                </button>
+            @else
+                {{-- <button class="btn-bookmark" item_code="{{ $item_code }}" data-post-id="{{ $item_id }}">
                 <i class="fa fa-bookmark" style="background:white">
                 </i>
-            </button>
-        @endif
+            </button> --}}
+                <button class="btn-bookmark " item_code="{{ $item_code }}" data-post-id="{{ $item_id }}">
+                    {{ $tong }} <i class="fa fa-bookmark  " style="background:white">
+                    </i>
+                </button>
+                </a>
+            @endif
+        @else
+            <a href="{{ route('front.login') }}">
+                <button class="btn-bookmark">
+                    {{ $tong }} <i class="fa fa-bookmark"></i>
+                </button>
+            </a>
+        @endauth
+
     </div>
 </div>

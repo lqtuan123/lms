@@ -22,11 +22,12 @@
             </div>
 
             <div class="mt-3">
-                <label>Ảnh hiện tại</label>
+                <label>Ảnh bìa</label>
+                <div id="photoDropzone" class="dropzone"></div>
+                <input type="hidden" name="photo" id="photo_input" value="{{ $book->photo }}">
                 @if ($book->photo)
-                    <img src="{{ $book->photo }}" alt="{{ $book->title }}" style="width: 100px; height: auto;">
+                    <img src="{{ $book->photo }}" id="photoPreview" style="width: 100px; height: auto; margin-top:10px;">
                 @endif
-                <input type="file" name="photo" class="form-control mt-2" accept="image/*">
             </div>
 
             <div class="mt-3">
@@ -110,7 +111,29 @@
 
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
     <script>
+        Dropzone.autoDiscover = false;
+        var photoDropzone = new Dropzone("#photoDropzone", {
+            url: "{{ route('front.upload.avatar') }}",
+            paramName: "photo",
+            maxFiles: 1,
+            acceptedFiles: "image/*",
+            addRemoveLinks: true,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            init: function() {
+                this.on("success", function(file, response) {
+                    document.querySelector("#photo_input").value = response.path;
+                    document.querySelector("#photoPreview").src = response.path;
+                });
+                this.on("removedfile", function(file) {
+                    document.querySelector("#photo_input").value = "";
+                });
+            }
+        });
         var select = new TomSelect('#select-junk', {
             maxItems: null,
             allowEmptyOption: true,

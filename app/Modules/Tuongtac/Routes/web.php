@@ -14,9 +14,11 @@ use App\Modules\Tuongtac\Controllers\TPollController;
 use App\Modules\Tuongtac\Controllers\AdminTBlogController;
 // Define routes here
 
-// Route::group( [ 'prefix'=>'admin' ,  'as' => 'admin.' ],function(){
-//     Route::resource('tblog',[AdminTBlogController::class]);
-// });
+Route::group(['prefix'=>'admin', 'middleware' => 'admin.auth', 'as' => 'admin.'], function(){
+    Route::resource('tblogs', AdminTBlogController::class);
+    Route::post('tblog-status', [AdminTBlogController::class, 'blogStatus'])->name('tblogs.status');
+    Route::delete('tblogs/{blogId}/resource/{resourceId}', [AdminTBlogController::class, 'removeResource'])->name('tblogs.resource.destroy');
+});
 
 Route::group( [    'as' => 'front.' ],function(){
     // Route::resource('tcomment',  TCommentController::class);
@@ -30,6 +32,7 @@ Route::group( [    'as' => 'front.' ],function(){
     Route::resource('tblogs',  TBlogController::class);
     Route::get('mytblogs',[TBlogController::class,'myblog'])->name('tblogs.myblog');
     Route::get('favtblogs',[TBlogController::class,'favblog'])->name('tblogs.favblog');
+    Route::get('trendblogs',[TBlogController::class,'trendblog'])->name('tblogs.trendblog');
     Route::get('social/{tag}',[TBlogController::class,'tag'])->name('tblogs.tag');
     
     Route::get('pageblog/create/{id}',[TBlogController::class,'addgroupblog'])->name('groupblog.create');
@@ -65,6 +68,7 @@ Route::group( [    'as' => 'front.' ],function(){
     Route::get('/vinh-danh-nguoi-dung', [TUserpageController::class, 'user_hornor'])->name('userpages.hornor');
 
     Route::get('/tpage/{slug}', [TPageController::class, 'view'])->name('tpage.view');
+    Route::get('/groups/{slug}', [TPageController::class, 'viewgroup'])->name('tpage.viewgroup');
     Route::post('/updateimage', [TPageController::class, 'updateImage'])->name('tpage.updateimage');
     
     Route::get('/polls', [TPollController::class, 'index'])->name('poll.index');

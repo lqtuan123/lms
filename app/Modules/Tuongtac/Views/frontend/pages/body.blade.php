@@ -13,10 +13,9 @@
     object-fit: cover;
 }
 
-.edit-icon {
+/* Định dạng chung cho icon chỉnh sửa */
+.edit-icon, .edit-icon1 {
     position: absolute;
-    top: 10px;
-    right: 10px;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     padding: 5px;
@@ -24,23 +23,23 @@
     cursor: pointer;
     display: block;
 }
-.edit-icon1 {
-    position: absolute;
+
+.edit-icon {
     top: 10px;
-    right: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 5px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: block;
+    right: 10px;
+}
+
+.edit-icon1 {
+    margin: 10px 0 0 10px ;
+    left:48%;
 }
 
 .image-container:hover .edit-icon {
     display: block;
 }
 
-.edit-form {
+/* Popup chỉnh sửa */
+.popup, .edit-form {
     display: none;
     position: fixed;
     top: 50%;
@@ -52,11 +51,8 @@
     border-radius: 8px;
     z-index: 1000;
 }
+
 .popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
@@ -65,26 +61,25 @@
 
 .popup-content {
     position: relative;
-    background: white;
     width: 400px;
-    padding: 20px;
-    border-radius: 8px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    left:40%;
+    top:10%;
 }
 
- 
+/* Hiệu ứng khi hover vào poll card */
 .poll-card:hover {
-    transform: scale(1.05); /* Phóng to nhẹ khi hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Bóng đậm hơn khi hover */
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
 
- 
+.avatar {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+}
 
- 
 </style>
 @endsection
 @section('content')
@@ -102,12 +97,16 @@
         <!-- end section -->
         <!-- start section -->
     <section class="overlap-section text-center p-0 sm-pt-50px">
-        <img   class="    box-shadow-medium-bottom w-150px bg-white  border border-9 border-color-white" src="{{$page->avatar}}" title ="{{$page->title }} " alt="{{$page->title}}">
         @if($is_admin)
-        <div class="edit-icon1" onclick="openEditPopup('logo')">
-            ✏️
+        <div class="edit-edit">
+            <div class="edit-icon1" onclick="openEditPopup('logo')">
+                ✏️
+            </div>
         </div>
+        
         @endif
+        <img   class="avatar   box-shadow-medium-bottom w-150px bg-white  border border-9 border-color-white" src="{{ $page->avatar}}" title ="{{$page->title }} " alt="{{$page->title}}">
+        
         <h1 style="font-size:200% !important; text-transform: uppercase;" class="text-dark-gray fw-700"> {{$page->title}} </h1>
         
     </section>

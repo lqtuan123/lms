@@ -172,14 +172,14 @@ class TUserpageController extends Controller
                 ->leftjoin('t_userpages', 'users.id', '=','t_userpages.user_id' )
                  ->select('t_userpages.*','users.*')
                  ->orderBy('t_userpages.point','desc')
-                 ->limit(4)
+                 ->limit(3)
                  ->get();
         $data['otherUsers'] = \DB::table('users')
                 ->leftjoin('t_userpages', 'users.id', '=','t_userpages.user_id' )
                   
                   ->select('t_userpages.*','users.*')
                   ->orderBy('t_userpages.point','desc')
-                  ->skip(4)->take(36)->get() ;
+                  ->skip(3)->take(36)->get() ;
         
         return view('Tuongtac::frontend.userpage.hornor',$data);
  

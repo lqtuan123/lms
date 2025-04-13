@@ -23,14 +23,14 @@ use Carbon\Carbon;
         $thoigian = $diffInDays . ' ngày trước';
     }
     $adsense_code = '<ins class="adsbygoogle"
-            style="display:block; text-align:center;"
-            data-ad-layout="in-article"
-            data-ad-format="fluid"
-            data-ad-client="ca-pub-5437344106154965"
-            data-ad-slot="3375673265"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>';
+                style="display:block; text-align:center;"
+                data-ad-layout="in-article"
+                data-ad-format="fluid"
+                data-ad-client="ca-pub-5437344106154965"
+                data-ad-slot="3375673265"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>';
     
     $content = $post->content;
     // Tìm vị trí của thẻ <p> đầu tiên
@@ -124,11 +124,7 @@ use Carbon\Carbon;
                 </div>
             </div>
 
-            <?php
-            if (isset($link_download)) {
-                echo $link_download;
-            }
-            ?>
+            <a href="{{ $url }}">{{ $url }}</a>    
 
             <!-- Hành động -->
             <?php echo $post->actionbar; ?>
@@ -176,4 +172,16 @@ use Carbon\Carbon;
             document.getElementById("lightbox-img").src = images[currentImageIndex];
         }
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let storedUrl = localStorage.getItem('sharedBookUrl');
+            if (storedUrl) {
+                document.getElementById('book-url').value = storedUrl;
+                localStorage.removeItem('sharedBookUrl'); // Xóa sau khi dùng để tránh giữ dữ liệu cũ
+            }
+        });
+    </script>
 @endsection
+
+
+

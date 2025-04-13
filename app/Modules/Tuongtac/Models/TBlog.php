@@ -19,7 +19,7 @@ class TBlog extends Model
         'hit',
         'status',
         'resources',
-        
+        'group_id',
     ];
     protected $casts = [
         'resources' => 'array', // Chuyển đổi thành mảng tự động
@@ -41,7 +41,11 @@ class TBlog extends Model
     public function author()
     {
         return $this->belongsTo(\App\Models\User::class,'user_id');
-        
+    }
+    
+    public function group()
+    {
+        return $this->belongsTo(\App\Modules\Group\Models\Group::class, 'group_id');
     }
 
     // protected $casts = [

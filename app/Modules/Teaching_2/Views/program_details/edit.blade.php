@@ -11,7 +11,7 @@
  
 <div class="intro-y flex items-center mt-8">
     <h2 class="text-lg font-medium mr-auto">
-        Điều chỉnh thông tin Giảng Viên
+        Điều chỉnh chi tiết chương trình
     </h2>
 </div>
 <div class="grid grid-cols-12 gap-12 mt-5">
@@ -46,13 +46,13 @@
         
                 <div class="mt-3">
                     <label for="hoc_ky" class="form-label">Học kỳ</label>
-                    <select id="hoc_ky" name="hocky" class="form-control">
+                    <select id="hoc_ky" name="hoc_ky_id" class="form-control">
                         <option value="">Chọn học kỳ</option>
-                        @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}" {{ old('hocky', $program_details->hocky ?? '') == $i ? 'selected' : '' }}>
-                                {{ $i }}
+                        @foreach($hocKy as $hoc_ky)
+                            <option value="{{ $hoc_ky->id }}" {{  $hoc_ky->id == $program_details->hoc_ky_id ? 'selected' : ''}}>
+                                {{ $hoc_ky->so_hoc_ky }}
                             </option>
-                        @endfor
+                        @endforeach
                     </select>
                 </div>
         
@@ -69,29 +69,33 @@
                     </select>
                 </div>
         
-                <!-- Học Phần Tiên Quyết -->
+                <!-- Học phần tiên quyết -->
                 <div class="mt-3">
                     <label for="hocphantienquyet" class="form-label">Học phần tiên quyết</label>
                     <select name="hocphantienquyet[]" id="hocphantienquyet" class="form-select" multiple>
                         @foreach($hocPhan as $hoc_phan)
-                            <option value="{{ $hoc_phan->id }}" {{ in_array($hoc_phan->id, old('hocphantienquyet', (array) $program_details->hocphantienquyet ?? [])) ? 'selected' : '' }}>
+                            <option value="{{ $hoc_phan->id }}" 
+                                {{ in_array($hoc_phan->id, $hocphantienquyet_ids) ? 'selected' : '' }}>
                                 {{ $hoc_phan->title }}
                             </option>
                         @endforeach
                     </select>
                 </div>
-        
-                <!-- Học Phần Song Song -->
+
+                <!-- Học phần song song -->
                 <div class="mt-3">
                     <label for="hocphansongsong" class="form-label">Học phần song song</label>
                     <select name="hocphansongsong[]" id="hocphansongsong" class="form-select" multiple>
                         @foreach($hocPhan as $hoc_phan)
-                            <option value="{{ $hoc_phan->id }}" {{ in_array($hoc_phan->id, old('hocphansongsong', (array) $program_details->hocphansongsong ?? [])) ? 'selected' : '' }}>
+                            <option value="{{ $hoc_phan->id }}" 
+                                {{ in_array($hoc_phan->id, $hocphansongsong_ids) ? 'selected' : '' }}>
                                 {{ $hoc_phan->title }}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
+
         
                 <!-- Hiển thị lỗi nếu có -->
                 <div class="mt-3">
@@ -120,6 +124,38 @@
 @section('scripts')
 
 <script>
+     // Khởi tạo cho học phần tiên quyết
+     var selectTienQuyet = new TomSelect('#hocphantienquyet', {
+        maxItems: null,
+        allowEmptyOption: true,
+        plugins: ['remove_button'],
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        onItemAdd: function() {
+            this.setTextboxValue('');
+            this.refreshOptions();
+        },
+        create: true
+    });
+
+    // Khởi tạo cho học phần song song
+    var selectSongSong = new TomSelect('#hocphansongsong', {
+        maxItems: null,
+        allowEmptyOption: true,
+        plugins: ['remove_button'],
+        sortField: {
+            field: "text",
+            direction: "asc"
+        },
+        onItemAdd: function() {
+            this.setTextboxValue('');
+            this.refreshOptions();
+        },
+        create: true
+    });
+    
 </script>
 
 @endsection

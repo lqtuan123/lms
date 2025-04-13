@@ -146,6 +146,7 @@ class UserController extends Controller
         } else {
             return response()->json(['msg' => '', 'status' => false]);
         }
+        
     }
     /**
      * Show the form for creating a new resource.
