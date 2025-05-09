@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
  
 use Illuminate\Support\Str;
 use App\Modules\Blog\Models\BlogCategory;
-class BlogCategoryController extends Controller
+class BlogCategoryController extends \App\Http\Controllers\Controller
 {
     /**
      * Display a listing of the resource.

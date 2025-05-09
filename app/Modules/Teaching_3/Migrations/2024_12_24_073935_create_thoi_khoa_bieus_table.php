@@ -18,8 +18,8 @@ return new class extends Migration
             $table->date('ngay'); // Ngày học
             $table->integer('tietdau'); // Tiết bắt đầu
             $table->integer('tietcuoi'); // Tiết kết thúc
-            $table->foreignId('diadiem_id')->constrained('dia_diem')->onDelete('cascade'); // Định nghĩa khóa ngoại      
             $table->timestamps();
+            $table->foreignId('diadiem_id')->constrained('dia_diem')->onDelete('cascade'); // Định nghĩa khóa ngoại      
         });
     }
 

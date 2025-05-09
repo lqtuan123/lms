@@ -29,7 +29,7 @@
                             </td>
                             
                             <td class="table-report__action w-56">
-                            <form action="{{route('setting.cnsp_brand')}}" method = "post">
+                            <form action="{{route('admin.setting.cnsp_brand')}}" method = "post">
                                 @csrf
                                 <input   type="hidden" name="brand_id" value="{{$item->id}}"/>
                                 <input   type="hidden" name="brand_name" value="{{$item->title}}"/>

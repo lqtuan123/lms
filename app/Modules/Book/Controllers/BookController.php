@@ -189,10 +189,11 @@ class BookController extends Controller
             $slug = $book->slug;
         }
 
-        // Cập nhật ảnh bìa từ Dropzone (chỉ thay đổi nếu có URL mới)
-        if ($request->photo) {
+        // Cập nhật ảnh bìa
+        $photo = $book->photo; // Giữ nguyên ảnh cũ nếu không có ảnh mới
+        if ($request->photo && $request->photo !== $book->photo) {
+            // Xóa dấu ngoặc vuông và dấu ngoặc kép nếu có
             $photo = trim($request->photo, '[]"');
-            $book->photo = $photo;
         }
 
         // Xử lý tài liệu (document)
@@ -224,6 +225,7 @@ class BookController extends Controller
         $book->update([
             'title' => $request->title,
             'slug' => $slug,
+            'photo' => $photo,
             'summary' => $request->summary,
             'content' => $request->content,
             'status' => $request->status,

@@ -13,21 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('classes', function (Blueprint $table) {
-            // Add the new columns if they don't exist
-            if (!Schema::hasColumn('classes', 'teacher_id')) {
-                $table->unsignedBigInteger('teacher_id')->nullable(); // Đảm bảo kiểu dữ liệu phù hợp
-                $table->foreign('teacher_id')->references('id')->on('teacher')->onDelete('cascade'); // Giảng viên có thể là null
-            }
-            
-            if (!Schema::hasColumn('classes', 'nganh_id')) {
-                $table->unsignedBigInteger('nganh_id')->nullable(); // Đảm bảo kiểu dữ liệu phù hợp
-                $table->foreign('nganh_id')->references('id')->on('nganh')->onDelete('cascade'); // Giảng viên có thể là null
-            }
-            
-            if (!Schema::hasColumn('classes', 'max_students')) {
-                $table->integer('max_students')->default(30);
-            }
+        Schema::create('classes', function (Blueprint $table) {
+            $table->id();
+            $table->string('class_name');
+            $table->unsignedBigInteger('teacher_id'); // Đảm bảo kiểu dữ liệu phù hợp
+            $table->unsignedBigInteger('nganh_id'); // Đảm bảo kiểu dữ liệu phù hợp
+            $table->foreign('teacher_id')->references('id')->on('teacher')->onDelete('cascade'); // Giảng viên có thể là null
+            $table->foreign('nganh_id')->references('id')->on('nganh')->onDelete('cascade'); // Giảng viên có thể là null
+            $table->text('description')->nullable();
+            $table->integer('max_students')->default(30);
+            $table->timestamps();
         });
     }
 
@@ -38,12 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('classes', function (Blueprint $table) {
-            $table->dropForeign(['teacher_id']);
-            $table->dropForeign(['nganh_id']);
-            $table->dropColumn('teacher_id');
-            $table->dropColumn('nganh_id');
-            $table->dropColumn('max_students');
-        });
+        Schema::dropIfExists('classes');
     }
 };

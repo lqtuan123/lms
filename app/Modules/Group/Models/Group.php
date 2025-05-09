@@ -8,6 +8,7 @@ use App\Modules\Tuongtac\Models\TPage;
 use App\Modules\Group\Models\GroupMemeber;
 use App\Models\User;
 use App\Modules\Tuongtac\Models\TBlog;
+use League\Flysystem\Visibility;
 
 class Group extends Model
 {
@@ -18,8 +19,7 @@ class Group extends Model
         'slug',
         'description',
         'type_code',
-        'author_id',
-        'visibility', // public, private, secret
+        'author_id', // public, private, secret
         'pending_members',
         'members',
         'moderators', // Danh sách ID phó nhóm
@@ -49,8 +49,7 @@ class Group extends Model
 
     public function ratings()
     {
-        return $this->hasOne(\App\Modules\Tuongtac\Models\TVoteItem::class, 'item_id')
-                    ->where('item_code', 'group');
+        return $this->hasMany(\App\Models\Rating::class, 'book_id');
     }
 
     // Helper methods
@@ -222,9 +221,13 @@ class Group extends Model
             $page = TPage::create($data);
         }
         
-        
-        return route('front.tpage.view',$page->slug);
-        
+        return route('group.show', $id);
     }
    
+    public function getUrl()
+    {
+        $id = $this->id;  
+        if (empty($id)) return ' ';
+        return route('group.show',$id);
+    }
 }

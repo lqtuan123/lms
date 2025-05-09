@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class IndexController extends Controller
 {
@@ -60,26 +61,32 @@ class IndexController extends Controller
         // $data['new_pros'] =   DB::select($sql_new_pro) ;
         // $sql_hit_pro = "SELECT * from products where status = 'active' and stock >= 0 and products.type = 'normal' order by hit desc LIMIT 10";
         // $data['hit_pros'] =   DB::select($sql_hit_pro) ;
-        $sql_blog_pro = "SELECT * from blogs where status = 'active' and cat_id > 0   order by id desc LIMIT 5";
-        $data['blogs'] =   DB::select($sql_blog_pro);
+        // $sql_blog_pro = "SELECT * from blogs where status = 'active' and cat_id > 0   order by id desc LIMIT 5";
+        // $data['blogs'] =   DB::select($sql_blog_pro);
         return view($this->front_view . '.index', $data);
     }
     public function viewLogin()
     {
-        $data['plink'] =   url()->previous();
-        $data['pagetitle'] = "Đăng nhập";
-        $data['links'] = array();
-        $link = new \App\Models\Links();
-        $link->title = 'Đăng nhập';
-        $link->url = '#';
-        array_push($data['links'], $link);
-        $data['detail'] = \App\Models\SettingDetail::find(1);
-
-        if (auth()->user()) {
-            return view($this->front_view . '.index', $data);
-        } else {
-            return view($this->front_view . '.auth.login', $data);
+        // Nếu người dùng đã đăng nhập, chuyển hướng đến trang chủ
+        if (Auth::check()) {
+            return redirect()->route('home');
         }
+        
+        // Lấy URL trang trước
+        $previousUrl = url()->previous();
+        $referer = request()->headers->get('referer');
+        
+        // Đảm bảo không lặp lại trang login
+        if (str_contains($previousUrl, '/front/login') || empty($previousUrl) || $previousUrl == url('/')) {
+            $redirectUrl = route('home', ['login' => 'true']);
+        } else {
+            // Thêm tham số login=true vào URL trước đó
+            $separator = (parse_url($previousUrl, PHP_URL_QUERY)) ? '&' : '?';
+            $redirectUrl = $previousUrl . $separator . 'login=true';
+        }
+        
+        // Chuyển hướng trở lại trang trước với tham số login=true
+        return redirect()->to($redirectUrl);
     }
     public function viewRegister()
     {
@@ -136,7 +143,7 @@ class IndexController extends Controller
             'email' => 'string|required',
             'password' => 'string|required',
             'address' => 'string|required',
-            'ketqua' => 'string|required',
+           
         ]);
 
         // $messages = [

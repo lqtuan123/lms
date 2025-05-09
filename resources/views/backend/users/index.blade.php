@@ -85,7 +85,7 @@
                         <th class="whitespace-nowrap">NHÓM</th>
                         <th class="text-center whitespace-nowrap">PHONE</th>
                         <th class="whitespace-nowrap">ĐỊA CHỈ</th>
-                        
+                        <th class="text-center whitespace-nowrap">ĐIỂM</th>
                         <th class="text-center whitespace-nowrap">TRẠNG THÁI</th>
                         <th></th>
                     </tr>
@@ -118,7 +118,11 @@
                         <td class="text-center">{{$item->ugroup_id!= null?\App\Models\UGroup::where('id',$item->ugroup_id)->value('title'):''}} </td>
                         <td class="text-center">{{$item->phone}} </td>
                         <td class="text-left">{{$item->address}} </td>
-                        
+                        <td class="text-center">
+                            <a href="{{ route('admin.user.points', $item->id) }}" class="text-primary font-bold">
+                                {{ number_format($item->totalpoint) }}
+                            </a>
+                        </td>
                         <td class="text-center"> 
                             <input type="checkbox" 
                             data-toggle="switchbutton" 
@@ -132,14 +136,16 @@
                         </td>
                         
                         <td class="table-report__action w-56">
-                            <div class="flex justify-center items-center">
-                                <a href="{{route('admin.user.edit',$item->id)}}" class="flex items-center mr-3" href="javascript:;"> <i data-lucide="check-square" class="w-4 h-4 mr-1"></i> Edit </a>
-                                <form action="{{route('admin.user.destroy',$item->id)}}" method = "post">
-                                    @csrf
-                                    @method('delete')
-                                    <a class="flex items-center text-danger dltBtn" data-id="{{$item->id}}" href="javascript:;" data-tw-toggle="modal" data-tw-target="#delete-confirmation-modal"> <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete </a>
-                                </form>
-                               
+                            <div class="flex justify-start items-center">
+                                <a class="mr-3 flex items-center text-primary" href="{{route('admin.user.edit',$item->id)}}"> <i class="far fa-edit"></i> </a>
+                                <a class="mr-3 flex items-center text-info" href="{{route('admin.user.reset-password',$item->id)}}" title="Đặt lại mật khẩu"> 
+                                    <i class="fas fa-key"></i> 
+                                </a>
+                                <a class="mr-3 flex items-center text-danger btn-delete" 
+                                    data-href="{{route('admin.user.destroy',$item->id)}}"> <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> </a>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input status" data-id="{{$item->id}}" type="checkbox" {{$item->status=='active'? 'checked':''}}>
+                                </div>
                             </div>
                         </td>
                     </tr>

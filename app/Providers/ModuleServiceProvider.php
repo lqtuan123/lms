@@ -18,7 +18,7 @@ class ModuleServiceProvider extends ServiceProvider
         // $this->loadModuleRoutes();
         $this->loadModuleViews();
         $this->loadMigration();
-         
+        $this->loadModuleServices();
     }
     
     protected function loadMigration()
@@ -82,6 +82,25 @@ class ModuleServiceProvider extends ServiceProvider
                     // Add the views path to Laravel's view finder
                    
                     $this->loadViewsFrom($viewPath, $module);
+                }
+            }
+        }
+    }
+
+    protected function loadModuleServices()
+    {
+        $modulesPath = base_path('app/Modules');
+
+        if (is_dir($modulesPath)) {
+            foreach (scandir($modulesPath) as $module) {
+                if ($module === '.' || $module === '..') {
+                    continue;
+                }
+
+                $servicesPath = $modulesPath . '/' . $module . '/Services';
+
+                if (is_dir($servicesPath)) {
+                    $this->app->register("App\\Modules\\{$module}\\Services\\{$module}ServiceProvider");
                 }
             }
         }

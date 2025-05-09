@@ -59,42 +59,113 @@ class Resource extends Model
             'code' => $code,
             'slug' => self::generateSlug($title),
         ];
-        $data['type_code'] =$type_code;
-        $data['link_code'] = 'file';
+        $data['type_code'] = $type_code;
+        
+        // Kiểm tra nếu là URL YouTube, xử lý đặc biệt
+        $youtubeID = self::getYouTubeID($url);
+        if ($youtubeID) {
+            $data['link_code'] = 'url';
+            $data['title'] = "YouTube: " . ($title != uniqid() ? $title : 'Video');
+            $data['url'] = $url;
+            return self::create($data);
+        }
+        
+        // Kiểm tra xem đây có phải URL thông thường hay là tệp tin
+        $isFileUrl = false;
+        try {
+            $response = Http::get($url);
+            
+            if ($response->ok()) {
+                $contentType = $response->header('Content-Type');
+                $contentDisposition = $response->header('Content-Disposition');
+                
+                // Nếu có Content-Disposition hoặc là các loại file phổ biến thì đánh dấu là file
+                if ($contentDisposition || 
+                    strpos($contentType, 'application/') === 0 || 
+                    strpos($contentType, 'audio/') === 0 || 
+                    strpos($contentType, 'video/') === 0 || 
+                    strpos($contentType, 'image/') === 0 || 
+                    strpos($contentType, 'text/') === 0) {
+                    $isFileUrl = true;
+                }
+                
+                // Kiểm tra thêm phần mở rộng của URL
+                $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                $documentExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'zip', 'rar'];
+                if (in_array(strtolower($extension), $documentExtensions)) {
+                    $isFileUrl = true;
+                }
+            }
+        } catch (\Exception $e) {
+            // Nếu không lấy được phản hồi, coi như URL thông thường
+            \Illuminate\Support\Facades\Log::warning("Không thể kiểm tra URL: " . $e->getMessage());
+        }
+        
+        // Đặt link_code dựa trên kiểu tài nguyên
+        // Nếu là URL file, đánh dấu là 'file'
+        if ($isFileUrl) {
+            $data['link_code'] = 'file';
+        } else {
+            // Nếu là URL thông thường, đánh dấu là 'url'
+            $data['link_code'] = 'url';
+        }
        
-        $response = Http::get($url);
-
-        if ($response->ok()) {
+        // Xử lý thông tin file nếu đây là URL của file
+        if ($isFileUrl && isset($response) && $response->ok()) {
             $fileName = 'unknown_file';
-            $contentDisposition = $response->header('Content-Disposition');
             $mimeType = $response->header('Content-Type');
-            $data['file_type'] =  $mimeType ;
+            $data['file_type'] = $mimeType;
+            
             // Lấy tên file từ Content-Disposition
-            if ($contentDisposition) {
+            if (isset($contentDisposition) && $contentDisposition) {
                 preg_match('/filename="(.+)"/', $contentDisposition, $matches);
                 $fileName = $matches[1] ?? 'unknown_file';
             }
         
-            // Nếu không có tên file, suy đoán từ Content-Type
-            if ($fileName === 'unknown_file' && $mimeType) {
-                switch ($mimeType) {
-                    case 'application/pdf':
-                        $fileName = 'file.pdf';
-                        break;
-                    case 'audio/mpeg':
-                        $fileName = 'file.mp3';
-                        break;
-                    case 'image/jpeg':
-                        $fileName = 'file.jpg';
-                        break;
-                    default:
-                        $fileName = 'file.unknown';
+            // Nếu không có tên file, suy đoán từ Content-Type hoặc từ URL
+            if ($fileName === 'unknown_file') {
+                // Suy đoán từ phần mở rộng của URL
+                $extension = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+                if ($extension) {
+                    $fileName = basename(parse_url($url, PHP_URL_PATH));
+                } else if (isset($mimeType)) {
+                    // Suy đoán từ Content-Type
+                    switch ($mimeType) {
+                        case 'application/pdf':
+                            $fileName = 'file.pdf';
+                            break;
+                        case 'audio/mpeg':
+                            $fileName = 'file.mp3';
+                            break;
+                        case 'image/jpeg':
+                            $fileName = 'file.jpg';
+                            break;
+                        case 'application/msword':
+                            $fileName = 'file.doc';
+                            break;
+                        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                            $fileName = 'file.docx';
+                            break;
+                        default:
+                            $fileName = 'file.' . $extension ?: 'unknown';
+                    }
                 }
             }
-            $data['file_name'] = $fileName;
+            
+            // Chỉ thiết lập file_name nếu có tên file hợp lệ
+            if ($fileName !== 'unknown_file' && $fileName !== 'file.unknown') {
+                $data['file_name'] = $fileName;
+            }
         }
-        if(isset( $data['file_name']))
+        
+        // Thiết lập tiêu đề và URL
+        if (isset($data['file_name']) && $data['file_name'] !== 'unknown_file' && $data['file_name'] !== 'file.unknown') {
             $data['title'] = $data['file_name'];
+        } else {
+            // Nếu là URL thông thường, sử dụng URL làm tiêu đề mô tả
+            $data['title'] = "Liên kết: " . ($title != uniqid() ? $title : parse_url($url, PHP_URL_HOST));
+        }
+        
         $data['url'] = $url;
       
         return self::create($data);
@@ -116,7 +187,10 @@ class Resource extends Model
             $data['type_code'] = $resourceType;
         }
 
-        if (isset($request->link_code)) {
+        // Đảm bảo file luôn được đánh dấu là file khi nó là file tải lên
+        if ($file) {
+            $data['link_code'] = 'file';
+        } else if (isset($request->link_code)) {
             $data['link_code'] = $request->link_code;
         } else {
             $linkTypes = self::generateLinkCode($file);
@@ -246,7 +320,7 @@ class Resource extends Model
     }
 
     // Lấy ID YouTube từ URL.
-    private static function getYouTubeID($url)
+    public static function getYouTubeID($url)
     {
         $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.+\?v=)|youtu\.be\/)([^&\n?#]+)/';
         preg_match($pattern, $url, $matches);

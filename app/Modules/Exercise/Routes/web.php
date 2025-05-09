@@ -6,18 +6,19 @@ use App\Modules\Exercise\Controllers\TuLuanCauHoiController;
 use App\Modules\Exercise\Controllers\BoDeTracNghiemController;
 use App\Modules\Exercise\Controllers\BoDeTuLuanController;
 use App\Modules\Exercise\Controllers\NoidungPhancongController;
+use App\Modules\Exercise\Controllers\SurveyController;
 
 // Định nghĩa route cho module câu hỏi
-// Route::prefix('admin/tuluancauhoi')->name('admin.tuluancauhoi.')->group(function () {
-//     Route::get('/', [TuluancauhoiController::class, 'index'])->name('index');
-//     Route::get('/create', [TuluancauhoiController::class, 'create'])->name('create');
-//     Route::post('/store', [TuluancauhoiController::class, 'store'])->name('store');
-//     Route::get('/{id}/edit', [TuluancauhoiController::class, 'edit'])->name('edit');
-//     Route::patch('/{id}', [TuluancauhoiController::class, 'update'])->name('update');
-//     Route::delete('/{id}', [TuluancauhoiController::class, 'destroy'])->name('destroy');
-//     Route::get('/search', [TuluancauhoiController::class, 'search'])->name('search');
-//     Route::get('/{id}', [TuluancauhoiController::class, 'show'])->name('show');
-// });
+Route::prefix('admin/tuluancauhoi')->name('admin.tuluancauhoi.')->group(function () {
+    Route::get('/', [TuluancauhoiController::class, 'index'])->name('index');
+    Route::get('/create', [TuluancauhoiController::class, 'create'])->name('create');
+    Route::post('/store', [TuluancauhoiController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [TuluancauhoiController::class, 'edit'])->name('edit');
+    Route::patch('/{id}', [TuluancauhoiController::class, 'update'])->name('update');
+    Route::delete('/{id}', [TuluancauhoiController::class, 'destroy'])->name('destroy');
+    Route::get('/search', [TuluancauhoiController::class, 'search'])->name('search');
+    Route::get('/{id}', [TuluancauhoiController::class, 'show'])->name('show');
+});
 
 Route::prefix('admin/noidung_phancong')->name('admin.noidung_phancong.')->group(function () {
     Route::get('/', [NoidungPhancongController::class, 'index'])->name('noidung_phancong.index');
@@ -45,5 +46,6 @@ Route::group(['prefix' => 'admin/', 'as' => 'admin.'], function () {
     Route::resource('bode_tracnghiem', BoDeTracNghiemController::class);
     // Bộ đề tu luan
     Route::resource('bode_tuluans', BoDeTuLuanController::class);
+    Route::resource('survey', SurveyController::class);
 });
 

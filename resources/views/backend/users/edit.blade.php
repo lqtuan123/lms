@@ -118,6 +118,20 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <!-- Thông tin điểm -->
+                    <div class="mt-5 pt-5 border-t border-slate-200/60">
+                        <div class="flex flex-col sm:flex-row items-center">
+                            <div>
+                                <label class="form-label font-medium">Tổng điểm:</label>
+                                <span class="text-primary text-lg font-bold ml-2">{{ number_format($user->totalpoint) }}</span>
+                            </div>
+                            <a href="{{ route('admin.user.points', $user->id) }}" class="btn btn-primary sm:ml-auto mt-3 sm:mt-0">
+                                <i data-lucide="list" class="w-4 h-4 mr-1"></i> Xem lịch sử điểm
+                            </a>
+                        </div>
+                    </div>
+                    
                     <div class="text-right mt-5">
                         <button type="submit" class="btn btn-primary w-24">Lưu</button>
                     </div>

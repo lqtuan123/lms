@@ -1,643 +1,236 @@
- {{-- phần bình luận  --}}
- @php
-     use Carbon\Carbon;
- @endphp
- <style>
-     .comments-section {
-         margin: 20px 0;
-         padding: 15px;
-         border: 1px solid #ddd;
-         border-radius: 8px;
-         background-color: #f9f9f9;
-     }
+{{-- Comments Section Template --}}
+{{-- Parameters: comments, item_id, item_code, curuser --}}
 
-     .comments-section h3 {
-         font-size: 20px;
-         margin-bottom: 15px;
-         color: #333;
-         font-weight: bold;
-         text-transform: uppercase;
-     }
-
-     .comment-form {
-         margin-bottom: 20px;
-         display: flex;
-         flex-direction: column;
-     }
-
-     .comment-form textarea {
-         width: 100%;
-         height: 80px;
-         resize: none;
-         padding: 10px;
-         font-size: 14px;
-         border: 1px solid #ddd;
-         border-radius: 6px;
-     }
-
-     .comment-form button {
-         margin-top: 10px;
-         padding: 8px 15px;
-         font-size: 14px;
-         background-color: #007bff;
-         color: white;
-         border: none;
-         border-radius: 6px;
-         cursor: pointer;
-         transition: background-color 0.3s;
-     }
-
-     .comment-form button:hover {
-         background-color: #0056b3;
-     }
-
-     .comments-list {
-         margin-top: 15px;
-     }
-
-     .comment {
-         margin-bottom: 15px;
-         padding: 10px;
-         border: 1px solid #ddd;
-         border-radius: 6px;
-         background-color: white;
-     }
-
-     .comment-author {
-         font-weight: bold;
-         
-         color: #007bff;
-         padding-left: 10px;
-         
-     }
-
-     .comment-text {
-         margin-bottom: 10px;
-         color: #333;
-         font-size: 14px;
-         margin-left: 40px;
-     }
-
-     .comment-actions {
-         font-size: 12px;
-         color: #555;
-         display: flex;
-         align-items: center;
-         gap: 10px;
-     }
-
-     .comment-actions span {
-         cursor: pointer;
-         color: #007bff;
-         transition: color 0.3s;
-     }
-
-     .comment-actions span:hover {
-         color: #0056b3;
-     }
-
-     .reply-form {
-         margin-top: 10px;
-         display: none;
-         flex-direction: column;
-     }
-
-     .reply-form textarea {
-         width: 100%;
-         height: 60px;
-         resize: none;
-         padding: 8px;
-         font-size: 14px;
-         border: 1px solid #ddd;
-         border-radius: 6px;
-     }
-
-     .reply-form button {
-         margin-top: 5px;
-         padding: 5px 10px;
-         font-size: 12px;
-         background-color: #28a745;
-         color: white;
-         border: none;
-         border-radius: 4px;
-         cursor: pointer;
-         transition: background-color 0.3s;
-     }
-
-     .reply-form button:hover {
-         background-color: #218838;
-     }
-
-     .replies {
-         margin-left: 20px;
-         padding: 10px;
-         border-left: 2px solid #ddd;
-     }
-
-     .reply {
-         margin-bottom: 10px;
-         background-color: #f1f1f1;
-         padding: 8px;
-         border-radius: 6px;
-     }
-
-     .reply-author {
-         font-weight: bold;
-         margin-bottom: 5px;
-         color: #007bff;
-         margin-left: 10px;
-     }
-
-     .reply-text {
-         margin-bottom: 10px;
-         color: #333;
-         font-size: 14px;
-         margin-left: 40px;
-     }
-
-     .reply-actions {
-         font-size: 12px;
-         color: #555;
-         display: flex;
-         align-items: center;
-         gap: 10px;
-     }
-
-     .reply-actions span {
-         cursor: pointer;
-         color: #007bff;
-         transition: color 0.3s;
-     }
-
-     .reply-actions span:hover {
-         color: #0056b3;
-     }
-
-     .comment_save_btn,
-     .comment_cancel_btn {
-         margin-left: 5px;
-         padding: 3px 8px;
-         font-size: 12px;
-         border-radius: 4px;
-         cursor: pointer;
-         transition: background-color 0.3s;
-     }
-
-     .comment_save_btn {
-         background-color: #28a745;
-         color: white;
-         border: none;
-     }
-
-     .comment_save_btn:hover {
-         background-color: #218838;
-     }
-
-     .comment_cancel_btn {
-         background-color: #dc3545;
-         color: white;
-         border: none;
-     }
-
-     .comment_cancel_btn:hover {
-         background-color: #c82333;
-     }
-     .comment-user{ 
-        display: flex;
-        align-items: center;
-    
-     }
-
-     .comment-image .img-comment{
-        border-radius: 50%;
-        height: 30px;
-        width: 30px;
-        
-     }
- </style>
- <div class="comments-section">
-     <h3>Bình luận</h3>
-
-     <!-- Form nhập bình luận mới -->
-     <div class="comment-form">
-         <textarea id="te-{{ $item_id }}" placeholder="Viết bình luận của bạn..."></textarea>
-         <button onclick="submitComment({{ $item_id }})">Gửi</button>
-     </div>
-
-     <!-- Danh sách bình luận -->
-     <div class="comments-list" id='comments-list-{{ $item_id }}'>
-         <!-- Một bình luận chính -->
-         @foreach ($comments as $comment)
-             @php
-                 $createdAt = Carbon::parse($comment->created_at); // Thay đổi $comment thành đối tượng bạn đang sử dụng
-                 $diffInMinutes = $createdAt->diffInMinutes();
-                 $diffInHours = $createdAt->diffInHours();
-                 $diffInDays = $createdAt->diffInDays();
-                 $thoigian = '';
-                 if ($diffInMinutes < 60) {
-                     $thoigian = intval($diffInMinutes) . ' phút trước';
-                 } elseif ($diffInHours < 24) {
-                     $thoigian = floor($diffInHours) . ' tiếng trước';
-                 } else {
-                     $thoigian = floor($diffInDays) . ' ngày trước';
-                 }
-             @endphp
-             <div id='acomment-{{ $item_id }}-{{ $comment->id }}' class="comment">
-                <div class="comment-user">
-                    <div class="comment-image"><img src="{{ $comment->photo }}" alt="" class="img-comment"></div>
-                 <div class="comment-author" >{{ $comment->full_name }}</div>
-                </div>
-                 <div id="comment-text-{{ $comment->id }}"class="comment-text">{{ $comment->content }}</div>
-                 <div class="comment-actions">
-                     <span onclick="replyComment({{ $comment->id }})">Phản hồi</span>
-                     @if (isset($curuser) && $curuser->id == $comment->user_id)
-                         | <span onclick="editComment({{ $item_id }},{{ $comment->id }})">Chỉnh sửa</span>
-                         | <span onclick="deleteComment({{ $item_id }},{{ $comment->id }})"
-                             class="text-danger">Xóa</span>
-                     @endif
-                     |
-                     <span>{{ $thoigian }}</span>
-                 </div>
-                 <!-- Form nhập phản hồi, mặc định ẩn -->
-                 <div class="reply-form" id="reply-form-{{ $comment->id }}" style="display: none;">
-                     <textarea id="te-{{ $item_id }}-{{ $comment->id }}" placeholder="Phản hồi lại..."></textarea>
-                     <button onclick="submitReply({{ $item_id }},{{ $comment->id }})">Gửi</button>
-                 </div>
-                 <div id= "comment-{{ $item_id }}-{{ $comment->id }}">
-
-                     @foreach ($comment->subcomments as $subcomment)
-                         <!-- Danh sách các phản hồi cho bình luận chính -->
-                         @php
-                             $createdAt = Carbon::parse($subcomment->created_at); // Thay đổi $comment thành đối tượng bạn đang sử dụng
-                             $diffInMinutes = $createdAt->diffInMinutes();
-                             $diffInHours = $createdAt->diffInHours();
-                             $diffInDays = $createdAt->diffInDays();
-                             $thoigiansub = '';
-                             if ($diffInMinutes < 60) {
-                                $thoigiansub = intval($diffInMinutes) . ' phút trước';
-
-                             } elseif ($diffInHours < 24) {
-                                 $thoigiansub = floor($diffInHours) . ' tiếng trước';
-                             } else {
-                                 $thoigiansub = floor($diffInDays) . ' ngày trước';
-                             }
-                         @endphp
-                         <div id='acomment-{{ $item_id }}-{{ $subcomment->id }}' class="replies">
-                             <div class="reply">
-                                <div class="comment-user">
-                                <div class="comment-image"><img src="{{ $subcomment->photo }}" alt="" class="img-comment"></div>
-                                 <div class="reply-author">{{ $subcomment->full_name }}</div>
+<div class="comments-section">
+    @if(isset($comments) && count($comments) > 0)
+        @foreach($comments as $comment)
+            @php
+                $commentLikes = App\Models\CommentLike::where('comment_id', $comment->id)->count();
+                $userLiked = Auth::check() ? App\Models\CommentLike::where('comment_id', $comment->id)->where('user_id', Auth::id())->exists() : false;
+            @endphp
+            <div class="comment mb-4 pb-2 border-b border-gray-100" id="comment-{{ $comment->id }}">
+                <div class="flex">
+                    <img src="{{ $comment->photo ? : asset('assets/images/placeholder.jpg') }}" alt="{{ $comment->full_name }}" class="w-9 h-9 rounded-full mr-3 object-cover">
+                    <div class="flex-1">
+                        <div class="bg-gray-100 rounded-lg p-3 relative">
+                            <h4 class="font-medium text-gray-800">{{ $comment->full_name }}</h4>
+                            <p class="text-gray-700">{!! $comment->content !!}</p>
+                        </div>
+                        <div class="flex items-center text-xs text-gray-500 mt-1">
+                            <span>{{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</span>
+                            <span class="mx-1">·</span>
+                            <button onclick="toggleReplyForm({{ $comment->id }})" class="hover:text-gray-700">Trả lời</button>
+                            @if ($curuser && ($curuser->id == $comment->user_id || $curuser->role == 'admin'))
+                                <span class="mx-1">·</span>
+                                <button onclick="deleteComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')" class="hover:text-red-500">
+                                    Xóa
+                                </button>
+                                <span class="mx-1">·</span>
+                                <button onclick="editComment({{ $comment->id }}, '{{ htmlspecialchars($comment->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="hover:text-blue-500">
+                                    Sửa
+                                </button>
+                            @endif
+                            <span class="mx-1">·</span>
+                            <button id="comment-like-{{ $comment->id }}" 
+                                    class="comment-like-btn hover:text-gray-700 flex items-center" 
+                                    data-comment-id="{{ $comment->id }}"
+                                    data-item-id="{{ $item_id }}"
+                                    data-item-code="{{ $item_code }}">
+                                <i class="{{ $userLiked ? 'fas text-blue-500' : 'far' }} fa-thumbs-up mr-1"></i>
+                                <span id="comment-like-count-{{ $comment->id }}">{{ $commentLikes }}</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Reply Form -->
+                        <div id="reply-form-{{ $comment->id }}" class="reply-form flex items-center mt-2 hidden">
+                            <img src="{{ $curuser->photo ?? asset('assets/images/placeholder.jpg') }}" alt="User" class="w-7 h-7 rounded-full mr-2 object-cover">
+                            <div class="relative flex-1">
+                                <input type="text" id="reply-input-{{ $comment->id }}" placeholder="Viết câu trả lời..." class="reply-input w-full bg-gray-100 rounded-full px-3 py-1 text-sm focus:outline-none">
+                                <div class="absolute right-2 top-1/2 transform -translate-y-1/2">
+                                    <button class="text-gray-400 hover:text-gray-600" 
+                                            onclick="replyToComment({{ $comment->id }}, {{ $item_id }}, '{{ $item_code }}')" 
+                                            data-parent-id="{{ $comment->id }}" 
+                                            data-item-id="{{ $item_id }}" 
+                                            data-item-code="{{ $item_code }}">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
                                 </div>
-                                 <div class="reply-text" id ="reply-text-{{ $subcomment->id }}">
-                                     {{ $subcomment->content }}</div>
-                                 <div class="reply-actions">
-                                     <span onclick="replyComment({{ $subcomment->id }})">Phản hồi</span>
-                                     @if (isset($curuser) && $curuser->id == $subcomment->user_id)
-                                         | <span onclick="editReply({{ $item_id }},{{ $subcomment->id }})">Chỉnh
-                                             sửa</span>
-                                         | <span onclick="deleteComment({{ $item_id }},{{ $subcomment->id }})"
-                                             class="text-danger">Xóa</span>
-                                     @endif
-                                     |
-                                     <span>{{ $thoigiansub }}</span>
-                                 </div>
-                             </div>
-                             <div class="reply-form" id="reply-form-{{ $subcomment->id }}" style="display: none;">
-                                 <textarea id="tes-{{ $item_id }}-{{ $comment->id }}-{{ $subcomment->id }}" placeholder="Phản hồi lại..."></textarea>
-                                 <button
-                                     onclick="submitSubReply({{ $item_id }},{{ $comment->id }},{{ $subcomment->id }})">Gửi</button>
-                             </div>
-                         </div>
-                     @endforeach
-                 </div>
-             </div>
-         @endforeach
-     </div>
- </div>
-
- <script>
-     if (typeof myVariable !== 'undefined') {
-         // Biến `myVariable` đã được định nghĩa
-     } else {
-         var item_code = '{{ $item_code }}';
-     }
-     var item_code = '{{ $item_code }}';
-     if (typeof replyComment !== 'function') {
-
-         function replyComment(commentId) {
-
-             // Tìm form phản hồi dựa trên commentId và thay đổi trạng thái hiển thị
-             const replyForm = document.getElementById(`reply-form-${commentId}`);
-             if (replyForm.style.display === "none") {
-                 replyForm.style.display = "block";
-             } else {
-                 replyForm.style.display = "none";
-             }
-         }
-     }
-     if (typeof submitComment !== 'function') {
-         function submitComment(item_id) {
-             // Xử lý gửi bình luận mới
-             const content = document.getElementById(`te-${item_id}`).value;
-             if (content.trim() === '') {
-                 alert('Vui lòng nhập nội dung bình luận.');
-                 return;
-             }
-             const dataToSend = {
-                 _token: "{{ csrf_token() }}",
-                 parent_id: 0,
-                 content: content.trim(),
-                 item_id: item_id,
-                 item_code: item_code
-             };
-             $.ajax({
-                 url: "{{ route('front.tcomments.savecomment') }}", // Replace with your actual server endpoint URL
-                 method: "POST",
-                 contentType: "application/json",
-                 data: JSON.stringify(dataToSend),
-                 success: function(response) {
-                     if (response.status) {
-                         // document.getElementById('te-{{ $item_id }}').value = '';
-                         document.getElementById(`te-${item_id}`).value = "";
-                         addCommentToDOM(item_id, response.msg);
-                         // location.reload(); // Tải lại trang để thấy bình luận mới
-                     } else {
-                         alert(response.msg);
-                     }
-                 },
-                 error: function(error) {
-                     console.error(error);
-                     alert('Có lỗi xảy ra khi gửi bình luận.');
-                 }
-             });
-         }
-     }
-
-
-     if (typeof addCommentToDOM !== 'function') {
-         function addCommentToDOM(item_id, comment) {
-             const commentSection = document.getElementById(`comments-list-${item_id}`);
-
-             // Tạo phần tử HTML mới cho bình luận
-             const newComment = document.createElement('div');
-             newComment.className = 'comment';
-             newComment.innerHTML = `
-            <div class="comment-author">${comment.full_name}</div>
-            <div class="comment-text" id="comment-text-${comment.id}">${comment.content}</div>
-            <div class="comment-actions">
-                <span onclick="replyComment(${comment.id})">Phản hồi</span> | 
-                <span>mới tạo</span>
-                | <span onclick="editComment(${item_id},${comment.id})">Chỉnh sửa</span>
-                | <span onclick="deleteComment(${item_id},${comment.id})" class="text-danger">Xóa</span>
-            </div>
-            <div class="reply-form" id="reply-form-${comment.id}" style="display: none;">
-                <textarea id="te-${item_id}-${comment.id}" placeholder="Phản hồi lại..."></textarea>
-                <button onclick="submitReply(${item_id},${comment.id})">Gửi</button>
-            </div>
-            <div id="comment-${item_id}-${comment.id}"  >
-            </div>
-        `;
-
-             // Thêm bình luận mới vào DOM
-             commentSection.prepend(newComment);
-         }
-     }
-
-     if (typeof addReplyToDOM !== 'function') {
-         function addReplyToDOM(item_id, subcomment, comment_id) {
-             const commentSection = document.getElementById(`comment-${item_id}-${comment_id}`);
-
-             // Tạo phần tử HTML mới cho bình luận
-             const newComment = document.createElement('div');
-             newComment.className = 'comment';
-             newComment.innerHTML = `
-             <div class="replies">
-                <div class="reply">
-                    <div class="reply-author">${subcomment.full_name}</div>
-                    <div class="reply-text" id ="reply-text-${subcomment.id}">${subcomment.content}</div>
-                    <div class="reply-actions">
-                        <span onclick="replyComment(${subcomment.id})">Phản hồi</span> 
+                            </div>
+                        </div>
                         
-                        |   <span onclick="editReply(${item_id}, ${subcomment.id})">Chỉnh sửa</span>
-                        |   <span onclick="deleteComment(${item_id},${subcomment.id})" class="text-danger">Xóa</span>
-                        
-                        | 
-                        <span>mới tạo</span>
+                        <!-- Replies -->
+                        @if (isset($comment->subcomments) && count($comment->subcomments) > 0)
+                            <div class="replies mt-2 pl-4 border-l border-gray-200">
+                                @foreach ($comment->subcomments as $reply)
+                                    @php
+                                        $replyLikes = App\Models\CommentLike::where('comment_id', $reply->id)->count();
+                                        $userLikedReply = Auth::check() ? App\Models\CommentLike::where('comment_id', $reply->id)->where('user_id', Auth::id())->exists() : false;
+                                    @endphp
+                                    <div class="reply mb-2" id="comment-{{ $reply->id }}">
+                                        <div class="flex">
+                                            <img src="{{ $reply->photo ? : asset('assets/images/placeholder.jpg') }}" alt="{{ $reply->full_name }}" class="w-7 h-7 rounded-full mr-2 object-cover">
+                                            <div class="flex-1">
+                                                <div class="bg-gray-100 rounded-lg p-2 relative">
+                                                    <h4 class="font-medium text-gray-800 text-sm">{{ $reply->full_name }}</h4>
+                                                    <p class="text-gray-700 text-sm">{!! $reply->content !!}</p>
+                                                </div>
+                                                <div class="flex items-center text-xs text-gray-500 mt-1">
+                                                    <span>{{ \Carbon\Carbon::parse($reply->created_at)->diffForHumans() }}</span>
+                                                    <span class="mx-1">·</span>
+                                                    <button 
+                                                        class="reply-to-reply-btn hover:text-gray-700"
+                                                        data-parent-id="{{ $comment->id }}"
+                                                        data-reply-to-id="{{ $reply->id }}"
+                                                        data-reply-to-name="{{ $reply->full_name }}"
+                                                        data-item-id="{{ $item_id }}"
+                                                        data-item-code="{{ $item_code }}"
+                                                    >
+                                                        Trả lời
+                                                    </button>
+                                                    @if ($curuser && ($curuser->id == $reply->user_id || $curuser->role == 'admin'))
+                                                        <span class="mx-1">·</span>
+                                                        <button onclick="deleteComment({{ $reply->id }}, {{ $item_id }}, '{{ $item_code }}')" class="hover:text-red-500">
+                                                            Xóa
+                                                        </button>
+                                                        <span class="mx-1">·</span>
+                                                        <button onclick="editComment({{ $reply->id }}, '{{ htmlspecialchars($reply->content, ENT_QUOTES) }}', {{ $item_id }}, '{{ $item_code }}')" class="hover:text-blue-500">
+                                                            Sửa
+                                                        </button>
+                                                    @endif
+                                                    <span class="mx-1">·</span>
+                                                    <button id="comment-like-{{ $reply->id }}" 
+                                                            class="comment-like-btn hover:text-gray-700 flex items-center" 
+                                                            data-comment-id="{{ $reply->id }}"
+                                                            data-item-id="{{ $item_id }}"
+                                                            data-item-code="{{ $item_code }}">
+                                                        <i class="{{ $userLikedReply ? 'fas text-blue-500' : 'far' }} fa-thumbs-up mr-1"></i>
+                                                        <span id="comment-like-count-{{ $reply->id }}">{{ $replyLikes }}</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                 </div>
-                <div class="reply-form" id="reply-form-${subcomment.id}" style="display: none;">
-                    <textarea id="tes-${item_id}-${comment_id}-${subcomment.id}" placeholder="Phản hồi lại..."></textarea>
-                    <button onclick="submitSubReply(${item_id},${comment_id},${subcomment.id})">Gửi</button>
-                </div>
             </div>
-        `;
+        @endforeach
+    @else
+        <div class="text-center text-gray-500 py-4">
+            Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
+        </div>
+    @endif
+</div>
 
-             // Thêm bình luận mới vào DOM
-             commentSection.prepend(newComment);
-         }
-     }
-     if (typeof submitReply !== 'function') {
-         function submitReply(item_id, commentId) {
-             const content = document.getElementById(`te-${item_id}-${commentId}`).value;
-             if (content.trim() === '') {
-                 alert('Vui lòng nhập nội dung bình luận.');
-                 return;
-             }
-             const dataToSend = {
-                 _token: "{{ csrf_token() }}",
-                 parent_id: commentId,
-                 content: content.trim(),
-                 item_id: item_id,
-                 item_code: item_code
-             };
-             $.ajax({
-                 url: "{{ route('front.tcomments.savecomment') }}",
-                 method: "POST",
-                 contentType: "application/json",
-                 data: JSON.stringify(dataToSend),
-                 success: function(response) {
-                     if (response.status) {
-                         document.getElementById(`te-${item_id}-${commentId}`).value = '';
-                         document.getElementById(`reply-form-${commentId}`).style.display =
-                             "none"; // Ẩn ô phản hồi
-                         addReplyToDOM(item_id, response.msg, commentId);
-                     } else {
-                         alert(response.msg);
-                     }
-                 },
-                 error: function(error) {
-                     console.error(error);
-                     alert('Có lỗi xảy ra khi gửi bình luận.');
-                 }
-             });
-         }
+<script>
+    // Initialize dropdowns after AJAX loads
+    function initializeCommentDropdowns() {
+        document.querySelectorAll('.comment-dropdown-toggle').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('hidden');
+            });
+        });
+        
+        // Close comment dropdowns when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.comment-dropdown-toggle + .dropdown-menu').forEach(dropdown => {
+                dropdown.classList.add('hidden');
+            });
+        });
+    }
+    
+    // Edit comment function
+    function editComment(commentId, content, itemId, itemCode) {
+        // Create a modal for editing
+        let modalId = 'edit-comment-modal';
+        let modal = document.getElementById(modalId);
+        
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = modalId;
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-4 w-full max-w-md">
+                    <h3 class="text-lg font-medium mb-4">Chỉnh sửa bình luận</h3>
+                    <textarea id="edit-comment-content" class="w-full border rounded p-2 mb-4" rows="4"></textarea>
+                    <div class="flex justify-end">
+                        <button id="cancel-edit" class="px-4 py-2 border rounded mr-2 hover:bg-gray-100">Hủy</button>
+                        <button id="save-edit" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Lưu</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            // Set up event listeners
+            document.getElementById('cancel-edit').addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+        } else {
+            modal.classList.remove('hidden');
+        }
+        
+        // Set content and data attributes
+        document.getElementById('edit-comment-content').value = content.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+        modal.dataset.commentId = commentId;
+        modal.dataset.itemId = itemId;
+        modal.dataset.itemCode = itemCode;
+        
+        // Update save handler
+        document.getElementById('save-edit').onclick = function() {
+            const newContent = document.getElementById('edit-comment-content').value.trim();
+            if (!newContent) return;
+            
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || window.csrfToken;
+            
+            fetch('/tcomments/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    id: commentId,
+                    item_id: itemId,
+                    item_code: itemCode,
+                    content: newContent
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status) {
+                    // Update comment in DOM with the returned HTML
+                    if (data.commentsHtml) {
+                        document.getElementById('comments-container-' + itemId).innerHTML = data.commentsHtml;
+                        initializeCommentDropdowns();
+                    }
+                    modal.classList.add('hidden');
+                } else {
+                    alert(data.msg || 'Không thể cập nhật bình luận');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi cập nhật bình luận');
+            });
+        };
+    }
+    
+    // Initialize dropdowns when the comments are loaded
+    initializeCommentDropdowns();
 
-     }
-     if (typeof submitSubReply !== 'function') {
-         function submitSubReply(item_id, commentId, subcommentId) {
-             const content = document.getElementById(`tes-${item_id}-${commentId}-${subcommentId}`).value;
-             if (content.trim() === '') {
-                 alert('Vui lòng nhập nội dung bình luận.');
-                 return;
-             }
-             const dataToSend = {
-                 _token: "{{ csrf_token() }}",
-                 parent_id: commentId,
-                 content: content.trim(),
-                 item_id: item_id,
-                 item_code: item_code
-             };
-             $.ajax({
-                 url: "{{ route('front.tcomments.savecomment') }}",
-                 method: "POST",
-                 contentType: "application/json",
-                 data: JSON.stringify(dataToSend),
-                 success: function(response) {
-                     if (response.status) {
-                         document.getElementById(`tes-${item_id}-${commentId}-${subcommentId}`).value = '';
-                         document.getElementById(`reply-form-${subcommentId}`).style.display =
-                             "none"; // Ẩn ô phản hồi con
-                         addReplyToDOM(item_id, response.msg, commentId);
-                     } else {
-                         alert(response.msg);
-                     }
-                 },
-                 error: function(error) {
-                     console.error(error);
-                     alert('Có lỗi xảy ra khi gửi bình luận.');
-                 }
-             });
-         }
-
-     }
-     if (typeof editComment !== 'function') {
-         function editComment(item_id, commentId) {
-             const commentTextEl = document.getElementById(`comment-text-${commentId}`);
-             const originalText = commentTextEl.textContent;
-
-             // Tạo một ô nhập liệu để chỉnh sửa
-             commentTextEl.innerHTML = `
-            <input type="text" id="edit-input-${commentId}" value="${originalText}" />
-            <button class="comment_save_btn" onclick="saveComment(${item_id},${commentId})">Lưu</button>
-            <button class="comment_cancel_btn" onclick="cancelEdit(${commentId}, '${originalText}')">Hủy</button>
-        `;
-         }
-     }
-     if (typeof editReply !== 'function') {
-         function editReply(item_id, commentId) {
-             const commentTextEl = document.getElementById(`reply-text-${commentId}`);
-             const originalText = commentTextEl.textContent;
-
-             // Tạo một ô nhập liệu để chỉnh sửa
-             commentTextEl.innerHTML = `
-            <input type="text" id="edit-input-${commentId}" value="${originalText}" />
-            <button class="comment_save_btn" onclick="saveReply(${item_id},${commentId})">Lưu</button>
-            <button class="comment_cancel_btn" onclick="cancelReply(${commentId}, '${originalText}')">Hủy</button>
-        `;
-         }
-     }
-     if (typeof saveComment !== 'function') {
-         function saveComment(item_id, commentId) {
-             const newText = document.getElementById(`edit-input-${commentId}`).value;
-             const dataToSend = {
-                 _token: "{{ csrf_token() }}",
-                 id: commentId,
-                 content: newText.trim(),
-                 item_id: item_id,
-                 item_code: item_code
-             };
-             $.ajax({
-                 url: "{{ route('front.tcomments.updatecomment') }}", // Replace with your actual server endpoint URL
-                 method: "POST",
-                 contentType: "application/json",
-                 data: JSON.stringify(dataToSend),
-                 success: function(response) {
-                     if (response.status) {
-                         document.getElementById(`comment-text-${commentId}`).textContent = newText;
-                     } else {
-                         alert(response.msg);
-                     }
-                 },
-                 error: function(error) {
-                     console.error(error);
-                     alert('Có lỗi xảy ra khi cập nhật bình luận.');
-                 }
-             });
-
-             // Gửi yêu cầu AJAX để cập nhật bình luận
-
-         }
-     }
-     if (typeof saveReply !== 'function') {
-         function saveReply(item_id, commentId) {
-             const newText = document.getElementById(`edit-input-${commentId}`).value;
-             const dataToSend = {
-                 _token: "{{ csrf_token() }}",
-                 id: commentId,
-                 content: newText.trim(),
-                 item_id: item_id,
-                 item_code: item_code
-             };
-             $.ajax({
-                 url: "{{ route('front.tcomments.updatecomment') }}", // Replace with your actual server endpoint URL
-                 method: "POST",
-                 contentType: "application/json",
-                 data: JSON.stringify(dataToSend),
-                 success: function(response) {
-                     if (response.status) {
-                         document.getElementById(`reply-text-${commentId}`).textContent = newText;
-                     } else {
-                         alert(response.msg);
-                     }
-                 },
-                 error: function(error) {
-                     console.error(error);
-                     alert('Có lỗi xảy ra khi cập nhật bình luận.');
-                 }
-             });
-
-             // Gửi yêu cầu AJAX để cập nhật bình luận
-
-         }
-     }
-     if (typeof cancelEdit !== 'function') {
-         function cancelEdit(commentId, originalText) {
-             document.getElementById(`comment-text-${commentId}`).textContent = originalText;
-         }
-     }
-     if (typeof cancelReply !== 'function') {
-         function cancelReply(commentId, originalText) {
-             document.getElementById(`reply-text-${commentId}`).textContent = originalText;
-         }
-     }
-     if (typeof deleteComment !== 'function') {
-         function deleteComment(item_id, commentId) {
-             if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
-
-                 const dataToSend = {
-                     _token: "{{ csrf_token() }}",
-                     id: commentId,
-                     item_id: item_id,
-                     item_code: item_code
-                 };
-                 $.ajax({
-                     url: "{{ route('front.tcomments.deletecomment') }}", // Replace with your actual server endpoint URL
-                     method: "POST",
-                     contentType: "application/json",
-                     data: JSON.stringify(dataToSend),
-                     success: function(response) {
-                         if (response.status) {
-                             document.getElementById(`acomment-${item_id}-${commentId}`).remove();
-                         } else {
-                             alert(response.msg);
-                         }
-                     },
-                     error: function(error) {
-                         console.error(error);
-                         alert('Có lỗi xảy ra khi cập nhật bình luận.');
-                     }
-                 });
-             }
-         }
-     }
- </script>
+    // Đảm bảo CSRF token được cập nhật khi có sự kiện liên quan đến token
+    document.addEventListener('DOMContentLoaded', function() {
+        // Theo dõi các sự kiện click trên các nút like comment
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.comment-like-btn')) {
+                console.log('Comment like button clicked');
+                // Đảm bảo CSRF token đã được lưu
+                window.lastCsrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            }
+        });
+    });
+</script>

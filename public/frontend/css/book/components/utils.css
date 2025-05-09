@@ -1,0 +1,155 @@
+/* ===== Các thành phần phụ và tiện ích ===== */
+/* Stats boxes */
+.book-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-1) var(--spacing-2);
+}
+
+.book-stat-value {
+    font-weight: 600;
+    font-size: var(--text-base);
+    color: var(--color-gray-800);
+}
+
+.book-stat-label {
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+}
+
+/* Interactive elements */
+.star {
+    cursor: pointer;
+    font-size: var(--text-lg);
+    color: var(--color-gray-300);
+    transition: color 0.2s;
+}
+
+.star.selected,
+.star.hover {
+    color: var(--color-secondary);
+}
+
+button {
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Toast notification */
+.toast-notification {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 9999;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Pagination */
+.pagination-btn {
+    transition: var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 var(--spacing-2);
+    border-radius: var(--radius-md);
+    background-color: white;
+    border: 1px solid var(--color-gray-200);
+    color: var(--color-gray-700);
+    font-size: var(--text-sm);
+    font-weight: 500;
+}
+
+.pagination-btn:hover {
+    background-color: var(--color-gray-50);
+}
+
+.pagination-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.pagination-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* PDF Viewer */
+.pdf-container {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background-color: white;
+}
+
+.pdf-container canvas {
+    width: 100%;
+    height: auto;
+    margin-bottom: var(--spacing-2);
+}
+
+/* Loading indicators */
+.loading-spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-gray-200);
+    border-radius: 50%;
+    border-top-color: var(--color-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    text-align: center;
+    margin-top: var(--spacing-1);
+}
+
+/* Resources */
+.resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-gray-50);
+    padding: var(--spacing-3);
+    margin-bottom: var(--spacing-2);
+    border: 1px solid var(--color-gray-200);
+}
+
+.download-link {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-1) var(--spacing-3);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: var(--text-sm);
+    transition: var(--transition-normal);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+.download-link:hover {
+    background-color: var(--color-primary-hover);
+} 

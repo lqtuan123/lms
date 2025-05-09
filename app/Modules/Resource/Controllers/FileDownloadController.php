@@ -18,7 +18,7 @@ class FileDownloadController extends Controller
     public function maildownload(Request $request )
     {
         $slug = $request->slug;
-        $user = auth()->user();
+        $user = auth()->guard('web')->user();
         if(!$user)
             return redirect()->back()->with('error','bạn cần phải đăng nhập để nhận email!');
         $resource = Resource::where('slug',$slug)->first();
@@ -28,7 +28,7 @@ class FileDownloadController extends Controller
     }
     public static function downloadform($res_ids)
     {
-        $user = auth()->user();
+        $user = auth()->guard('web')->user();
         
         if($user)
         {
@@ -59,43 +59,139 @@ class FileDownloadController extends Controller
         $download->is_downloaded = true;
         $download->save();
 
-        // Trả về file cho người dùng
+        // Tìm resource liên quan nếu có
         $filePath = $download->file_path; // Đường dẫn file trên server
-        $response = Http::get($filePath);
-
-        if ($response->ok()) {
-            $fileName = 'unknown_file';
-            $contentDisposition = $response->header('Content-Disposition');
-            $mimeType = $response->header('Content-Type');
+        $resource = Resource::find($download->resource_id);
         
-            // Lấy tên file từ Content-Disposition
-            if ($contentDisposition) {
-                preg_match('/filename="(.+)"/', $contentDisposition, $matches);
-                $fileName = $matches[1] ?? 'unknown_file';
-            }
-        
-            // Nếu không có tên file, suy đoán từ Content-Type
-            if ($fileName === 'unknown_file' && $mimeType) {
-                switch ($mimeType) {
-                    case 'application/pdf':
-                        $fileName = 'file.pdf';
-                        break;
-                    case 'audio/mpeg':
-                        $fileName = 'file.mp3';
-                        break;
-                    case 'image/jpeg':
-                        $fileName = 'file.jpg';
-                        break;
-                    default:
-                        $fileName = 'file.unknown';
-                }
-            }
-        
-            return response($response->body())
-                ->header('Content-Type', $mimeType)
-                ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+        if (!$resource) {
+            // Tìm bằng URL nếu không có resource_id
+            $resource = Resource::where('url', $filePath)->first();
         }
         
-        return response()->json(['error' => 'Không thể tải file từ S3'], 404);
+        // Kiểm tra nếu file_name là file.unknown hoặc unknown_file thì ngăn không cho tải xuống
+        if ($resource && ($resource->file_name == 'file.unknown' || $resource->file_name == 'unknown_file')) {
+            return response()->json(['message' => 'Không thể tải xuống file không xác định.'], 403);
+        }
+        
+        // Xử lý tải xuống file
+        try {
+            \Illuminate\Support\Facades\Log::info("Đang xử lý tải xuống: " . $filePath);
+            
+            // Tên file và loại file
+            $fileName = $resource->file_name ?? 'download';
+            $mimeType = $resource->file_type ?? 'application/octet-stream';
+            
+            // Ưu tiên xử lý như file cục bộ
+            
+            // Phương pháp 1: Kiểm tra trong thư mục storage public
+            if (Storage::disk('public')->exists($filePath)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ public storage: " . $filePath);
+                $fullPath = Storage::disk('public')->path($filePath);
+                return response()->download($fullPath, $fileName, ['Content-Type' => $mimeType]);
+            }
+            
+            // Phương pháp 2: Kiểm tra bằng đường dẫn trong storage
+            try {
+                $storagePath = Storage::path($filePath);
+                if (file_exists($storagePath)) {
+                    \Illuminate\Support\Facades\Log::info("Tải xuống từ storage path: " . $storagePath);
+                    return response()->download($storagePath, $fileName, ['Content-Type' => $mimeType]);
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::warning("Lỗi khi sử dụng Storage::path: " . $e->getMessage());
+            }
+            
+            // Phương pháp 3: Kiểm tra file trong thư mục public
+            $publicPath = public_path(ltrim($filePath, '/'));
+            if (file_exists($publicPath)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ public path: " . $publicPath);
+                return response()->download($publicPath, $fileName, ['Content-Type' => $mimeType]);
+            }
+            
+            // Phương pháp 3.1: Kiểm tra trong storage/uploads/resources
+            $resourcePath = public_path('storage/uploads/resources/' . basename($filePath));
+            if (file_exists($resourcePath)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ resource path: " . $resourcePath);
+                return response()->download($resourcePath, $fileName, ['Content-Type' => $mimeType]);
+            }
+            
+            // Phương pháp 4: Thử xử lý như đường dẫn tương đối
+            $basePath = base_path(ltrim($filePath, '/'));
+            if (file_exists($basePath)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ base path: " . $basePath);
+                return response()->download($basePath, $fileName, ['Content-Type' => $mimeType]);
+            }
+            
+            // Phương pháp 5: Thử xử lý nếu đường dẫn bắt đầu với /storage
+            if (strpos($filePath, '/storage/') === 0) {
+                $storagePublicPath = public_path(substr($filePath, 1)); // Bỏ dấu / đầu tiên
+                if (file_exists($storagePublicPath)) {
+                    \Illuminate\Support\Facades\Log::info("Tải xuống từ storage public path: " . $storagePublicPath);
+                    return response()->download($storagePublicPath, $fileName, ['Content-Type' => $mimeType]);
+                }
+            }
+            
+            // Phương pháp 6: Thử xử lý nếu đường dẫn là URL
+            if (filter_var($filePath, FILTER_VALIDATE_URL)) {
+                \Illuminate\Support\Facades\Log::info("Tải xuống từ URL: " . $filePath);
+                
+                // Thử tải xuống từ URL
+                try {
+                    // Mã hóa URL đúng cách
+                    $parsedUrl = parse_url($filePath);
+                    if (isset($parsedUrl['path'])) {
+                        $pathParts = explode('/', $parsedUrl['path']);
+                        $encodedParts = array_map(function($part) {
+                            return urlencode($part);
+                        }, $pathParts);
+                        $parsedUrl['path'] = implode('/', $encodedParts);
+                    }
+                    
+                    // Tái tạo URL từ các thành phần đã mã hóa
+                    $encodedUrl = $this->buildUrl($parsedUrl);
+                    
+                    $response = Http::get($encodedUrl);
+                    
+                    if ($response->ok()) {
+                        return response($response->body())
+                            ->header('Content-Type', $mimeType)
+                            ->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+                    } else {
+                        return response()->json(['error' => 'Không thể tải file từ URL. Trạng thái: ' . $response->status()], 404);
+                    }
+                } catch (\Exception $e) {
+                    \Illuminate\Support\Facades\Log::error("Lỗi khi tải từ URL: " . $e->getMessage());
+                    return response()->json(['error' => 'Lỗi khi tải xuống từ URL: ' . $e->getMessage()], 500);
+                }
+            }
+            
+            // Không tìm thấy file ở bất kỳ vị trí nào
+            \Illuminate\Support\Facades\Log::error("Không tìm thấy file: " . $filePath);
+            return response()->json(['error' => 'Không thể tìm thấy file tại đường dẫn: ' . $filePath], 404);
+            
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Lỗi tải xuống file: ' . $e->getMessage());
+            return response()->json(['error' => 'Lỗi khi tải xuống file: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    /**
+     * Tái tạo URL từ các thành phần đã được phân tích
+     * 
+     * @param array $parsedUrl Các thành phần URL từ parse_url()
+     * @return string URL đã được tái tạo
+     */
+    private function buildUrl($parsedUrl) {
+        $scheme   = isset($parsedUrl['scheme']) ? $parsedUrl['scheme'] . '://' : '';
+        $host     = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
+        $port     = isset($parsedUrl['port']) ? ':' . $parsedUrl['port'] : '';
+        $user     = isset($parsedUrl['user']) ? $parsedUrl['user'] : '';
+        $pass     = isset($parsedUrl['pass']) ? ':' . $parsedUrl['pass']  : '';
+        $pass     = ($user || $pass) ? "$pass@" : '';
+        $path     = isset($parsedUrl['path']) ? $parsedUrl['path'] : '';
+        $query    = isset($parsedUrl['query']) ? '?' . $parsedUrl['query'] : '';
+        $fragment = isset($parsedUrl['fragment']) ? '#' . $parsedUrl['fragment'] : '';
+        
+        return "$scheme$user$pass$host$port$path$query$fragment";
     }
 }

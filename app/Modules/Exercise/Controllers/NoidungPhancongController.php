@@ -4,7 +4,7 @@ namespace App\Modules\Exercise\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Exercise\Models\BoDeTuLuan;
-use App\Modules\Exercise\Models\BodeTracNghiem;
+use App\Modules\Exercise\Models\BoDeTracNghiem;
 use App\Modules\Exercise\Models\NoidungPhancong;
 use App\Modules\Resource\Models\Resource;
 use App\Models\Tag;

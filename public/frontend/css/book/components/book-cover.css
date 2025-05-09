@@ -1,0 +1,82 @@
+/* ===== Phần hình ảnh sách ===== */
+.book-cover-container {
+    flex: 0 0 auto;
+    max-width: 220px;
+    position: relative;
+}
+
+.book-cover-img {
+    width: 100%;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    transition: transform 0.2s ease;
+}
+
+.book-cover-img:hover {
+    transform: scale(1.03);
+}
+
+/* Hiệu ứng trang sách */
+.book-cover-container::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+    transform: rotate(-1deg);
+}
+
+/* Hiệu ứng trang sách thứ hai */
+.book-cover-container::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    bottom: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: var(--radius-lg);
+    z-index: -2;
+    transform: rotate(-2deg);
+}
+
+/* Các phiên bản khác của bìa sách */
+.book-cover {
+    flex: 0 0 140px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+}
+
+.book-cover:hover {
+    transform: scale(1.02);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .book-cover-container {
+        max-width: 180px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    
+    .book-cover-img {
+        max-width: 100%;
+        margin: 0 auto;
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-cover-container {
+        max-width: 160px;
+    }
+} 

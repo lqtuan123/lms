@@ -17,7 +17,7 @@
                         <th class="whitespace-nowrap">Tên</th>
                         
                         <th class="text-center whitespace-nowrap">
-                            <a class="btn" href="{{route('role.selectall',$role->id)}}" 
+                            <a class="btn" href="{{route('admin.role.selectall',$role->id)}}" 
                             class="flex items-center mr-3" href="javascript:;"> 
                               Chọn hết</a>
 
@@ -76,7 +76,7 @@
         var mode = $(this).prop('checked');
         var id=$(this).val();
         $.ajax({
-            url:"{{route('role.functionstatus')}}",
+            url:"{{route('admin.role.functionstatus')}}",
             type:"post",
             data:{
                 _token:'{{csrf_token()}}',

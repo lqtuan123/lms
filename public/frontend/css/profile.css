@@ -1,0 +1,83 @@
+/**
+ * Profile CSS - Main File
+ * 
+ * File này nhập tất cả các CSS cần thiết cho trang hồ sơ người dùng
+ */
+
+/* Import base styles */
+@import 'profile/profile-base.css';
+
+/* Import layout styles */
+@import 'profile/profile-layout.css';
+
+/* Import components styles */
+@import 'profile/profile-components.css';
+
+/* Import feature-specific styles */
+@import 'profile/profile-features.css';
+
+/* Import Tailwind utility classes */
+@import 'profile/profile-tailwind-utils.css';
+
+/* Import responsive styles (must be imported last) */
+@import 'profile/profile-responsive.css';
+
+/* Các lớp tiện ích bổ sung (additional utility classes) */
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.shadow-sm {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.shadow-md {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+/* Màu sắc */
+.text-blue-500 {
+    color: #3B82F6;
+}
+
+.text-gray-500 {
+    color: #6B7280;
+}
+
+.text-gray-800 {
+    color: #1F2937;
+}
+
+.bg-blue-500 {
+    background-color: #3B82F6;
+}
+
+.bg-white {
+    background-color: #FFFFFF;
+}
+
+.bg-gray-100 {
+    background-color: #F3F4F6;
+} 

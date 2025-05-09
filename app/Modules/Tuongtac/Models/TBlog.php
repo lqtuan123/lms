@@ -32,6 +32,13 @@ class TBlog extends Model
      
     }
 
+    // Define the comments relationship
+    public function comments()
+    {
+        return $this->hasMany(TComment::class, 'item_id')
+                    ->where('item_code', 'tblog');
+    }
+
        // return TTag::where('item_id',$this->id)->where('item_code','blog')->get();
     // public function motion()
     // {

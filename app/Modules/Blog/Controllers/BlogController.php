@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use App\Modules\Blog\Models\Blog;
 
-class BlogController extends Controller
+class BlogController extends \App\Http\Controllers\Controller
 {
     //
     protected $pagesize;

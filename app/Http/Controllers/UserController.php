@@ -577,4 +577,80 @@ class UserController extends Controller
             return back()->with('error', 'Không tìm thấy dữ liệu');
         }
     }
+
+    public function resetUserPassword($id)
+    {
+        // Kiểm tra quyền admin
+        $func = "user_edit";
+        if (!$this->check_function($func)) {
+            return redirect()->route('unauthorized');
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return back()->with('error', 'Không tìm thấy người dùng!');
+        }
+
+        $active_menu = "ctm_list";
+        $breadcrumb = '
+        <li class="breadcrumb-item"><a href="#">/</a></li>
+        <li class="breadcrumb-item"><a href="' . route('admin.user.index') . '">Người dùng</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Đặt lại mật khẩu</li>';
+
+        return view('backend.users.reset-password', compact('user', 'breadcrumb', 'active_menu'));
+    }
+
+    public function processResetPassword(Request $request, $id)
+    {
+        // Kiểm tra quyền admin
+        $func = "user_edit";
+        if (!$this->check_function($func)) {
+            return redirect()->route('unauthorized');
+        }
+
+        $this->validate($request, [
+            'password' => 'required|string|min:6|confirmed',
+        ], [
+            'password.required' => 'Vui lòng nhập mật khẩu mới!',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự!',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp!'
+        ]);
+
+        $user = User::find($id);
+        if (!$user) {
+            return back()->with('error', 'Không tìm thấy người dùng!');
+        }
+
+        // Đặt lại mật khẩu mới
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Thêm log hệ thống về việc reset mật khẩu
+        \Log::info('Admin đã đặt lại mật khẩu cho người dùng: ' . $user->email);
+
+        return redirect()->route('admin.user.index')->with('success', 'Đặt lại mật khẩu thành công cho người dùng ' . $user->full_name);
+    }
+
+    public function restoreUser($id) 
+    {
+        // Kiểm tra quyền admin
+        $func = "user_edit";
+        if (!$this->check_function($func)) {
+            return redirect()->route('unauthorized');
+        }
+
+        $user = User::find($id);
+        if (!$user) {
+            return back()->with('error', 'Không tìm thấy người dùng!');
+        }
+
+        // Khôi phục tài khoản
+        $user->status = 'active';
+        $user->save();
+
+        // Thêm log hệ thống về việc khôi phục tài khoản
+        \Log::info('Admin đã khôi phục tài khoản của người dùng: ' . $user->email);
+
+        return redirect()->route('admin.user.index')->with('success', 'Khôi phục tài khoản thành công cho người dùng ' . $user->full_name);
+    }
 }

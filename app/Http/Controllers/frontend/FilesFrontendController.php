@@ -18,6 +18,17 @@ class FilesFrontendController extends Controller
         $this->middleware('auth', ['except' => ['avatarUpload', 'ckeditorUpload']]);
     }
 
+    /**
+     * Return the s3 storage disk.
+     *
+     * @param string $disk
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    private function getDisk($disk)
+    {
+        return Storage::disk($disk);
+    }
+
     private function storeFile($file, $folder, $convertToWebP = false, $filename = null)
     {
         $awsKey = env('AWS_ACCESS_KEY_ID');
@@ -28,22 +39,58 @@ class FilesFrontendController extends Controller
         $filename = $filename ?? Str::random(25);
         $extension = $convertToWebP ? 'webp' : $file->getClientOriginalExtension();
         $filePath = "$folder/$filename.$extension";
+        $url = '';
 
-        if ($convertToWebP) {
-            $tempPath = sys_get_temp_dir() . "/$filename.webp";
-
-            $manager = new ImageManager(new Driver()); // Chạy với GD
-            $image = $manager->read($file)->toWebp(90);
-            $image->save($tempPath);
-
-            Storage::disk($disk)->put($filePath, file_get_contents($tempPath));
-            unlink($tempPath);
-        } else {
-            Storage::disk($disk)->putFileAs($folder, $file, "$filename.$extension");
+        try {
+            // Thử lưu vào AWS trước
+            if ($awsKey && $awsSecret) {
+                if ($convertToWebP) {
+                    $tempPath = sys_get_temp_dir() . "/$filename.webp";
+                    $manager = new ImageManager(new Driver());
+                    $image = $manager->read($file)->toWebp(90);
+                    $image->save($tempPath);
+                    
+                    Storage::disk('s3')->put($filePath, file_get_contents($tempPath));
+                    unlink($tempPath);
+                } else {
+                    Storage::disk('s3')->putFileAs($folder, $file, "$filename.$extension");
+                }
+                
+                // Tạo URL cho AWS
+                $s3Url = env('AWS_URL', 'https://s3.' . env('AWS_DEFAULT_REGION', 'us-east-1') . '.amazonaws.com');
+                $bucket = env('AWS_BUCKET', '');
+                $url = rtrim($s3Url, '/') . '/' . $bucket . '/' . $filePath;
+                
+                Log::info('File uploaded to AWS successfully', ['path' => $filePath, 'url' => $url]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to upload to AWS: ' . $e->getMessage());
+            // Nếu lưu AWS thất bại, tiếp tục với local storage
+            $disk = 'local';
         }
 
-        $link = Storage::disk($disk)->url($filePath);
-        return ($disk === 'local') ? asset($link) : $link;
+        // Nếu không có AWS hoặc lưu AWS thất bại, lưu vào local
+        if ($disk === 'local') {
+            if ($convertToWebP) {
+                $tempPath = sys_get_temp_dir() . "/$filename.webp";
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($file)->toWebp(90);
+                $image->save($tempPath);
+                
+                Storage::disk('local')->put($filePath, file_get_contents($tempPath));
+                unlink($tempPath);
+            } else {
+                Storage::disk('local')->putFileAs($folder, $file, "$filename.$extension");
+            }
+            
+            // Tạo URL cho local storage
+            $relativePath = 'storage/' . str_replace('public/', '', $filePath);
+            $url = rtrim(config('app.url'), '/') . '/' . $relativePath;
+            
+            Log::info('File uploaded to local storage', ['path' => $filePath, 'url' => $url]);
+        }
+
+        return $url;
     }
 
     public function uploadImage(Request $request, $folder, $convertToWebP = false)
@@ -94,11 +141,90 @@ class FilesFrontendController extends Controller
     }
     public function avatarUpload(Request $request)
     {
-        return $this->uploadImage($request, 'avatar');
+        Log::info('Avatar upload request received', ['has_file' => $request->hasFile('photo')]);
+        
+        if($request->hasFile('photo')) {
+            try {
+                $file = $request->file('photo');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                Log::info('Processing avatar upload', [
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime' => $file->getMimeType()
+                ]);
+                
+                // Lưu vào storage
+                $path = $file->storeAs('avatar', $filename, 'public');
+                // Tạo URL đầy đủ với domain và đường dẫn storage
+                $relativePath = 'storage/' . str_replace('public/', '', $path);
+                $url = rtrim(config('app.url'), '/') . '/' . $relativePath;
+                
+                Log::info('Avatar uploaded successfully', ['path' => $path, 'url' => $url]);
+                
+                return response()->json([
+                    'status' => true,
+                    'url' => $url,
+                    'link' => $url,
+                    'message' => 'Tải lên ảnh đại diện thành công!'
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Avatar upload error: ' . $e->getMessage());
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Lỗi khi tải lên ảnh: ' . $e->getMessage()
+                ], 500);
+            }
+        }
+        
+        Log::warning('Avatar upload failed: No file provided');
+        return response()->json([
+            'status' => false,
+            'message' => 'Không có file nào được tải lên'
+        ], 400);
     }
     public function bannerUpload(Request $request)
     {
-        return $this->uploadImage($request, 'banner');
+        Log::info('Banner upload request received', ['has_file' => $request->hasFile('banner')]);
+        
+        if($request->hasFile('banner')) {
+            try {
+                $file = $request->file('banner');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                Log::info('Processing banner upload', [
+                    'original_name' => $file->getClientOriginalName(),
+                    'size' => $file->getSize(),
+                    'mime' => $file->getMimeType()
+                ]);
+                
+                // Lưu vào storage
+                $path = $file->storeAs('banner', $filename, 'public');
+                // Tạo URL đầy đủ với domain và đường dẫn storage
+                $relativePath = 'storage/' . str_replace('public/', '', $path);
+                $url = rtrim(config('app.url'), '/') . '/' . $relativePath;
+                
+                Log::info('Banner uploaded successfully', ['path' => $path, 'url' => $url]);
+                
+                return response()->json([
+                    'status' => true,
+                    'url' => $url,
+                    'message' => 'Tải lên ảnh bìa thành công!'
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Banner upload error: ' . $e->getMessage());
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Lỗi khi tải lên ảnh: ' . $e->getMessage()
+                ], 500);
+            }
+        }
+        
+        Log::warning('Banner upload failed: No file provided');
+        return response()->json([
+            'status' => false,
+            'message' => 'Không có file nào được tải lên'
+        ], 400);
     }
     public function productUpload(Request $request)
     {

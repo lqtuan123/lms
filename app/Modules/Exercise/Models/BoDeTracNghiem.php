@@ -9,7 +9,7 @@ use App\Modules\Exercise\Models\TracNghiemCauhoi;
 use App\Modules\Teaching_3\Models\EnrollResult;
 use App\Models\User; // Import model User
 
-class BodeTracNghiem extends Model
+class BoDeTracNghiem extends Model
 {
     use HasFactory;
 

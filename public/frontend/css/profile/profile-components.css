@@ -1,0 +1,210 @@
+/* CSS cho các thành phần UI trong trang hồ sơ */
+
+/* Card */
+.post-card {
+    margin-bottom: 20px;
+    transition: all 0.25s ease;
+    border-radius: 0.75rem;
+    background-color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.post-card-header {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.avatar-img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+    border: 2px solid white;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.post-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.post-title a:hover {
+    color: #3B82F6;
+    text-decoration: none;
+}
+
+.post-summary {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #6B7280;
+    margin-bottom: 12px;
+}
+
+.post-tag {
+    display: inline-block;
+    background-color: #e9f5fe;
+    color: #3B82F6;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    transition: background-color 0.2s;
+}
+
+.post-tag:hover {
+    background-color: #d1e9fd;
+    text-decoration: none;
+}
+
+.post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #9CA3AF;
+}
+
+/* Post action buttons */
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.post-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 8px 0;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #6B7280;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.post-action-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.post-action-btn i {
+    margin-right: 6px;
+}
+
+.post-action-btn.liked {
+    color: #3B82F6;
+}
+
+.post-action-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: #6B7280;
+    background-color: #fff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    margin-left: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.post-action-icon:hover {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.comment-input-container {
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+}
+
+/* Comment input */ 
+.comment-input {
+    flex: 1;
+    border: none;
+    background-color: #F3F4F6;
+    border-radius: 9999px;
+    padding: 10px 16px;
+    font-size: 14px;
+    outline: none;
+}
+
+.comment-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.comment-box {
+    display: none;
+}
+
+.comment-box.active {
+    display: block;
+}
+
+/* Book grid */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+/* Tabs */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Modals */
+.quick-view-modal {
+    display: none;
+}
+
+.quick-view-modal.active {
+    display: flex;
+}
+
+/* Emoji picker */
+.emoji-picker {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    z-index: 10;
+}
+
+.emoji-picker.active {
+    display: block;
+} 

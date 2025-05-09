@@ -1,240 +1,446 @@
-@extends('frontend.layouts.master1')
+@extends('frontend.layouts.master')
 @section('css')
-    <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom8.css') }}" type="text/css" />
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/assets/css/custom8.css') }}" type="text/css" /> --}}
+    {{-- <link rel="stylesheet" href="{{ asset('frontend/assets_f/custom-group.css') }}" type="text/css" /> --}}
     <!-- FilePond CSS -->
     <!-- Dropzone CSS -->
     @yield('topcss')
     <style>
-        .scroll-to-top {
-            position: fixed;
-            /* Cố định vị trí */
-            bottom: 20px;
-            /* Cách đáy màn hình 20px */
-            right: 20px;
-            /* Cách phải màn hình 20px */
-            width: 40px;
-            height: 40px;
-            background-color: var(--base-color);
-            /* Màu nền */
-            color: white;
-            /* Màu chữ */
-            border: none;
-            border-radius: 50%;
-            /* Bo tròn thành hình tròn */
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            /* Đổ bóng */
-            font-size: 20px;
-            /* Kích thước chữ */
+        /* CSS cho cấu trúc 3 cột cố định */
+        .blogs-container {
+            display: flex;
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 60px); /* Điều chỉnh theo chiều cao thực tế của navbar */
+            overflow: visible; /* Thay đổi từ hidden thành visible */
+        }
+
+        /* Cột trái */
+        .left-sidebar {
+            width: 280px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: hidden; /* Ban đầu ẩn thanh cuộn */
+            padding: 1rem 1rem 1rem 0;
+            border-right: 1px solid #e5e7eb;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+            transition: overflow-y 0.3s ease;
+        }
+        
+        .left-sidebar:hover {
+            overflow-y: auto; /* Hiển thị thanh cuộn khi hover */
+        }
+
+        /* Phần nội dung chính giữa */
+        .main-content-wrapper {
+            flex: 1;
+            min-width: 0; /* Đảm bảo co lại khi màn hình nhỏ */
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 1rem 0;
+            /* Bỏ các thuộc tính cuộn riêng */
+            overflow: visible;
+            position: relative;
+        }
+
+        /* Cột phải */
+        .right-sidebar {
+            width: 320px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: hidden; /* Ban đầu ẩn thanh cuộn */
+            padding: 1rem 0rem 1rem 1rem !important;
+            border-left: 1px solid #e5e7eb;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(203, 213, 225, 0.6) transparent;
+            transition: overflow-y 0.3s ease;
+        }
+        
+        .right-sidebar:hover {
+            overflow-y: auto; /* Hiển thị thanh cuộn khi hover */
+        }
+
+        /* Tùy chỉnh thanh cuộn cho hiệu ứng mượt mà */
+        .left-sidebar::-webkit-scrollbar,
+        .right-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .left-sidebar::-webkit-scrollbar-track,
+        .right-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .left-sidebar::-webkit-scrollbar-thumb,
+        .right-sidebar::-webkit-scrollbar-thumb {
+            background-color: rgba(203, 213, 225, 0.6);
+            border-radius: 20px;
+        }
+
+        /* Hiệu ứng hover cho thanh cuộn */
+        .left-sidebar:hover::-webkit-scrollbar-thumb,
+        .right-sidebar:hover::-webkit-scrollbar-thumb {
+            background-color: rgba(148, 163, 184, 0.8);
+        }
+
+        /* CSS cho dropdown menu */
+        .dropdown-menu {
             display: none;
-            /* Ẩn mặc định */
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            /* Hiển thị trên cùng */
-            transition: background-color 0.3s ease, transform 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
         }
 
-        /* Hiệu ứng hover */
-        .scroll-to-top:hover {
-            background-color: var(--base-color);
-            /* Màu nền khi hover */
-            transform: scale(1.1);
-            /* Phóng to nhẹ */
+        .dropdown-menu.active {
+            display: block;
+            opacity: 1;
+            visibility: visible;
         }
 
-        @media screen and (max-width: 768px) {
-            .post-tags {
+        /* Dropdown menu styles */
+        .post-dropdown .dropdown-menu {
+            transition: all 0.3s ease;
+            transform: translateY(-10px);
+            opacity: 0;
+        }
+
+        .post-dropdown .dropdown-menu.active,
+        .post-dropdown .dropdown-menu:not(.hidden) {
+            transform: translateY(0);
+            opacity: 1;
+            display: block;
+        }
+
+        /* Post action button styles */
+        .post-action-btn {
+            transition: all 0.2s ease;
+        }
+
+        .post-action-btn:hover {
+            color: #3b82f6 !important;
+        }
+
+        .post-action-btn.active {
+            color: #3b82f6 !important;
+        }
+
+        /* Emoji picker styles */
+        #emoji-picker {
+            transition: all 0.2s ease;
+        }
+
+        .emoji-btn {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .post-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu {
+            display: none;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main-content.expanded {
+            width: 100%;
+        }
+
+        #main-content {
+            max-width: 692.8px;
+            width: 100%;
+        }
+
+        .loading-spinner {
+            display: none;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        .quick-view-modal {
+            display: none;
+        }
+
+        .quick-view-modal.active {
+            display: flex;
+        }
+
+        .tag:hover {
+            transform: scale(1.05);
+        }
+
+        .comment-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        @media (max-width: 1200px) {
+            .left-sidebar {
+                width: 240px;
+            }
+            
+            .right-sidebar {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .blogs-container {
+                flex-direction: column;
+            }
+            
+            .left-sidebar, .right-sidebar {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                position: relative;
+                border: none;
+                overflow: visible;
+                max-height: 300px;
+            }
+            
+            .left-sidebar {
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .right-sidebar {
+                border-top: 1px solid #e5e7eb;
+                padding-top: 1rem;
+                margin-top: 1rem;
+            }
+            
+            .main-content-wrapper {
+                max-width: 100%;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .right-sidebar-mobile {
                 display: none;
             }
         }
 
-        .post-tags span {
-            display: inline-block;
-            white-space: nowrap;
-            margin-top: 2px;
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            z-index: 10;
+        }
+
+        .emoji-picker.active {
+            display: block;
+        }
+
+        /* aaaaaaaaaaaaaaa */
+        /* Popup Modal - Global */
+        .popup-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: all 0.3s ease;
+        }
+
+        .popup-modal.hidden {
+            display: none;
+        }
+
+        .popup-content {
+            background: #fff;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #555;
+            transition: color 0.2s;
+        }
+
+        .close-popup:hover {
+            color: #222;
+        }
+
+        /* Post Dropdown */
+        .post-dropdown {
+            position: relative;
+        }
+
+        .post-dropdown .dropdown-toggle {
+            background: white;
+            border-radius: 9999px;
+            padding: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .post-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            margin-top: 8px;
+            width: 192px;
+            /* 48 * 4 px */
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .post-dropdown:hover .dropdown-menu,
+        .post-dropdown .dropdown-toggle:focus+.dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #333;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background-color: #f7fafc;
+        }
+
+        /* Nút lên đầu trang */
+        #scroll-to-top {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #3b82f6;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        #scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
         }
     </style>
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('content')
     {{-- @include('frontend.layouts.page_title') --}}
-    <section class="hero-section position-relative padding-large"
-        style="background-image: url('{{ asset('frontend/assets_f/images/banner-image-bg-1.jpg') }}');
-    background-size: cover; background-repeat: no-repeat; background-position: center; height: 400px;">
-        <div class="hero-content">
-            <div class="container">
-                <div class="row">
-                    <div class="text-center">
-                        <h1>Book</h1>
-                        <div class="breadcrumbs">
-                            <span class="item">
-                                <a href="{{ route('home') }}">Home > </a>
-                            </span>
-                            <span class="item text-decoration-underline">Blogs</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section style="padding-top:0px">
-        <div class="mcontainer dev">
-
-            <!-- Left Menu -->
+    
+    <div class="blogs-container">
+        <!-- Left Menu -->
+        <div class="left-sidebar">
             @include('Tuongtac::frontend.blogs.left-partial')
+        </div>
 
-            <!-- Main Content -->
-            <main class="main-content">
-                @yield('inner-content')
-            </main>
+        <!-- Main Content -->
+        <div class="main-content-wrapper">
+            @yield('inner-content')
+        </div>
 
-            <!-- Right Menu -->
+        <!-- Right Menu -->
+        <div class="right-sidebar">
             @include('Tuongtac::frontend.blogs.right-partial')
-
         </div>
-        <div id="spinner" style="display: none;">
-            <div class="spinner"></div>
-        </div>
-        <button id="scrollToTopBtn" class="scroll-to-top" onclick="scrollToTop()">▲</button>
-    </section>
-@endsection
-@section('footscripts')
-    @yield('botscript')
+    </div>
+
+    <!-- Nút cuộn lên đầu trang -->
+    <div id="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
     <script>
+        var csrfToken = '{{ csrf_token() }}';
+
+        // Xử lý hiệu ứng nút cuộn lên đầu trang
         document.addEventListener('DOMContentLoaded', function() {
-            const leftSide = document.querySelector('.left-menu');
-            const rightSide = document.querySelector('.right-menu');
-            const mainContent = document.querySelector('.main-content');
-
-            const syncScroll = () => {
-                const mainScrollTop = mainContent.scrollTop;
-
-                // Đồng bộ hóa cuộn left-side
-                if (leftSide.scrollHeight - leftSide.scrollTop > leftSide.clientHeight) {
-                    leftSide.scrollTop = mainScrollTop;
+            const scrollTopBtn = document.getElementById('scroll-to-top');
+            
+            // Hiển thị nút khi cuộn xuống
+            function toggleScrollButton() {
+                if (document.documentElement.scrollTop > 300) {
+                    scrollTopBtn.classList.add('show');
+                } else {
+                    scrollTopBtn.classList.remove('show');
                 }
-
-                // Đồng bộ hóa cuộn right-side
-                if (rightSide.scrollHeight - rightSide.scrollTop > rightSide.clientHeight) {
-                    rightSide.scrollTop = mainScrollTop;
-                }
-            };
-
-            // Lắng nghe sự kiện cuộn từ main-content
-            mainContent.addEventListener('scroll', syncScroll);
-        });
-    </script>
-    <script>
-        // Lắng nghe sự kiện cuộn
-        window.addEventListener('scroll', function() {
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            if (window.scrollY > 300) {
-                // Hiển thị nút khi cuộn xuống hơn 300px
-                scrollToTopBtn.style.display = 'flex';
-            } else {
-                // Ẩn nút khi ở gần đầu trang
-                scrollToTopBtn.style.display = 'none';
             }
-        });
-
-        // Hàm cuộn lên đầu trang
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth' // Cuộn mượt mà
-            });
-        }
-
-        function toggleMenu() {
-            const menu = document.querySelector('.left-menu .menu');
-            menu.classList.toggle('active');
-        }
-    </script>
-
-    {{-- <script src="https://cdn.tiny.cloud/1/sljivccrwgowrmusksk60bxotqp62hwlfuyqsrgh3esuzcz6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    tinymce.init({
-        selector: '#editor',
-        plugins: 'image code link lists table media preview',
-        toolbar: 'undo redo | formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | image media link | code preview',
-        image_advtab: true, // Bật chế độ chỉnh sửa ảnh
-        height: 500,
-        automatic_uploads: true,
-        images_upload_url: "{{ route('front.upload.ckeditor') }}", // Endpoint để upload ảnh
-        file_picker_types: 'image',
-        images_upload_handler: function (blobInfo, success, failure) {
-            const formData = new FormData();
-            formData.append('file', blobInfo.blob(), blobInfo.filename());
-
-            fetch("{{ route('front.upload.ckeditor') }}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: formData
-            })
-                .then(response => response.json())
-                .then(result => success(result.link)) // Trả về đường dẫn ảnh
-                .catch(error => failure(error.message));
-        }
-    });
-</script> --}}
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const icons = ['📌', '🔥', '✨', '🌟', '🎖️', '💎', '⚡', '💡'];
-            const randomIcons = document.querySelectorAll('.random-icon');
-
-            randomIcons.forEach(icon => {
-                const randomIndex = Math.floor(Math.random() * icons.length);
-                icon.textContent = icons[randomIndex];
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closePopup();
-            }
-        });
-
-        function openPopup(postId) {
-            // Hiển thị popup với nội dung chờ
-            const popup = document.getElementById('contentPopup');
-            popup.style.display = 'flex';
-
-            // Đặt nội dung chờ
-            document.getElementById('popup-title').innerText = 'Đang tải...';
-            document.getElementById('popup-body').innerText = 'Vui lòng chờ...';
-
-            // Gửi yêu cầu AJAX để lấy nội dung bài viết
-            fetch(`/gettblog/${postId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Lỗi khi tải nội dung');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Cập nhật nội dung vào popup
-                    document.getElementById('popup-title').innerText = data.title;
-                    document.getElementById('popup-body').innerHTML = data.content;
-                })
-                .catch(error => {
-                    // Hiển thị lỗi nếu không lấy được nội dung
-                    document.getElementById('popup-title').innerText = 'Lỗi';
-                    document.getElementById('popup-body').innerText = 'Không thể tải nội dung bài viết.';
-                    console.error(error);
+            
+            // Xử lý sự kiện khi cuộn trang
+            window.addEventListener('scroll', toggleScrollButton);
+            
+            // Xử lý sự kiện khi nhấp vào nút
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
                 });
-        }
-
-        function closePopup() {
-            // Đóng popup
-            const popup = document.getElementById('contentPopup');
-            popup.style.display = 'none';
-        }
+            });
+        });
     </script>
+
+    <!-- Social Interactions JavaScript -->
+    @socialInteractions
+
+    <!-- Additional Scripts -->
+    @yield('botscript')
 @endsection
+

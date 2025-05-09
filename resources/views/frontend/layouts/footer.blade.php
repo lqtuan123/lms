@@ -1,89 +1,63 @@
-<?php $detail = \App\Models\SettingDetail::find(1); ?>
+<footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Column 1: About -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Về ReadSocial</h3>
+                <p class="text-gray-300 mb-4">ReadSocial là nền tảng kết hợp đọc sách và mạng xã hội học tập, giúp bạn
+                    tiếp cận tri thức và kết nối với cộng đồng người học.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-300 hover:text-white"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
 
-<footer id="footer" class="padding-large" style="padding-bottom: 20px;">
-  <div class="container">
-    <div class="row">
-      <div class="footer-top-area">
-        <div class="row d-flex flex-wrap justify-content-between">
-          <div class="col-lg-3 col-sm-6 pb-3">
-            <div class="footer-menu">
-              <img src="{{ asset('frontend/assets_f/images/main-logo.png')}}" alt="logo" class="img-fluid mb-2">
-              <p>Bookly là nền tảng chia sẻ tài liệu và hỗ trợ học tập dành cho sinh viên công nghệ thông tin và những người yêu sách.</p>
-              <div class="social-links">
-                <ul class="d-flex list-unstyled">
-                  <li><a href="#"><svg class="facebook"><use xlink:href="#facebook" /></svg></a></li>
-                  <li><a href="#"><svg class="instagram"><use xlink:href="#instagram" /></svg></a></li>
-                  <li><a href="#"><svg class="twitter"><use xlink:href="#twitter" /></svg></a></li>
-                  <li><a href="#"><svg class="linkedin"><use xlink:href="#linkedin" /></svg></a></li>
-                  <li><a href="#"><svg class="youtube"><use xlink:href="#youtube" /></svg></a></li>
+            <!-- Column 2: Policies -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Chính sách</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-300 hover:text-white">Điều khoản sử dụng</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Chính sách bảo mật</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Chính sách cookie</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Quyền riêng tư</a></li>
                 </ul>
-              </div>
             </div>
-          </div>
 
-          <div class="col-lg-2 col-sm-6 pb-3">
-            <div class="footer-menu text-capitalize">
-              <h5 class="widget-title pb-2">Liên kết nhanh</h5>
-              <ul class="menu-list list-unstyled text-capitalize">
-                <li class="menu-item mb-1"><a href="#">Trang chủ</a></li>
-                <li class="menu-item mb-1"><a href="#">Giới thiệu</a></li>
-                <li class="menu-item mb-1"><a href="#">Thư viện sách</a></li>
-                <li class="menu-item mb-1"><a href="#">Blog</a></li>
-                <li class="menu-item mb-1"><a href="#">Liên hệ</a></li>
-              </ul>
+            <!-- Column 3: Support -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Hỗ trợ</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-gray-300 hover:text-white">Trung tâm trợ giúp</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Liên hệ hỗ trợ</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Báo lỗi</a></li>
+                    <li><a href="#" class="text-gray-300 hover:text-white">Câu hỏi thường gặp</a></li>
+                </ul>
             </div>
-          </div>
 
-          <div class="col-lg-3 col-sm-6 pb-3">
-            <div class="footer-menu text-capitalize">
-              <h5 class="widget-title pb-2">Hỗ trợ</h5>
-              <ul class="menu-list list-unstyled">
-                <li class="menu-item mb-1"><a href="#">Hướng dẫn sử dụng</a></li>
-                <li class="menu-item mb-1"><a href="#">Chính sách hoàn trả</a></li>
-                <li class="menu-item mb-1"><a href="#">Giao hàng & thanh toán</a></li>
-                <li class="menu-item mb-1"><a href="#">Câu hỏi thường gặp</a></li>
-              </ul>
+            <!-- Column 4: Contact -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Liên hệ</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-gray-300"></i>
+                        <span class="text-gray-300">123 Đường ABC, Quận 1, TP.HCM</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-phone-alt mr-2 text-gray-300"></i>
+                        <span class="text-gray-300">+84 123 456 789</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-envelope mr-2 text-gray-300"></i>
+                        <span class="text-gray-300">support@readsocial.vn</span>
+                    </li>
+                </ul>
             </div>
-          </div>
-
-          <div class="col-lg-3 col-sm-6 pb-3">
-            <div class="footer-menu contact-item">
-              <h5 class="widget-title text-capitalize pb-2">Liên hệ</h5>
-              <p>Mọi thắc mắc hoặc góp ý xin gửi về: <a href="mailto:lequoctuan.dev@gmail.com" class="text-decoration-underline">lequoctuan.dev@gmail.com</a></p>
-              <p>Hoặc gọi trực tiếp: <a href="#" class="text-decoration-underline">+84 987 654 321</a></p>
-            </div>
-          </div>
         </div>
-      </div>
+
+        <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>© 2023 ReadSocial. Tất cả quyền được bảo lưu.</p>
+        </div>
     </div>
-  </div>
 </footer>
-
-<hr>
-
-<div id="footer-bottom" class="mb-2">
-  <div class="container">
-    <div class="d-flex flex-wrap justify-content-between">
-      {{-- <div class="ship-and-payment d-flex gap-md-5 flex-wrap">
-        <div class="shipping d-flex">
-          <p>Vận chuyển bởi:</p>
-          <div class="card-wrap ps-2">
-            <img src="{{ asset('frontend/assets_f/images/dhl.png')}}" alt="dhl">
-            <img src="{{ asset('frontend/assets_f/images/shippingcard.png')}}" alt="ship">
-          </div>
-        </div>
-        <div class="payment-method d-flex">
-          <p>Phương thức thanh toán:</p>
-          <div class="card-wrap ps-2">
-            <img src="{{ asset('frontend/assets_f/images/visa.jpg')}}" alt="visa">
-            <img src="{{ asset('frontend/assets_f/images/mastercard.jpg')}}" alt="mastercard">
-            <img src="{{ asset('frontend/assets_f/images/paypal.jpg')}}" alt="paypal">
-          </div>
-        </div>
-      </div> --}}
-      <div class="copyright">
-        <p>© 2024 Bookly. Thiết kế & phát triển bởi <a href="#" target="_blank">Lê Quốc Tuấn</a></p>
-      </div>
-    </div>
-  </div>
-</div>

@@ -21,16 +21,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('booktypes', BookTypeController::class)->parameters(['booktypes' => 'id']);
     Route::post('booktypes_status', [BookTypeController::class, 'bookTypeStatus'])->name('booktypes.status');
 
-    // Routes for BookPoint
-    Route::resource('bookpoints', BookPointController::class);
-
-    Route::resource('bookaccess', BookAccessController::class);
-
-    Route::resource('bookusers', BookUserController::class);
-    Route::get('bookusers/{userId}/updatePoints', [BookUserController::class, 'updatePoints'])->name('bookusers.updatePoints');
-
-    Route::post('/booktransactions/process', [BookTransactionController::class, 'processTransaction'])
-        ->name('booktransactions.process');
+    
 });
 
 

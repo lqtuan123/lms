@@ -1,0 +1,850 @@
+/* Book Show CSS - Tệp chính */
+
+/* Import các thành phần */
+@import 'components/variables.css';
+@import 'components/layout.css';
+@import 'components/book-cover.css';
+@import 'components/book-info.css';
+@import 'components/book-buttons.css';
+@import 'components/rating.css';
+@import 'components/rating-list.css';
+@import 'components/tabs.css';
+@import 'components/comments.css';
+@import 'components/utils.css';
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS cơ bản */
+body {
+    font-family: var(--font-primary);
+    line-height: var(--leading-normal);
+    color: var(--color-gray-800);
+    background-color: var(--color-gray-50);
+}
+
+/* Nếu có CSS bổ sung dành riêng cho trang show, có thể thêm ở đây */
+
+/* Biến CSS để dễ dàng quản lý theme */
+:root {
+    /* Màu sắc */
+    --color-primary: #3b82f6;
+    --color-primary-hover: #2563eb;
+    --color-secondary: #facc15;
+    
+    /* Thang màu xám */
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-500: #6b7280;
+    --color-gray-600: #4b5563;
+    --color-gray-700: #374151;
+    --color-gray-800: #1f2937;
+    
+    /* Màu chức năng */
+    --color-red-500: #ef4444;
+    --color-red-600: #dc2626;
+    --color-green-500: #10b981;
+    --color-yellow-100: #fef3c7;
+    --color-yellow-800: #92400e;
+    
+    /* Đổ bóng */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    /* Bo tròn */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-full: 9999px;
+    
+    /* Kích thước cơ bản */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+    
+    /* Hiệu ứng */
+    --transition-normal: all 0.2s ease;
+    --transition-slow: all 0.3s ease-out;
+}
+
+/* ===== Layout chung và container ===== */
+.book-detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+}
+
+.book-main-info {
+    display: flex;
+    gap: var(--spacing-8);
+}
+
+/* ===== Chi tiết sách ===== */
+/* Phần hình ảnh sách */
+.book-cover-container {
+    flex: 0 0 auto;
+    max-width: 300px;
+}
+
+.book-cover-img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    transition: transform 0.3s ease;
+}
+
+.book-cover-img:hover {
+    transform: scale(1.02);
+}
+
+.book-cover {
+    flex: 0 0 140px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s;
+}
+
+.book-cover:hover {
+    transform: scale(1.02);
+}
+
+/* Phần thông tin sách */
+.book-info-container, .book-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-info-container {
+    justify-content: flex-start;
+}
+
+.book-info {
+    justify-content: center;
+}
+
+.book-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+.book-meta {
+    margin-bottom: var(--spacing-6);
+}
+
+.book-meta-item {
+    margin-bottom: var(--spacing-2);
+    display: flex;
+    align-items: flex-start;
+}
+
+.book-meta-label {
+    font-weight: 600;
+    color: var(--color-gray-700);
+    margin-right: var(--spacing-2);
+}
+
+.book-meta-value {
+    color: var(--color-gray-700);
+}
+
+/* Tags, descriptions và nội dung */
+.book-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+}
+
+.book-tag {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    color: var(--color-gray-700);
+    background-color: var(--color-gray-50);
+    transition: background-color 0.2s;
+}
+
+.book-tag:hover {
+    background-color: var(--color-gray-100);
+}
+
+.book-description {
+    margin-bottom: var(--spacing-6);
+    line-height: 1.6;
+    color: var(--color-gray-700);
+}
+
+.book-content-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-4);
+    margin-top: var(--spacing-6);
+}
+
+.book-content-list {
+    list-style-type: disc;
+    padding-left: var(--spacing-6);
+    margin-bottom: var(--spacing-6);
+}
+
+.book-content-item {
+    margin-bottom: 0.75rem;
+    color: var(--color-gray-700);
+    line-height: 1.5;
+}
+
+/* Actions và nút */
+.book-actions, .book-actions-container {
+    display: flex;
+    margin-top: var(--spacing-4);
+    gap: var(--spacing-2);
+}
+
+.book-actions {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.book-actions-container {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.book-action-btn, .book-actions a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: var(--transition-normal);
+    text-decoration: none;
+}
+
+.book-action-btn {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
+}
+
+.book-actions a {
+    font-size: 0.875rem;
+    padding: 0.375rem 1rem;
+}
+
+.btn-read {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-read:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-bookmark {
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-700);
+}
+
+.btn-bookmark:hover {
+    background-color: var(--color-gray-200);
+}
+
+.btn-bookmark.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-icon {
+    margin-right: 0.375rem;
+    font-size: 1rem;
+}
+
+/* ===== Đánh giá và xếp hạng ===== */
+/* Rating indicator display */
+.book-rating-container, .rating-container {
+    display: flex;
+    align-items: center;
+}
+
+.book-rating-container {
+    margin-bottom: 1.25rem;
+}
+
+.rating-container {
+    margin-bottom: var(--spacing-4);
+}
+
+.book-rating-stars, .rating-stars {
+    display: flex;
+    margin-right: 0.75rem;
+}
+
+.rating-stars {
+    margin-right: var(--spacing-2);
+}
+
+.book-rating-text {
+    font-weight: 500;
+    color: var(--color-gray-700);
+    font-size: 1rem;
+}
+
+.rating-count {
+    color: var(--color-gray-500);
+    font-size: 0.875rem;
+}
+
+.rating-star {
+    color: var(--color-gray-300);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.rating-star.filled {
+    color: var(--color-secondary);
+}
+
+.rating-star.half {
+    position: relative;
+}
+
+.rating-star.half:after {
+    content: '★';
+    color: var(--color-secondary);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+}
+
+/* Rating statistics */
+.rating-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.rating-average {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--color-gray-800);
+    min-width: 80px;
+    text-align: center;
+    position: relative;
+}
+
+.rating-average::after {
+    content: '/5';
+    font-size: 1rem;
+    color: var(--color-gray-500);
+    position: absolute;
+    bottom: 0.5rem;
+    right: -10px;
+}
+
+.rating-distribution {
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.rating-bar {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr auto auto;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    gap: 0.5rem;
+}
+
+.rating-bar-label {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    font-weight: 500;
+}
+
+.rating-bar-track {
+    background-color: var(--color-gray-200);
+    height: 0.375rem;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    transition: width 0.5s ease-out;
+    border-radius: var(--radius-full);
+    position: relative;
+    background-color: var(--color-secondary);
+}
+
+/* Màu gradient cho các thanh rating */
+.rating-bar:nth-child(1) .rating-bar-fill { background-color: #f59e0b; }
+.rating-bar:nth-child(2) .rating-bar-fill { background-color: #fbbf24; }
+.rating-bar:nth-child(3) .rating-bar-fill { background-color: #fcd34d; }
+.rating-bar:nth-child(4) .rating-bar-fill { background-color: #fde68a; }
+.rating-bar:nth-child(5) .rating-bar-fill { background-color: #fef3c7; }
+
+.rating-bar-count {
+    min-width: 1.5rem;
+    text-align: right;
+    font-size: 0.75rem;
+    color: var(--color-gray-700);
+    font-weight: 500;
+}
+
+.rating-bar-percent {
+    min-width: 2.5rem;
+    text-align: left;
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+    transition: opacity 0.2s;
+    opacity: 0.8;
+}
+
+/* Hiệu ứng hover cho rating bar */
+.rating-bar:hover .rating-bar-track { height: 0.5rem; }
+.rating-bar:hover .rating-bar-count { 
+    font-weight: 600;
+    color: var(--color-gray-800);
+}
+.rating-bar:hover .rating-bar-percent {
+    opacity: 1;
+    font-weight: 500;
+}
+
+/* Rating form */
+.rating-form {
+    background-color: var(--color-gray-50);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-4);
+    margin-top: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s;
+}
+
+.rating-form:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.rating-form-header {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-6);
+}
+
+.rating-form-label {
+    display: block;
+    margin-bottom: var(--spacing-2);
+    color: var(--color-gray-700);
+    font-weight: 500;
+}
+
+.rating-stars-input {
+    display: flex;
+    margin-bottom: var(--spacing-6);
+}
+
+.rating-stars-input .rating-star {
+    font-size: 2rem;
+    margin-right: var(--spacing-2);
+}
+
+.rating-form input,
+.rating-form textarea,
+.comment-form textarea {
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rating-form textarea,
+.comment-form textarea {
+    width: 100%;
+    padding: var(--spacing-4);
+    font-size: 1rem;
+    resize: vertical;
+    margin-bottom: var(--spacing-4);
+}
+
+.rating-form textarea {
+    min-height: 120px;
+}
+
+.comment-form textarea {
+    min-height: 100px;
+}
+
+.rating-form input:focus,
+.rating-form textarea:focus,
+.comment-form textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+.rating-submit {
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    padding: 0.75rem 2rem;
+    border-radius: var(--radius-lg);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.rating-submit:hover {
+    background-color: var(--color-primary-hover);
+}
+
+/* ===== Tab System ===== */
+.book-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--color-gray-200);
+    margin-bottom: var(--spacing-6);
+}
+
+.book-tab {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    color: var(--color-gray-600);
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    transition: var(--transition-normal);
+}
+
+.book-tab.active {
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.book-tab .tab-icon {
+    font-size: 1.25rem;
+}
+
+.book-tab .tab-count {
+    color: var(--color-gray-500);
+    font-size: 0.9rem;
+}
+
+.book-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--color-primary);
+    transition: width 0.3s;
+}
+
+.book-tab.active::after {
+    width: 100%;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ===== Ratings List ===== */
+.rating-list {
+    margin-top: var(--spacing-8);
+}
+
+.rating-item {
+    border-bottom: 1px solid var(--color-gray-200);
+    padding: 1.5rem 0;
+    transition: background-color 0.2s;
+}
+
+.rating-item:hover {
+    background-color: rgba(249, 250, 251, 0.5);
+}
+
+.rating-item:last-child {
+    border-bottom: none;
+}
+
+.rating-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.rating-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: var(--spacing-4);
+    flex-shrink: 0;
+}
+
+.rating-user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rating-user-details {
+    flex-grow: 1;
+}
+
+.rating-user-name, .rating-user {
+    font-weight: 600;
+    color: var(--color-gray-800);
+}
+
+.rating-user-name {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.rating-date {
+    color: var(--color-gray-500);
+    font-size: 0.875rem;
+}
+
+.rating-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-2);
+}
+
+.rating-value, .rating-stars-display {
+    display: flex;
+    margin-bottom: var(--spacing-2);
+}
+
+.rating-stars-display .rating-star {
+    font-size: 1.25rem;
+    color: var(--color-secondary);
+    margin-right: 0.25rem;
+}
+
+.rating-content, .rating-text {
+    color: var(--color-gray-700);
+    line-height: 1.6;
+}
+
+.rating-content {
+    margin-bottom: 0.75rem;
+}
+
+.rating-text {
+    font-size: 0.9375rem;
+}
+
+.rating-actions {
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-2);
+}
+
+.rating-like {
+    display: flex;
+    align-items: center;
+    color: var(--color-gray-600);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+.rating-like:hover {
+    background-color: var(--color-gray-100);
+}
+
+.rating-like-icon {
+    margin-right: 0.25rem;
+}
+
+.rating-like-count {
+    margin-left: 0.25rem;
+}
+
+/* ===== Bình luận ===== */
+.comments-section {
+    margin-top: var(--spacing-8);
+}
+
+.comment-form {
+    margin-bottom: var(--spacing-8);
+}
+
+/* ===== Helper Components ===== */
+/* PDF Viewer */
+.pdf-container {
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.pdf-container canvas {
+    width: 100%;
+    height: auto;
+    margin-bottom: var(--spacing-2);
+}
+
+/* Stats boxes */
+.book-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+}
+
+.book-stat-value {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-gray-800);
+}
+
+.book-stat-label {
+    font-size: 0.75rem;
+    color: var(--color-gray-500);
+}
+
+/* Interactive elements */
+.star {
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: var(--color-gray-300);
+    transition: color 0.2s ease;
+}
+
+.star.selected,
+.star.hover {
+    color: var(--color-secondary);
+}
+
+button {
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Toast notification */
+.toast-notification {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+}
+
+.toast-notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Pagination */
+.pagination-btn {
+    transition: var(--transition-normal);
+}
+
+.pagination-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* ===== Responsive Media Queries ===== */
+@media (max-width: 768px) {
+    .book-main-info {
+        flex-direction: column;
+    }
+
+    .book-cover-container {
+        max-width: 100%;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .book-cover-img {
+        max-width: 250px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    .book-title {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .book-rating-container {
+        justify-content: center;
+    }
+
+    .book-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .book-actions a {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rating-stats {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .rating-distribution {
+        width: 100%;
+        max-width: 400px;
+        margin: 1rem auto 0;
+    }
+
+    .rating-item {
+        padding: 1rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .rating-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rating-date {
+        margin-top: 0.25rem;
+    }
+} 

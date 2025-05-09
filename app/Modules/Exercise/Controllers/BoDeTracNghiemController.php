@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
-use App\Modules\Exercise\Models\BodeTracNghiem; 
+use App\Modules\Exercise\Models\BoDeTracNghiem; 
 use App\Modules\Teaching_2\Models\HocPhan;
 use App\Models\User;
 use App\Modules\Exercise\Models\TracNghiemCauhoi;

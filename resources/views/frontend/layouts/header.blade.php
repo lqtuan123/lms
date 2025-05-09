@@ -1,392 +1,888 @@
-<?php
-$categories = \App\Models\Category::where('status', 'active')->orderBy('title', 'ASC')->get();
-$detail = \App\Models\SettingDetail::find(1); ?>
+<style>
+    /* CSS để đảm bảo dropdown menu hiển thị đúng */
+    .dropdown-menu {
+        display: none;
+        transform: translateX(-50%);
+        right: -50% !important;
+    }
 
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="search" xmlns="http://www.w3.org/2000/symbolsvg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M11.5 2.75a8.75 8.75 0 1 0 0 17.5a8.75 8.75 0 0 0 0-17.5M1.25 11.5c0-5.66 4.59-10.25 10.25-10.25S21.75 5.84 21.75 11.5c0 2.56-.939 4.902-2.491 6.698l3.271 3.272a.75.75 0 1 1-1.06 1.06l-3.272-3.271A10.21 10.21 0 0 1 11.5 21.75c-5.66 0-10.25-4.59-10.25-10.25"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol id="user" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M12 1.25a4.75 4.75 0 1 0 0 9.5a4.75 4.75 0 0 0 0-9.5M8.75 6a3.25 3.25 0 1 1 6.5 0a3.25 3.25 0 0 1-6.5 0M12 12.25c-2.313 0-4.445.526-6.024 1.414C4.42 14.54 3.25 15.866 3.25 17.5v.102c-.001 1.162-.002 2.62 1.277 3.662c.629.512 1.51.877 2.7 1.117c1.192.242 2.747.369 4.773.369s3.58-.127 4.774-.369c1.19-.24 2.07-.605 2.7-1.117c1.279-1.042 1.277-2.5 1.276-3.662V17.5c0-1.634-1.17-2.96-2.725-3.836c-1.58-.888-3.711-1.414-6.025-1.414M4.75 17.5c0-.851.622-1.775 1.961-2.528c1.316-.74 3.184-1.222 5.29-1.222c2.104 0 3.972.482 5.288 1.222c1.34.753 1.961 1.677 1.961 2.528c0 1.308-.04 2.044-.724 2.6c-.37.302-.99.597-2.05.811c-1.057.214-2.502.339-4.476.339c-1.974 0-3.42-.125-4.476-.339c-1.06-.214-1.68-.509-2.05-.81c-.684-.557-.724-1.293-.724-2.601"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol id="heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M5.624 4.424C3.965 5.182 2.75 6.986 2.75 9.137c0 2.197.9 3.891 2.188 5.343c1.063 1.196 2.349 2.188 3.603 3.154c.298.23.594.459.885.688c.526.415.995.778 1.448 1.043c.452.264.816.385 1.126.385c.31 0 .674-.12 1.126-.385c.453-.265.922-.628 1.448-1.043c.29-.23.587-.458.885-.687c1.254-.968 2.54-1.959 3.603-3.155c1.289-1.452 2.188-3.146 2.188-5.343c0-2.15-1.215-3.955-2.874-4.713c-1.612-.737-3.778-.542-5.836 1.597a.75.75 0 0 1-1.08 0C9.402 3.882 7.236 3.687 5.624 4.424M12 4.46C9.688 2.39 7.099 2.1 5 3.059C2.786 4.074 1.25 6.426 1.25 9.138c0 2.665 1.11 4.699 2.567 6.339c1.166 1.313 2.593 2.412 3.854 3.382c.286.22.563.434.826.642c.513.404 1.063.834 1.62 1.16c.557.325 1.193.59 1.883.59s1.326-.265 1.883-.59c.558-.326 1.107-.756 1.62-1.16a78.6 78.6 0 0 1 .826-.642c1.26-.97 2.688-2.07 3.854-3.382c1.457-1.64 2.567-3.674 2.567-6.339c0-2.712-1.535-5.064-3.75-6.077c-2.099-.96-4.688-.67-7 1.399"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol id="cart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M2.249 2.292a.75.75 0 1 0-.498 1.416l.262.091c.667.235 1.106.39 1.429.549c.303.149.437.27.525.398c.09.132.16.314.2.677c.04.38.041.875.041 1.615V9.76c0 1.453.014 2.5.151 3.3c.146.854.438 1.466.985 2.042c.594.627 1.346.9 2.243 1.026c.858.122 1.948.122 3.293.122h5.406c.742 0 1.366 0 1.87-.062c.537-.065 1.025-.209 1.452-.556c.426-.348.665-.797.837-1.309c.163-.482.289-1.093.439-1.82l.508-2.469l.002-.005l.01-.052c.165-.825.303-1.519.338-2.077c.036-.586-.031-1.164-.413-1.66c-.235-.306-.565-.479-.866-.584a4.617 4.617 0 0 0-1.002-.21c-.687-.076-1.522-.076-2.34-.076H5.667a5.932 5.932 0 0 0-.01-.108c-.054-.497-.17-.95-.453-1.362c-.284-.416-.662-.682-1.102-.899c-.412-.202-.936-.386-1.553-.603zm3.46 4.578h11.38c.856 0 1.61.001 2.205.067c.296.034.517.08.672.134a.56.56 0 0 1 .176.086c.062.082.128.23.102.651c-.027.444-.143 1.036-.321 1.926v.002l-.5 2.42c-.16.783-.27 1.303-.399 1.688c-.123.366-.239.523-.364.625c-.125.102-.303.184-.685.23c-.404.05-.935.051-1.734.051h-5.303c-1.417 0-2.4-.002-3.14-.107c-.716-.101-1.093-.285-1.366-.573c-.32-.338-.493-.668-.595-1.263c-.11-.65-.129-1.558-.129-3.047zM7.5 21.75a2.25 2.25 0 1 1 0-4.5a2.25 2.25 0 0 1 0 4.5m-.75-2.25a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0m9.75 2.25a2.25 2.25 0 1 1 0-4.5a2.25 2.25 0 0 1 0 4.5m-.75-2.25a.75.75 0 1 0 1.5 0a.75.75 0 0 0-1.5 0"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="alt-arrow-right-outline" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M8.512 4.43a.75.75 0 0 1 1.057.082l6 7a.75.75 0 0 1 0 .976l-6 7a.75.75 0 0 1-1.138-.976L14.012 12L8.431 5.488a.75.75 0 0 1 .08-1.057"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="alt-arrow-left-outline" viewBox="0 0 24 24">
-        <path fill="currentColor" fill-rule="evenodd"
-            d="M15.488 4.43a.75.75 0 0 1 .081 1.058L9.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081"
-            clip-rule="evenodd" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="cart-outline" viewBox="0 0 16 16">
-        <path
-            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="quality" viewBox="0 0 16 16">
-        <path
-            d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68L9.669.864zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702 1.509.229z" />
-        <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="price-tag" viewBox="0 0 16 16">
-        <path d="M6 4.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1 0a.5.5 0 1 0-1 0 .5.5 0 0 0 1 0z" />
-        <path
-            d="M2 1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 1 6.586V2a1 1 0 0 1 1-1zm0 5.586 7 7L13.586 9l-7-7H2v4.586z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="shield-plus" viewBox="0 0 16 16">
-        <path
-            d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z" />
-        <path
-            d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V9a.5.5 0 0 1-1 0V7.5H6a.5.5 0 0 1 0-1h1.5V5a.5.5 0 0 1 .5-.5z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="star-fill" viewBox="0 0 24 24">
-        <path fill="currentColor"
-            d="M9.153 5.408C10.42 3.136 11.053 2 12 2c.947 0 1.58 1.136 2.847 3.408l.328.588c.36.646.54.969.82 1.182c.28.213.63.292 1.33.45l.636.144c2.46.557 3.689.835 3.982 1.776c.292.94-.546 1.921-2.223 3.882l-.434.507c-.476.557-.715.836-.822 1.18c-.107.345-.071.717.001 1.46l.066.677c.253 2.617.38 3.925-.386 4.506c-.766.582-1.918.051-4.22-1.009l-.597-.274c-.654-.302-.981-.452-1.328-.452c-.347 0-.674.15-1.328.452l-.596.274c-2.303 1.06-3.455 1.59-4.22 1.01c-.767-.582-.64-1.89-.387-4.507l.066-.676c.072-.744.108-1.116 0-1.46c-.106-.345-.345-.624-.821-1.18l-.434-.508c-1.677-1.96-2.515-2.941-2.223-3.882c.293-.941 1.523-1.22 3.983-1.776l.636-.144c.699-.158 1.048-.237 1.329-.45c.28-.213.46-.536.82-1.182z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="star-empty" viewBox="0 0 16 16">
-        <path
-            d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="star-half" viewBox="0 0 16 16">
-        <path
-            d="M5.354 5.119 7.538.792A.516.516 0 0 1 8 .5c.183 0 .366.097.465.292l2.184 4.327 4.898.696A.537.537 0 0 1 16 6.32a.548.548 0 0 1-.17.445l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256a.52.52 0 0 1-.146.05c-.342.06-.668-.254-.6-.642l.83-4.73L.173 6.765a.55.55 0 0 1-.172-.403.58.58 0 0 1 .085-.302.513.513 0 0 1 .37-.245l4.898-.696zM8 12.027a.5.5 0 0 1 .232.056l3.686 1.894-.694-3.957a.565.565 0 0 1 .162-.505l2.907-2.77-4.052-.576a.525.525 0 0 1-.393-.288L8.001 2.223 8 2.226v9.8z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="quote" viewBox="0 0 24 24">
-        <path fill="currentColor" d="m15 17l2-4h-4V6h7v7l-2 4h-3Zm-9 0l2-4H4V6h7v7l-2 4H6Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="facebook" viewBox="0 0 24 24">
-        <path fill="currentColor"
-            d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 0 1 1-1h3v-4h-3a5 5 0 0 0-5 5v2.01h-2l-.396 3.98h2.396v8.01Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="youtube" viewBox="0 0 32 32">
-        <path fill="currentColor"
-            d="M29.41 9.26a3.5 3.5 0 0 0-2.47-2.47C24.76 6.2 16 6.2 16 6.2s-8.76 0-10.94.59a3.5 3.5 0 0 0-2.47 2.47A36.13 36.13 0 0 0 2 16a36.13 36.13 0 0 0 .59 6.74a3.5 3.5 0 0 0 2.47 2.47c2.18.59 10.94.59 10.94.59s8.76 0 10.94-.59a3.5 3.5 0 0 0 2.47-2.47A36.13 36.13 0 0 0 30 16a36.13 36.13 0 0 0-.59-6.74ZM13.2 20.2v-8.4l7.27 4.2Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="twitter" viewBox="0 0 256 256">
-        <path fill="currentColor"
-            d="m245.66 77.66l-29.9 29.9C209.72 177.58 150.67 232 80 232c-14.52 0-26.49-2.3-35.58-6.84c-7.33-3.67-10.33-7.6-11.08-8.72a8 8 0 0 1 3.85-11.93c.26-.1 24.24-9.31 39.47-26.84a110.93 110.93 0 0 1-21.88-24.2c-12.4-18.41-26.28-50.39-22-98.18a8 8 0 0 1 13.65-4.92c.35.35 33.28 33.1 73.54 43.72V88a47.87 47.87 0 0 1 14.36-34.3A46.87 46.87 0 0 1 168.1 40a48.66 48.66 0 0 1 41.47 24H240a8 8 0 0 1 5.66 13.66Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="instagram" viewBox="0 0 256 256">
-        <path fill="currentColor"
-            d="M128 80a48 48 0 1 0 48 48a48.05 48.05 0 0 0-48-48Zm0 80a32 32 0 1 1 32-32a32 32 0 0 1-32 32Zm48-136H80a56.06 56.06 0 0 0-56 56v96a56.06 56.06 0 0 0 56 56h96a56.06 56.06 0 0 0 56-56V80a56.06 56.06 0 0 0-56-56Zm40 152a40 40 0 0 1-40 40H80a40 40 0 0 1-40-40V80a40 40 0 0 1 40-40h96a40 40 0 0 1 40 40ZM192 76a12 12 0 1 1-12-12a12 12 0 0 1 12 12Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="linkedin" viewBox="0 0 24 24">
-        <path fill="currentColor"
-            d="M6.94 5a2 2 0 1 1-4-.002a2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="nav-icon" viewBox="0 0 16 16">
-        <path
-            d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16">
-        <path
-            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-    </symbol>
-    <symbol xmlns="http://www.w3.org/2000/svg" id="navbar-icon" viewBox="0 0 16 16">
-        <path
-            d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
-    </symbol>
-</svg>
+    .modal {
+        z-index: 1060 !important;
+    }
 
-<div id="preloader" class="preloader-container">
-    <div class="book">
-        <div class="inner">
-            <div class="left"></div>
-            <div class="middle"></div>
-            <div class="right"></div>
-        </div>
-        <ul>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-    </div>
-</div>
+    .modal-backdrop {
+        z-index: 1055 !important;
+    }
 
-<div class="search-popup">
-    <div class="search-popup-container">
+    .dropdown-menu.active {
+        display: block;
+    }
 
-        <form role="search" method="get" class="search-form" action="">
-            <input type="search" id="search-form" class="search-field" placeholder="Type and press enter"
-                value="" name="s" />
-            <button type="submit" class="search-submit"><svg class="search">
-                    <use xlink:href="#search"></use>
-                </svg></button>
-        </form>
+    /* Logo hiện đại với gradient và hiệu ứng */
+    .logo-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
 
-        <h5 class="cat-list-title">Browse Categories</h5>
+    .logo-container:hover {
+        transform: translateY(-2px);
+    }
 
-        <ul class="cat-list">
-            <li class="cat-list-item">
-                <a href="#" title="Romance">Romance</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Thriller">Thriller</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Sci-fi">Sci-fi</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Cooking">Cooking</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Health">Health</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Lifestyle">Lifestyle</a>
-            </li>
-            <li class="cat-list-item">
-                <a href="#" title="Fiction">Fiction</a>
-            </li>
-        </ul>
+    .logo-icon {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        border-radius: 12px;
+        margin-right: 10px;
+        box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
 
-    </div>
-</div>
+    .logo-icon:before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        filter: blur(10px);
+        opacity: 0.3;
+        z-index: -1;
+        transition: all 0.3s ease;
+    }
 
-<header id="header" class="site-header">
+    .logo-icon i {
+        color: white;
+        font-size: 1.2rem;
+        z-index: 1;
+    }
 
-    <nav id="header-nav" class="navbar navbar-expand-lg py-3">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <img src="{{ asset('frontend/assets_f/images/main-logo.png') }}" class="logo">
-            </a>
-            <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <svg class="navbar-icon">
-                    <use xlink:href="#navbar-icon"></use>
-                </svg>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar"
-                aria-labelledby="bdNavbarOffcanvasLabel">
-                <div class="offcanvas-header px-4 pb-0">
-                    <a class="navbar-brand" href="index.html">
-                        <img src="{{ asset('frontend/assets_f/images/main-logo.png') }}" class="logo">
-                    </a>
-                    <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas"
-                        aria-label="Close" data-bs-target="#bdNavbar"></button>
+    .logo-container:hover .logo-icon {
+        transform: rotate(5deg);
+        box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .logo-text {
+        font-weight: 800;
+        font-size: 1.5rem;
+        position: relative;
+    }
+
+    .logo-text-read {
+        color: #4f46e5;
+        font-weight: 900;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .logo-text-social {
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .logo-text span {
+        position: relative;
+    }
+
+    .logo-text span:after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+        transition: width 0.3s ease;
+    }
+
+    .logo-container:hover .logo-text span:after {
+        width: 100%;
+    }
+
+    .logo-badge {
+        position: absolute;
+        top: -5px;
+        right: -12px;
+        background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+        color: rgb(20, 18, 18);
+        font-size: 0.6rem;
+        font-weight: bold;
+        padding: 1px 5px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(239, 68, 68, 0.3);
+        transform: scale(0);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .logo-container:hover .logo-badge {
+        transform: scale(1);
+    }
+
+    /* Thiết kế gọn gàng cho dropdown thông báo */
+    .notification-item {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .notification-item p {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px;
+    }
+
+    .notification-item .text-xs {
+        font-size: 0.65rem;
+    }
+
+    /* Hiệu ứng khi hover vào avatar */
+    .avatar-container:hover .avatar-ring {
+        border-color: #4f46e5;
+        transform: scale(1.05);
+    }
+
+    .avatar-container:hover .avatar {
+        transform: scale(1.1);
+    }
+
+    /* Hiệu ứng đặc biệt cho avatar guest */
+    #guest-avatar-button:hover .avatar-ring {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+    }
+
+    #guest-avatar-button:hover .avatar {
+        transform: scale(1.1);
+    }
+
+    .avatar,
+    .avatar-ring {
+        transition: all 0.2s ease;
+    }
+
+    /* Hiệu ứng cho dropdown menu */
+    @keyframes dropdown-appear {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dropdown-menu.active {
+        animation: dropdown-appear 0.2s ease forwards;
+    }
+
+    /* Overlay để đóng menu - phải nằm dưới menu */
+    .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        display: none;
+    }
+    
+    .mobile-menu-overlay.active {
+        display: block;
+    }
+
+    /* CSS cho Mobile Menu */
+    .mobile-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        background-color: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        z-index: 50;
+        display: none;
+        flex-direction: column;
+        padding: 1rem;
+        max-height: calc(100vh - 70px);
+        overflow-y: auto;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+    
+    /* Khi menu hiển thị */
+    .mobile-menu.active {
+        display: flex;
+        opacity: 1;
+        pointer-events: auto;
+        animation: none;
+    }
+    
+    /* Thiết kế các mục trong menu */
+    .mobile-menu a {
+        display: block;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.25rem;
+        border-radius: 0.375rem;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-menu a:hover {
+        background-color: #f3f4f6;
+    }
+    
+    /* Nút đóng menu */
+    .mobile-menu-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: #f3f4f6;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1;
+    }
+</style>
+
+<header class="bg-white shadow-sm sticky top-0 z-40">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center">
+            <a href="{{ route('home') }}" class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-book-reader"></i>
                 </div>
-                <div class="offcanvas-body">
-                    <ul id="navbar"
-                        class="navbar-nav text-uppercase justify-content-start justify-content-lg-center align-items-start align-items-lg-center flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link me-4 active" href="{{ route('home') }}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link me-4" href="{{ route('front.book.index') }}">Book</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link me-4" href="{{ route('front.tblogs.index') }}">Blogs</a>
-                        </li>
-                        
-                        <li class="nav-item">
-                            <a class="nav-link me-4" href="{{ route('contact') }}">Contact</a>
-                        </li>
-                    </ul>
-                    <div class="user-items d-flex">
-                        <ul class="d-flex justify-content-end list-unstyled mb-0">
-                            <li class="search-item pe-3">
-                                <a href="#" class="search-button">
-                                    <svg class="search">
-                                        <use xlink:href="#search"></use>
-                                    </svg>
-                                </a>
-                            </li>
-                            <li class="pe-3 position-relative">
-                                @guest
-                                    <!-- Hiển thị icon và mở modal nếu chưa đăng nhập -->
-                                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                        <svg class="user">
-                                            <use xlink:href="#user"></use>
-                                        </svg>
-                                    </a>
-                                    @include('frontend.auth.login') <!-- Modal đăng nhập -->
-                                @else
-                                    <!-- Nếu đã đăng nhập, hiển thị dropdown menu -->
-                                    <a href="#" id="userDropdownToggle">
-                                        <svg class="user">
-                                            <use xlink:href="#user"></use>
-                                        </svg>
-                                    </a>
-                                    <ul class="dropdown-menu show position-absolute mt-2" style="right: 0; display: none;"
-                                        id="userDropdownMenu">
-                                        <li><a class="dropdown-item" href="{{ route('front.profile') }}">Thông tin tài
-                                                khoản</a></li>
-                                        <li><a class="dropdown-item" href="{{ route('front.book.create') }}">Đăng sách</a></li>
-                                        <li><a class="dropdown-item" href="">Cài đặt</a></li>
-                                        <li>
-                                            <form method="POST" action="{{ route('logout') }}">
-                                                @csrf
-                                                <input type="hidden" name="redirect" value="{{ url()->full() }}">
-                                                <button type="submit" class="dropdown-item">Đăng xuất</button>
-                                            </form>
-                                        </li>
-                                    </ul>
+                <div class="logo-text">
+                    <span class="logo-text-read">Read</span><span class="logo-text-social">Social</span>
+                    <div class="logo-badge">beta</div>
+                </div>
+            </a>
+        </div>
 
-                                    <!-- Script toggle dropdown -->
-                                    <script>
-                                        document.getElementById('userDropdownToggle').addEventListener('click', function(e) {
-                                            e.preventDefault();
-                                            const dropdown = document.getElementById('userDropdownMenu');
-                                            dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
-                                        });
+        <!-- Search Bar (Center) -->
+        <div class="hidden md:flex mx-4 flex-1 max-w-xl">
+            <form action="{{ route('front.book.search') }}" method="GET" class="w-full">
+                <div
+                    class="search-bar relative w-full flex items-center rounded-full border border-gray-300 bg-gray-50 px-4 py-2">
+                    <i class="fas fa-search text-gray-400 mr-2"></i>
+                    <input type="text" name="book_title" placeholder="Tìm kiếm sách, tài liệu, nhóm..."
+                        class="bg-transparent w-full focus:outline-none">
+                    <button type="submit"
+                        class="ml-2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm hover:bg-blue-600 transition">Tìm</button>
+                </div>
+            </form>
+        </div>
 
-                                        // Ẩn dropdown khi click ra ngoài
-                                        document.addEventListener('click', function(e) {
-                                            const toggle = document.getElementById('userDropdownToggle');
-                                            const dropdown = document.getElementById('userDropdownMenu');
-                                            if (!toggle.contains(e.target) && !dropdown.contains(e.target)) {
-                                                dropdown.style.display = 'none';
-                                            }
-                                        });
-                                    </script>
-                                @endguest
-                            </li>
+        <!-- Navigation Menu -->
+        <nav class="hidden md:flex space-x-6">
+            <a href="{{ route('home') }}" class="text-gray-700 hover:text-blue-600 font-medium">Trang chủ</a>
+            <a href="{{ route('front.tblogs.index') }}" class="text-gray-700 hover:text-blue-600 font-medium">Cộng
+                đồng</a>
+            <a href="{{ route('group.index') }}" class="text-gray-700 hover:text-blue-600 font-medium">Nhóm học tập</a>
+            <a href="{{ route('front.book.index') }}" class="text-gray-700 hover:text-blue-600 font-medium">Thư viện</a>
+            <a href="{{ route('front.leaderboard') }}" class="text-gray-700 hover:text-blue-600 font-medium">
+                <i class="fas fa-trophy text-yellow-500 mr-1"></i> Vinh danh
+            </a>
+        </nav>
 
-                            <li class="wishlist-dropdown dropdown pe-3">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
-                                    aria-expanded="false">
-                                    <svg class="wishlist">
-                                        <use xlink:href="#heart"></use>
-                                    </svg>
-                                </a>
-                                <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-primary">Sách yêu thích</span>
-                                        @php
-                                            $bookmarkedBooks = [];
-                                            if (Auth::check()) {
-                                                $bookmarkedIds = \App\Modules\Tuongtac\Models\TRecommend::where('user_id', Auth::id())
-                                                    ->where('item_code', 'book')
-                                                    ->pluck('item_id')
-                                                    ->toArray();
-                                                $bookmarkedBooks = \App\Modules\Book\Models\Book::whereIn('id', $bookmarkedIds)
-                                                    ->where('status', 'active')
-                                                    ->where('block', 'no')
-                                                    ->limit(3)
-                                                    ->get();
-                                            }
-                                        @endphp
-                                        <span class="badge bg-primary rounded-pill">{{ count($bookmarkedBooks) }}</span>
-                                    </h4>
-                                    <ul class="list-group mb-3">
-                                        @forelse($bookmarkedBooks as $book)
-                                        <li class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-                                            <div>
-                                                <h5>
-                                                    <a href="{{ route('front.book.show', $book->slug) }}">{{ Str::limit($book->title, 30) }}</a>
-                                                </h5>
-                                                <small>{{ Str::limit($book->summary, 50) }}</small>
-                                                <a href="{{ route('front.book.show', $book->slug) }}" class="d-block fw-medium text-capitalize mt-2">Đọc sách</a>
-                                            </div>
-                                            <img src="{{ $book->photo }}" alt="{{ $book->title }}" class="img-fluid" style="width: 50px; height: 70px; object-fit: cover;">
-                                        </li>
-                                        @empty
-                                        <li class="list-group-item bg-transparent text-center">
-                                            <p>Bạn chưa có sách yêu thích nào</p>
-                                        </li>
-                                        @endforelse
-                                    </ul>
-                                    @if(count($bookmarkedBooks) > 0)
-                                    <div class="d-flex flex-wrap justify-content-center">
-                                        <a href="{{ route('front.profile') }}" class="w-100 btn btn-primary" type="submit">Xem tất cả</a>
-                                    </div>
-                                    @endif
-                                </div>
-                            </li>
-                            <li class="cart-dropdown dropdown">
-                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
-                                    role="button" aria-expanded="false">
-                                    <i class="fa fa-bell"></i>
-                                    @php
-                                        $notificationCount = 0;
-                                        $notifications = [];
-                                        
-                                        if (Auth::check()) {
-                                            // Lấy 3 thông báo mới nhất - thay thế với mã thích hợp cho hệ thống thông báo của bạn
-                                            $notifications = \App\Modules\Tuongtac\Models\TComment::where('item_code', 'book')
-                                                ->where('user_id', '!=', Auth::id())
-                                                ->where('created_at', '>', now()->subDays(7))
-                                                ->orderBy('created_at', 'desc')
-                                                ->limit(3)
-                                                ->get();
-                                            
-                                            $notificationCount = count($notifications);
-                                        }
-                                    @endphp
-                                    <span class="badge bg-danger">{{ $notificationCount }}</span>
-                                </a>
-                                <div class="dropdown-menu animate slide dropdown-menu-start dropdown-menu-lg-end p-3">
-                                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-primary">Thông báo của bạn</span>
-                                        <span class="badge bg-primary rounded-pill">{{ $notificationCount }}</span>
-                                    </h4>
-                                    <ul class="list-group mb-3">
-                                        @forelse($notifications as $notification)
-                                        <li class="list-group-item bg-transparent d-flex justify-content-between lh-sm">
-                                            <div>
-                                                @php
-                                                    $book = \App\Modules\Book\Models\Book::find($notification->item_id);
-                                                    $user = \App\Models\User::find($notification->user_id);
-                                                @endphp
-                                                
-                                                @if($book && $user)
-                                                <h5>
-                                                    <a href="{{ route('front.book.show', $book->slug) }}">{{ $user->name ?? 'Người dùng' }} đã bình luận về sách "{{ Str::limit($book->title, 20) }}"</a>
-                                                </h5>
-                                                <small>{{ $notification->created_at->diffForHumans() }}</small>
-                                                @else
-                                                <h5>Bạn có thông báo mới</h5>
-                                                @endif
-                                            </div>
-                                        </li>
-                                        @empty
-                                        <li class="list-group-item bg-transparent text-center">
-                                            <p>Không có thông báo mới</p>
-                                        </li>
-                                        @endforelse
-                                    </ul>
-                                    @if($notificationCount > 0)
-                                    <div class="d-flex flex-wrap justify-content-center">
-                                        <a href="#" class="w-100 btn btn-primary" type="submit">Xem tất cả thông báo</a>
-                                    </div>
-                                    @endif
-                                </div>
-                            </li>
-                        </ul>
+        <!-- User Area -->
+        <div class="flex items-center">
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-button" class="md:hidden text-gray-600 mr-4">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+
+            <!-- Search Icon for Mobile -->
+            <button id="mobile-search-button" class="md:hidden text-gray-600 mr-4">
+                <i class="fas fa-search text-xl"></i>
+            </button>
+
+            <!-- Notifications Icon (Only for logged in users) -->
+            @auth
+                <div class="dropdown relative mr-4">
+                    <button id="notification-button" class="text-gray-600 hover:text-blue-600 relative p-2">
+                        <i class="fas fa-bell text-xl"></i>
+                        <span id="notification-count"
+                            class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center {{ auth()->user()->unreadNotificationsCount() == 0 ? 'hidden' : '' }}">
+                            {{ auth()->user()->unreadNotificationsCount() }}
+                        </span>
+                    </button>
+
+                    <div id="notification-dropdown"
+                        class="dropdown-menu absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg overflow-hidden z-50">
+                        <!-- Header với nút tùy chọn -->
+                        <div class="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                            <h2 class="text-lg font-bold">Thông báo</h2>
+                            <div class="flex items-center space-x-2">
+
+                            </div>
+                        </div>
+
+                        <!-- Tabs -->
+                        <div class="flex border-b">
+                            <button id="all-notifications-tab"
+                                class="flex-1 py-2 px-4 text-center bg-blue-50 text-blue-600 font-medium border-b-2 border-blue-600 transition">
+                                Tất cả
+                            </button>
+                            <button id="unread-notifications-tab"
+                                class="flex-1 py-2 px-4 text-center text-gray-600 hover:bg-gray-50 transition">
+                                Chưa đọc
+                            </button>
+                        </div>
+
+                        <!-- Section header -->
+                        <div class="flex justify-between items-center px-4 py-1 bg-gray-50 border-b">
+                            <button id="mark-all-read-button" class="text-xs text-blue-600 hover:text-blue-800"
+                                style="white-space: nowrap;">
+                                Đánh dấu tất cả đã đọc
+                            </button>
+                            <a href="{{ route('notifications.index') }}" class="text-xs text-blue-600 hover:underline">Xem
+                                tất cả</a>
+                        </div>
+
+                        <!-- Notifications list -->
+                        <div id="notification-list" class="max-h-96 overflow-y-auto">
+                            <!-- Notifications will be loaded via AJAX -->
+                            <div class="text-center py-4 text-gray-500 text-sm">
+                                <i class="fas fa-spinner fa-spin mr-2"></i> Đang tải...
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </nav>
+            @endauth
 
+            <!-- User Authentication Area -->
+            @auth
+                <!-- User Avatar with Dropdown (Logged in) -->
+                <div class="dropdown relative">
+                    <button id="user-menu-button" class="avatar-container flex items-center focus:outline-none">
+                        <div class="relative">
+                            <div class="avatar-ring absolute inset-0 rounded-full border-2 border-blue-500"></div>
+                            <img src="{{ auth()->user()->photo ?? 'https://randomuser.me/api/portraits/women/44.jpg' }}"
+                                alt="User" class="avatar w-10 h-10 rounded-full object-cover shadow-sm">
+                            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white">
+                            </div>
+                        </div>
+                    </button>
+
+                    <div id="user-dropdown"
+                        class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                        <div class="px-4 py-2 border-b border-gray-100">
+                            <p class="text-sm font-medium text-gray-700">{{ auth()->user()->name }}</p>
+                            <p class="text-xs text-gray-500 truncate">{{ auth()->user()->email }}</p>
+                        </div>
+                        <a href="{{ route('front.profile') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-user mr-2 text-gray-400"></i> Trang cá nhân
+                        </a>
+                        <a href="{{ route('user.books.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-bookmark mr-2 text-gray-400"></i> Tài liệu đã lưu
+                        </a>
+                        <a href="{{ route('group.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-users mr-2 text-gray-400"></i> Nhóm của tôi
+                        </a>
+                        <a href="{{ route('frontend.book.advanced-search') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-search mr-2 text-gray-400"></i> Tìm kiếm nâng cao
+                        </a>
+                        <div class="border-t border-gray-100 my-1"></div>
+                        <a href="{{ route('logout') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                            class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                            @csrf
+                        </form>
+                    </div>
+                </div>
+            @else
+                <!-- Guest Avatar with Modal Trigger (Not logged in) -->
+                <div class="dropdown relative">
+                    <button id="guest-avatar-button" type="button"
+                        class="avatar-container flex items-center focus:outline-none">
+                        <div class="relative">
+                            <div class="avatar-ring absolute inset-0 rounded-full border-2 border-gray-300"></div>
+                            <img src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" alt="Guest"
+                                class="avatar w-10 h-10 rounded-full object-cover shadow-sm bg-gray-50">
+                        </div>
+                    </button>
+
+                    <!-- Dropdown menu for guest -->
+                    <div id="guest-dropdown"
+                        class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                        <div class="px-4 py-2 border-b border-gray-100">
+                            <p class="text-sm font-medium text-gray-700">Chào mừng</p>
+                            <p class="text-xs text-gray-500">Vui lòng đăng nhập để tiếp tục</p>
+                        </div>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal"
+                            id="dropdown-login-btn"
+                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-sign-in-alt mr-2 text-gray-400"></i> Đăng nhập
+                        </button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal"
+                            id="dropdown-register-btn"
+                            class="register-btn block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 transition-colors">
+                            <i class="fas fa-user-plus mr-2 text-gray-400"></i> Đăng ký tài khoản
+                        </button>
+                    </div>
+
+                    <!-- Invisible button for register tab trigger -->
+                    <button id="register-tab-trigger" type="button" data-bs-toggle="modal" data-bs-target="#loginModal"
+                        class="register-btn hidden"></button>
+                </div>
+            @endauth
+        </div>
+    </div>
+
+    <!-- Overlay để đóng menu khi người dùng click bên ngoài -->
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu">
+        <button id="mobile-menu-close" class="mobile-menu-close">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <form action="{{ route('front.book.search') }}" method="GET" class="pb-2">
+            <div
+                class="search-bar relative w-full flex items-center rounded-full border border-gray-300 bg-gray-50 px-4 py-2 mb-4">
+                <i class="fas fa-search text-gray-400 mr-2"></i>
+                <input type="text" id="mobile-search-input" name="book_title" placeholder="Tìm kiếm..."
+                    class="bg-transparent w-full focus:outline-none">
+                <button type="submit"
+                    class="ml-2 bg-blue-500 text-white px-3 py-1 rounded-full text-sm hover:bg-blue-600 transition">Tìm</button>
+            </div>
+        </form>
+        <a href="{{ route('home') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Trang chủ</a>
+       
+        <a href="{{ route('front.tblogs.index') }}"
+            class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Cộng đồng</a>
+        <a href="{{ route('group.index') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Nhóm học
+            tập</a>
+        <a href="{{ route('front.book.index') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Thư
+            viện</a>
+        <a href="{{ route('front.leaderboard') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <i class="fas fa-trophy text-yellow-500 mr-1"></i> Vinh danh
+        </a>
+        <div class="border-t border-gray-200 my-2"></div>
+        @auth
+            <a href="{{ route('front.profile') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Trang cá
+                nhân</a>
+            <a href="{{ route('user.books.index') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Tài liệu
+                đã lưu</a>
+            <a href="{{ route('group.index') }}" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Nhóm của
+                tôi</a>
+            <a href="{{ route('logout') }}"
+                onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Đăng xuất</a>
+            <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+        @else
+            <div class="flex items-center px-4 py-3 mb-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/6596/6596121.png" alt="Guest"
+                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-300 mr-3">
+                <div>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" id="mobile-login-btn"
+                        class="block w-full text-left font-medium text-blue-600 hover:text-blue-800">
+                        Đăng nhập
+                    </button>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" id="mobile-register-btn"
+                        class="block w-full text-left text-sm text-gray-600 hover:text-blue-600 mt-1 register-btn">
+                        Đăng ký tài khoản
+                    </button>
+                    <p class="text-xs text-gray-500 mt-1">Đăng nhập để truy cập tất cả tính năng</p>
+                </div>
+            </div>
+        @endauth
+    </div>
 </header>
+
+<!-- Import Login Modal -->
+@include('frontend.auth.login')
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu elements
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileSearchButton = document.getElementById('mobile-search-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuClose = document.getElementById('mobile-menu-close');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileSearchInput = document.getElementById('mobile-search-input');
+        
+        // Function to open mobile menu
+        function openMobileMenu() {
+            if (mobileMenu && mobileMenuOverlay) {
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                mobileMenuOverlay.classList.add('active');
+                
+                // Slight delay to ensure overlay is visible first
+                setTimeout(() => {
+                    mobileMenu.classList.add('active');
+                }, 10);
+            }
+        }
+        
+        // Function to close mobile menu
+        function closeMobileMenu() {
+            if (mobileMenu && mobileMenuOverlay) {
+                mobileMenu.classList.remove('active');
+                
+                // Slight delay before hiding overlay
+                setTimeout(() => {
+                    mobileMenuOverlay.classList.remove('active');
+                    document.body.style.overflow = ''; // Restore scrolling
+                }, 200);
+            }
+        }
+        
+        // Toggle mobile menu
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMobileMenu();
+            });
+        }
+        
+        // Mobile search button
+        if (mobileSearchButton) {
+            mobileSearchButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openMobileMenu();
+                
+                // Focus on search input after menu opens
+                setTimeout(() => {
+                    if (mobileSearchInput) {
+                        mobileSearchInput.focus();
+                    }
+                }, 300);
+            });
+        }
+        
+        // Close button for mobile menu
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMobileMenu();
+            });
+        }
+        
+        // Close menu when clicking overlay
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+        }
+        
+        // Close menu when clicking on links
+        const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a:not([href="#"])') : [];
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Close menu if link is not in search form
+                if (!this.closest('form')) {
+                    // Prevent default only temporarily to ensure menu closes first
+                    e.preventDefault();
+                    closeMobileMenu();
+                    
+                    // After menu closes, follow the link
+                    setTimeout(() => {
+                        window.location.href = this.href;
+                    }, 300);
+                }
+            });
+        });
+        
+        // Close menu with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeMobileMenu();
+            }
+        });
+
+        // Toggle user dropdown
+        const userMenuButton = document.getElementById('user-menu-button');
+        if (userMenuButton) {
+            userMenuButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Ngăn chặn sự kiện click lan ra document
+                const dropdown = document.getElementById('user-dropdown');
+                dropdown.classList.toggle('active');
+            });
+        }
+
+        // Toggle guest dropdown 
+        const guestAvatarButton = document.getElementById('guest-avatar-button');
+        if (guestAvatarButton) {
+            guestAvatarButton.addEventListener('click', function(e) {
+                e.stopPropagation(); // Ngăn chặn sự kiện click lan ra document
+                const dropdown = document.getElementById('guest-dropdown');
+                dropdown.classList.toggle('active');
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            // User dropdown
+            const dropdown = document.getElementById('user-dropdown');
+            const userMenuButton = document.getElementById('user-menu-button');
+
+            if (dropdown && dropdown.classList.contains('active') &&
+                userMenuButton && !userMenuButton.contains(event.target) &&
+                !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+
+            // Guest dropdown
+            const guestDropdown = document.getElementById('guest-dropdown');
+            const guestAvatarButton = document.getElementById('guest-avatar-button');
+
+            if (guestDropdown && guestDropdown.classList.contains('active') &&
+                guestAvatarButton && !guestAvatarButton.contains(event.target) &&
+                !guestDropdown.contains(event.target)) {
+                guestDropdown.classList.remove('active');
+            }
+        });
+
+        // Xử lý hiển thị tab đăng ký khi nhấn nút đăng ký
+        const registerButtons = document.querySelectorAll('.register-btn');
+        if (registerButtons.length > 0) {
+            registerButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    localStorage.setItem('openRegisterTab', 'true');
+                });
+            });
+        }
+
+        // Thêm nút gọi tới tab đăng ký
+        const mobileRegisterBtn = document.getElementById('mobile-register-btn');
+        if (mobileRegisterBtn) {
+            mobileRegisterBtn.addEventListener('click', function() {
+                localStorage.setItem('openRegisterTab', 'true');
+            });
+        }
+
+        // Xử lý đăng nhập từ dropdown
+        const dropdownLoginBtn = document.getElementById('dropdown-login-btn');
+        if (dropdownLoginBtn) {
+            dropdownLoginBtn.addEventListener('click', function() {
+                localStorage.removeItem('openRegisterTab');
+            });
+        }
+
+        // Xử lý đăng ký từ dropdown
+        const dropdownRegisterBtn = document.getElementById('dropdown-register-btn');
+        if (dropdownRegisterBtn) {
+            dropdownRegisterBtn.addEventListener('click', function() {
+                localStorage.setItem('openRegisterTab', 'true');
+            });
+        }
+
+        // Toggle notification dropdown
+        const notificationButton = document.getElementById('notification-button');
+        if (notificationButton) {
+            notificationButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const dropdown = document.getElementById('notification-dropdown');
+                dropdown.classList.toggle('active');
+
+                // Nếu dropdown đang hiển thị, tải dữ liệu thông báo
+                if (dropdown.classList.contains('active')) {
+                    loadNotifications('all');
+                }
+            });
+        }
+
+        // Đóng dropdown khi click bên ngoài
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('notification-dropdown');
+            const notificationButton = document.getElementById('notification-button');
+
+            if (dropdown && dropdown.classList.contains('active') &&
+                notificationButton && !notificationButton.contains(event.target) &&
+                !dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+
+        // Xử lý các tab thông báo
+        const allNotificationsTab = document.getElementById('all-notifications-tab');
+        const unreadNotificationsTab = document.getElementById('unread-notifications-tab');
+
+        if (allNotificationsTab && unreadNotificationsTab) {
+            // Tab Tất cả
+            allNotificationsTab.addEventListener('click', function() {
+                allNotificationsTab.classList.add('bg-blue-50', 'text-blue-600', 'border-b-2',
+                    'border-blue-600');
+                unreadNotificationsTab.classList.remove('bg-blue-50', 'text-blue-600', 'border-b-2',
+                    'border-blue-600');
+                unreadNotificationsTab.classList.add('text-gray-600');
+
+                loadNotifications('all');
+            });
+
+            // Tab Chưa đọc
+            unreadNotificationsTab.addEventListener('click', function() {
+                unreadNotificationsTab.classList.add('bg-blue-50', 'text-blue-600', 'border-b-2',
+                    'border-blue-600');
+                allNotificationsTab.classList.remove('bg-blue-50', 'text-blue-600', 'border-b-2',
+                    'border-blue-600');
+                allNotificationsTab.classList.add('text-gray-600');
+
+                loadNotifications('unread');
+            });
+        }
+
+        // Hàm tải thông báo
+        function loadNotifications(type = 'all') {
+            const notificationList = document.getElementById('notification-list');
+            
+            // Hiển thị loading
+            notificationList.innerHTML =
+                '<div class="text-center py-4 text-gray-500 text-sm"><i class="fas fa-spinner fa-spin mr-2"></i> Đang tải...</div>';
+            
+            // URL tải thông báo
+            let url = '/notices/get-notice?limit=10';
+            if (type === 'unread') {
+                url += '&filter=unread';
+            }
+            
+            // Tải dữ liệu thông báo
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                }
+            })
+            .then(response => response.text())
+            .then(html => {
+                notificationList.innerHTML = html;
+                
+                // Thêm event listener cho các thông báo
+                const notificationItems = notificationList.querySelectorAll('.notification-item');
+                notificationItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const notificationId = this.dataset.id;
+                        markAsRead(notificationId);
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error loading notifications:', error);
+                notificationList.innerHTML =
+                    '<div class="text-center py-4 text-red-500 text-sm">Có lỗi xảy ra khi tải thông báo.</div>';
+            });
+        }
+
+        // Hàm đánh dấu thông báo đã đọc
+        function markAsRead(notificationId) {
+            fetch(`/notices/mark-as-read/${notificationId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cập nhật số lượng thông báo
+                        updateNotificationCount();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Hàm cập nhật số lượng thông báo
+        function updateNotificationCount() {
+            fetch('/notices/count-unread', {
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const notificationCount = document.getElementById('notification-count');
+                    if (notificationCount) {
+                        if (data.count > 0) {
+                            notificationCount.textContent = data.count;
+                            notificationCount.classList.remove('hidden');
+                        } else {
+                            notificationCount.textContent = '0';
+                            notificationCount.classList.add('hidden');
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Cập nhật số lượng thông báo mỗi 30 giây
+        setInterval(updateNotificationCount, 30000);
+
+        // Xử lý sự kiện nút đánh dấu tất cả đã đọc
+        const markAllReadButton = document.getElementById('mark-all-read-button');
+        if (markAllReadButton) {
+            markAllReadButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                markAllNotificationsAsRead();
+            });
+        }
+
+        // Hàm đánh dấu tất cả thông báo đã đọc
+        function markAllNotificationsAsRead() {
+            fetch('/notices/mark-all-read', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Cập nhật lại giao diện
+                        document.getElementById('notification-count').classList.add('hidden');
+
+                        // Nếu đang ở tab "Chưa đọc", chuyển sang tab "Tất cả"
+                        if (document.getElementById('unread-notifications-tab').classList.contains(
+                                'border-blue-600')) {
+                            document.getElementById('all-notifications-tab').click();
+                        } else {
+                            // Nếu đang ở tab "Tất cả", load lại thông báo
+                            loadNotifications('all');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error marking all notifications as read:', error);
+                });
+        }
+    });
+</script>

@@ -21,64 +21,17 @@ class TPage extends Model
         'status',
     ];
     
-    public static function getPageUrl($id,$item_code)
+    public static function getPageUrl($userId, $type = 'user')
     {
-        
-           
-            $page = TPage::where('item_id',$id)->where('item_code',$item_code)->first();
-            
-            if (!$page)
-            {
-                if($item_code =="group")
-                {
-                    $group = Group::find($id);
-                    if(!$group)
-                        return '';
-                    $slug = $group->slug;
-                    $ppage = TPage::where('slug',$slug)->first();
-                    if($ppage)
-                    {
-                        $slug .= uniqid();
-                    }
-                    $data['item_id'] = $id;
-                    $data['item_code'] = 'group';
-                    $data['title'] = $group->title;
-                    $data['slug'] = $slug;
-                    $data['description'] ="";
-                    $data['banner'] = "https://itcctv.vn/images/profile-8.jpg";
-                    $data['avatar'] = "https://itcctv.vn/images/profile-8.jpg";
-                    $data['status'] = "active";
-                    $page = TPage::create($data);
-                }
-                if($item_code =="user")
-                {
-
-                    $user = User::find($id);
-                    if(!$user)
-                        return '';
-                    $slug = Str::slug($user->full_name);
-                    $ppage = TPage::where('slug',$slug)->first();
-                    if($ppage)
-                    {
-                        $slug .= uniqid();
-                    }
-                    $data['item_id'] = $id;
-                    $data['item_code'] = 'user';
-                    $data['title'] = $user->full_name;
-                    $data['slug'] = $slug;
-                    $data['description'] ="";
-                    $data['banner'] = "https://itcctv.vn/images/profile-8.jpg";
-                    $data['avatar'] = $user->photo?$user->photo:"https://itcctv.vn/images/profile-8.jpg";
-                    $data['status'] = "active";
-                    $page = TPage::create($data);
-                }
-                
+        if ($type == 'user') {
+            return route('front.user.profile', ['id' => $userId]);
+        } else {
+            $userpage = self::where('user_id', $userId)->first();
+            if ($userpage) {
+                return route('group.show', $userpage->item_id);
             }
-            
-            
-            return route('front.tpage.view',$page->slug);
-            
-        
+            return route('front.user.profile', ['id' => $userId]);
+        }
     }
  
 }

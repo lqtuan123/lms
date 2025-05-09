@@ -73,7 +73,7 @@ class SettingController extends Controller
             $breadcrumb = '
             <li class="breadcrumb-item"><a href="#">/</a></li>
              ';
-            return view('backend.admin.setting.edit',compact('breadcrumb','setting','active_menu' ));
+            return view('backend.setting.edit',compact('breadcrumb','setting','active_menu' ));
     
         }
        
@@ -106,7 +106,7 @@ class SettingController extends Controller
         }
         $status = $setting->fill($data)->save();
         if($status){
-            return redirect()->route('admin.admin.setting.edit',1);
+            return redirect()->route('admin.setting.edit',1);
         }
         else
         {

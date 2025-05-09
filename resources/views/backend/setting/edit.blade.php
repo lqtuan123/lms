@@ -8,7 +8,7 @@
             Điều chỉnh setting
         </h2>
     </div>
-    <form method="post" action="{{route('setting.update',$setting->id)}}">
+    <form method="post" action="{{route('admin.setting.update',$setting->id)}}">
                 @csrf
                 @method('patch')
         <div class="grid grid-cols-12 gap-12 mt-5">
@@ -241,7 +241,7 @@
                 // previewsContainer: ".dropzone-previews",
     Dropzone.instances[0].options.multiple = true;
     Dropzone.instances[0].options.autoQueue= true;
-    Dropzone.instances[0].options.maxFilesize =  1; // MB
+    Dropzone.instances[0].options.maxFilesize =  5; // MB
     Dropzone.instances[0].options.maxFiles =5;
     Dropzone.instances[0].options.acceptedFiles= "image/jpeg,image/png,image/gif";
     Dropzone.instances[0].options.previewTemplate =  '<div class="col-span-5 md:col-span-2 h-28 relative image-fit cursor-pointer zoom-in">'
@@ -281,7 +281,7 @@
 
     Dropzone.instances[1].options.multiple = true;
     Dropzone.instances[1].options.autoQueue= true;
-    Dropzone.instances[1].options.maxFilesize =  1; // MB
+    Dropzone.instances[1].options.maxFilesize =  5; // MB
     Dropzone.instances[1].options.maxFiles =1;
     Dropzone.instances[1].options.acceptedFiles= "image/jpeg,image/png,image/gif";
     Dropzone.instances[1].options.previewTemplate =  '<div class="col-span-5 md:col-span-2 h-28 relative image-fit cursor-pointer zoom-in">'
@@ -323,7 +323,7 @@
 
      Dropzone.instances[2].options.multiple = true;
     Dropzone.instances[2].options.autoQueue= true;
-    Dropzone.instances[2].options.maxFilesize =  1; // MB
+    Dropzone.instances[2].options.maxFilesize =  5; // MB
     Dropzone.instances[2].options.maxFiles =1;
     Dropzone.instances[2].options.acceptedFiles= "image/jpeg,image/png,image/gif";
     Dropzone.instances[2].options.previewTemplate =  '<div class="col-span-5 md:col-span-2 h-28 relative image-fit cursor-pointer zoom-in">'

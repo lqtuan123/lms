@@ -1,0 +1,402 @@
+/* 
+* CSS cho trang book - Plugin styling
+* Style cho các plugin như Dropzone, Tom Select
+*/
+
+/* Dropzone styling */
+.dropzone {
+    border: 2px dashed #4f46e5;
+    border-radius: 0.375rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: #F9FAFB;
+    cursor: pointer;
+    min-height: 150px;
+    transition: all 0.3s ease;
+    z-index: 1;
+    position: relative;
+}
+
+.dropzone:hover {
+    background: #EFF6FF;
+}
+
+.dropzone .dz-message {
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+    color: #6B7280;
+}
+
+.dropzone .dz-preview {
+    margin: 0.5rem;
+    z-index: 10;
+    position: relative;
+}
+
+.dropzone .dz-preview .dz-image {
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.dropzone .dz-preview .dz-remove {
+    color: #EF4444;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.dropzone .dz-preview .dz-remove:hover {
+    text-decoration: underline;
+}
+
+.dropzone .dz-preview .dz-success-mark,
+.dropzone .dz-preview .dz-error-mark {
+    margin-top: 0.5rem;
+}
+
+.dropzone .dz-preview .dz-success-mark svg,
+.dropzone .dz-preview .dz-error-mark svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.dropzone .dz-preview .dz-progress {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: #E5E7EB;
+    margin-top: 0.5rem;
+}
+
+.dropzone .dz-preview .dz-progress .dz-upload {
+    background: #4f46e5;
+    border-radius: 9999px;
+}
+
+/* Drag and drop file area */
+.file-drop-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    text-align: center;
+    background: #f9fafb;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-drop-area:hover,
+.file-drop-area.dragover {
+    border-color: #4f46e5;
+    background-color: #eff6ff;
+}
+
+.file-drop-area .file-message {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.file-drop-area .file-input {
+    position: absolute;
+    left: -9999px;
+}
+
+/* Tom Select styling */
+.ts-wrapper {
+    border-radius: 0.375rem;
+}
+
+.ts-control {
+    border-color: #D1D5DB;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    box-shadow: none;
+}
+
+.ts-control:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 1px #4f46e5;
+}
+
+.ts-dropdown {
+    border-radius: 0.375rem;
+    border-color: #D1D5DB;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.ts-dropdown .option.active {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+}
+
+.ts-dropdown .option:hover {
+    background-color: #F3F4F6;
+}
+
+.ts-dropdown .create {
+    color: #4f46e5;
+}
+
+.ts-wrapper.multi .ts-control > div {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    border-radius: 9999px;
+    margin: 0.125rem;
+    padding: 0.125rem 0.5rem;
+    border: none;
+}
+
+.ts-wrapper.multi .ts-control > div .remove {
+    border-left: none;
+    padding-left: 0.25rem;
+    color: #1E40AF;
+}
+
+.ts-wrapper.plugin-remove_button .item .remove {
+    border-left: none;
+    padding-left: 0.25rem;
+    color: #1E40AF;
+}
+
+/* Select2 styling (if used) */
+.select2-container .select2-selection--single {
+    height: 2.5rem;
+    border-color: var(--color-gray-300);
+    border-radius: var(--radius-md);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 2.5rem;
+    padding-left: 0.75rem;
+    color: var(--color-gray-700);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 2.5rem;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--color-primary);
+}
+
+/* DatePicker styling (if used) */
+.datepicker {
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.datepicker table tr td.active.active, 
+.datepicker table tr td.active:hover.active {
+    background-color: var(--color-primary) !important;
+}
+
+/* Loading spinner */
+.spinner-border {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    vertical-align: text-bottom;
+    border: 0.25rem solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.text-primary {
+    color: #4f46e5;
+}
+
+/* Fix for modal popup issues */
+#create-book-modal,
+#download-resources-modal,
+#quick-view-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#create-book-modal.hidden,
+#download-resources-modal.hidden,
+#quick-view-modal:not(.active) {
+    display: none;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+}
+
+.modal-content {
+    position: relative;
+    z-index: 10000;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 32rem;
+    margin: 2rem auto;
+    pointer-events: auto;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Ensure buttons in modals are clickable */
+.modal-btn,
+.modal-close,
+#close-create-book-modal,
+#cancel-create-book,
+#close-download-resources-modal,
+#cancel-download-resources,
+#close-quick-view {
+    position: relative;
+    z-index: 10001;
+    cursor: pointer;
+    pointer-events: auto;
+}
+
+/* Fix for file selection */
+input[type="file"].sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Fix form controls inside modal */
+.modal-content button,
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+    position: relative;
+    z-index: 10001;
+    pointer-events: auto;
+}
+
+.modal-content .dropzone {
+    position: relative;
+    z-index: 10001;
+    pointer-events: auto;
+}
+
+.modal-content .dropzone * {
+    pointer-events: auto;
+}
+
+/* Đảm bảo modal ẩn/hiện đúng */
+#create-book-modal.hidden,
+#download-resources-modal.hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#create-book-modal:not(.hidden),
+#download-resources-modal:not(.hidden),
+#quick-view-modal.active {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.3s ease;
+}
+
+/* Fix form controls inside modal */
+#create-book-modal input,
+#create-book-modal select,
+#create-book-modal textarea,
+#create-book-modal button {
+    position: relative;
+    z-index: 10002;
+    pointer-events: auto;
+}
+
+/* Modal footers */
+.modal-footer {
+    position: relative;
+    z-index: 10002;
+}
+
+/* Nút trong modal */
+.modal-btn {
+    position: relative;
+    z-index: 10003;
+    cursor: pointer;
+}
+
+.modal-btn-primary {
+    background-color: #4f46e5;
+    color: white;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+}
+
+.modal-btn-primary:hover {
+    background-color: #4338ca;
+}
+
+.modal-btn-secondary {
+    background-color: white;
+    color: #374151;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s;
+}
+
+.modal-btn-secondary:hover {
+    background-color: #F9FAFB;
+}
+
+/* Fix cho modal header */
+.modal-header {
+    position: relative;
+    z-index: 10001;
+}
+
+.modal-close {
+    position: relative;
+    z-index: 10002;
+    cursor: pointer;
+}
+
+/* Fix cho loading spinner */
+#modal-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 10004;
+}
+
+#modal-loading.hidden {
+    display: none;
+} 

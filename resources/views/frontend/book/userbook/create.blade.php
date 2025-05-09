@@ -1,21 +1,97 @@
 @extends('frontend.layouts.master')
 @section('css')
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
+        .book-create-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
         }
 
-        .btn{
-            margin-top: 10px; 
-            border-radius: 5px;
+        .book-create-title {
+            color: #2563eb;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
         }
 
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        
+        .dropzone {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            background-color: #f9fafb;
+            margin-bottom: 1.5rem;
+        }
+
+        .copyright-notice {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .copyright-checkbox {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .copyright-checkbox input {
+            margin-right: 0.5rem;
+        }
+
+        .copyright-text {
+            color: #4b5563;
+            font-size: 0.875rem;
+        }
     </style>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
@@ -23,38 +99,38 @@
 @endsection
 
 @section('content')
-    <div class="container">
-        <h2>Tạo sách mới</h2>
+    <div class="book-create-container">
+        <h2 class="book-create-title">Tạo sách mới</h2>
         <form action="{{ route('front.book.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div class="mb-3">
+            <div class="form-group">
                 <label class="form-label">Tên sách</label>
                 <input type="text" name="title" class="form-control" required>
             </div>
 
-            <div class="">
-                <label>Ảnh bìa</label>
+            <div class="form-group">
+                <label class="form-label">Ảnh bìa</label>
                 <div class="dropzone" id="imageDropzone" data-url="{{ route('public.upload.avatar') }}"></div>
             </div>
             <!-- Ẩn input để lưu tên file ảnh -->
             <input type="hidden" name="photo" id="uploadedImages">
 
-            <div class="mb-3">
+            <div class="form-group">
                 <label class="form-label">Thông tin</label>
-                <textarea name="summary" class="form-control"></textarea>
+                <textarea name="summary" class="form-control" rows="3"></textarea>
             </div>
 
-            <div class="mb-3">
+            <div class="form-group">
                 <label class="form-label">Nội dung</label>
-                <textarea name="content" class="form-control"></textarea>
+                <textarea name="content" class="form-control" rows="5"></textarea>
             </div>
 
-            <div class="mb-3">
+            <div class="form-group">
                 <label class="form-label">Tài liệu đính kèm</label>
                 <input type="file" name="document[]" class="form-control" multiple required>
             </div>
 
-            <div class="mt-3">
+            <div class="form-group">
                 <label for="book_type_id" class="form-label">Loại sách</label>
                 <select name="book_type_id" id="book_type_id" class="form-control" required>
                     <option value="">Chọn loại sách</option>
@@ -69,7 +145,7 @@
                 @enderror
             </div>
 
-            <div class="mt-3">
+            <div class="form-group">
                 <label for="status" class="form-label">Trạng Thái</label>
                 <select name="status" id="status" class="form-control" required>
                     <option value="active">Active</option>
@@ -80,16 +156,24 @@
                 @enderror
             </div>
 
-            <div class="mt-3">
+            <div class="form-group">
                 <label for="post-form-4" class="form-label">Tags</label>
-                <select id="select-junk" name="tag_ids[]" multiple placeholder=" ..." autocomplete="off">
+                <select id="select-junk" name="tag_ids[]" multiple placeholder="Chọn tags..." autocomplete="off">
                     @foreach ($tags as $tag)
                         <option value="{{ $tag->id }}">{{ $tag->title }}</option>
                     @endforeach
                 </select>
             </div>
 
-            <button type="submit" class="btn btn-primary" >Tạo sách</button>
+            <div class="copyright-notice">
+                <p class="copyright-text"><strong>Lưu ý về bản quyền:</strong> Khi đăng tải sách lên hệ thống, bạn cần đảm bảo rằng bạn có đầy đủ quyền sở hữu hoặc được phép chia sẻ nội dung này.</p>
+                <div class="copyright-checkbox">
+                    <input type="checkbox" name="copyright_agreement" id="copyright_agreement" required>
+                    <label for="copyright_agreement" class="copyright-text">Tôi xác nhận rằng tôi là chủ sở hữu bản quyền hoặc được ủy quyền hợp pháp để chia sẻ nội dung này và chịu mọi trách nhiệm về vấn đề bản quyền liên quan đến sách đã đăng.</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tạo sách</button>
         </form>
     </div>
 @endsection

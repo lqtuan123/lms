@@ -93,6 +93,8 @@ class UserBookController extends Controller
 
         $bookTypes = BookType::all();
         $tags = Tag::where('status', 'active')->get();
+        
+        // Lấy danh sách tag_id đã chọn cho sách này
         $selectedTags = DB::table('tag_books')
             ->where('book_id', $id)
             ->pluck('tag_id')
@@ -135,9 +137,9 @@ class UserBookController extends Controller
             }
 
             // Xử lý đường dẫn ảnh mới
-            $photo = str_replace(url('/'), '', trim($request->photo, '[]"'));
-            // Đảm bảo đường dẫn bắt đầu bằng /
-            if (!Str::startsWith($photo, '/')) {
+            $photo = $request->photo;
+            // Chỉ thêm dấu / nếu không phải là URL đầy đủ
+            if (!filter_var($photo, FILTER_VALIDATE_URL) && !Str::startsWith($photo, '/')) {
                 $photo = '/' . $photo;
             }
         }
@@ -168,6 +170,7 @@ class UserBookController extends Controller
             $currentResourceIds = $currentResources['resource_ids'] ?? [];
             $resourceIds = [];
 
+            // Tạo tài liệu mới
             foreach ($request->file('document') as $file) {
                 $resource = Resource::createResource($request, $file, 'Book');
                 if ($resource) {
@@ -175,8 +178,30 @@ class UserBookController extends Controller
                 }
             }
 
-            // Gộp resource_ids cũ và mới
-            $allResourceIds = array_merge($currentResourceIds, $resourceIds);
+            // Kiểm tra nếu người dùng chọn thay thế tất cả tài liệu cũ
+            if ($request->has('replace_documents')) {
+                // Xóa tất cả tài liệu cũ
+                foreach ($currentResourceIds as $oldResourceId) {
+                    $oldResource = Resource::find($oldResourceId);
+                    if ($oldResource) {
+                        // Xóa file vật lý nếu có
+                        if ($oldResource->url) {
+                            $oldFilePath = public_path($oldResource->url);
+                            if (file_exists($oldFilePath)) {
+                                unlink($oldFilePath);
+                            }
+                        }
+                        // Xóa record trong database
+                        $oldResource->delete();
+                    }
+                }
+                
+                // Chỉ sử dụng tài liệu mới
+                $allResourceIds = $resourceIds;
+            } else {
+                // Gộp resource_ids cũ và mới nếu không chọn thay thế
+                $allResourceIds = array_merge($currentResourceIds, $resourceIds);
+            }
 
             // Cập nhật resources
             $book->resources = json_encode([
@@ -191,7 +216,7 @@ class UserBookController extends Controller
             (new \App\Http\Controllers\TagController())->update_book_tag($book->id, $request->tag_ids);
         }
 
-        return redirect()->route('user.books.index')->with('success', 'Cập nhật sách thành công!');
+        return redirect()->route('front.profile')->with('success', 'Sách đã được cập nhật thành công!')->withFragment('books');
     }
 
     // Xóa sách
@@ -209,7 +234,7 @@ class UserBookController extends Controller
             $book->delete();
         });
 
-        return redirect()->route('user.books.index')->with('success', 'Xóa sách thành công!');
+        return redirect()->route('front.profile')->with('success', 'Sách đã được xóa thành công!')->withFragment('books');
     }
 
 

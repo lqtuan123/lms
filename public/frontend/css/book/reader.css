@@ -1,0 +1,957 @@
+/* CSS cho book reader - phù hợp với thiết kế chung của hệ thống */
+
+/* Biến màu sắc cơ bản - đồng bộ với hệ thống */
+:root {
+    --bg-color: #f9fafb;
+    --container-bg: #fff;
+    --text-color: #111827;
+    --secondary-text: #6b7280;
+    --border-color: #e5e7eb;
+    --button-bg: #4f46e5;
+    --button-hover: #4338ca;
+    --button-text: #fff;
+    --shadow-color: rgba(0,0,0,0.05);
+    --back-button-bg: #6b7280;
+    --back-button-hover: #4b5563;
+    --search-highlight: rgba(255, 230, 0, 0.4);
+    --search-selected: rgba(255, 165, 0, 0.5);
+}
+
+/* Dark mode variables */
+body.dark-mode {
+    --bg-color: #1a1a1a;
+    --container-bg: #2c2c2c;
+    --text-color: #f3f4f6;
+    --secondary-text: #d1d5db;
+    --border-color: #374151;
+    --button-bg: #4f46e5;
+    --button-hover: #4338ca;
+    --button-text: #fff;
+    --shadow-color: rgba(0,0,0,0.2);
+    --back-button-bg: #4b5563;
+    --back-button-hover: #6b7280;
+    --search-highlight: rgba(255, 215, 0, 0.3);
+    --search-selected: rgba(255, 140, 0, 0.4);
+}
+
+/* Cài đặt cơ bản */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Container reader */
+.reader-container {
+    position: relative;
+    overflow-x: hidden;
+    min-height: calc(100vh - 80px);
+    padding-top: 60px; /* Thêm padding-top để tránh đè lên header */
+}
+
+@media (min-width: 1200px) {
+    .reader-container {
+        max-width: 1140px;
+    }
+}
+
+/* Header sách */
+.book-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.book-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 5px;
+    transition: color 0.3s;
+    line-height: 1.3;
+}
+
+.book-author {
+    font-size: 0.9rem;
+    color: var(--secondary-text);
+    transition: color 0.3s;
+}
+
+/* Controls PDF */
+.pdf-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.pdf-controls.hidden {
+    transform: translate3d(0, 100%, 0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Nút điều khiển PDF */
+.pdf-button {
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pdf-button:hover:not(:disabled) {
+    background-color: #e5e7eb;
+}
+
+.pdf-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pdf-pagination-info {
+    padding: 0.5rem 1rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    margin: 0 0.5rem;
+    font-weight: 500;
+}
+
+/* Khu vực nội dung PDF */
+.pdf-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 1rem auto;
+    padding: 0 1rem;
+}
+
+/* Trang PDF riêng lẻ */
+.pdf-page {
+    position: relative;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #ddd; /* Thêm viền bên phải */
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pdf-page:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Đánh dấu trang hiện tại bên trái */
+.pdf-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background-color: var(--button-bg);
+    opacity: 0.7;
+    border-radius: 5px 0 0 5px;
+}
+
+/* Thêm đánh dấu bên phải */
+.pdf-page::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    height: 100%;
+    background-color: var(--button-bg);
+    opacity: 0.7;
+    border-radius: 0 5px 5px 0;
+}
+
+/* Số trang */
+.page-number {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+.pdf-page:hover .page-number {
+    background: var(--button-bg);
+    transform: scale(1.1);
+}
+
+/* Chỉ báo tải */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #4f46e5;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.page-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+/* PDF text layer */
+.pdf-textLayer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    opacity: 0.2;
+    line-height: 1.0;
+}
+
+.pdf-textLayer span {
+    color: transparent;
+    position: absolute;
+    white-space: pre;
+    cursor: text;
+    transform-origin: 0% 0%;
+}
+
+.pdf-textLayer .highlight {
+    margin: -1px;
+    padding: 1px;
+    background-color: rgb(180, 0, 170);
+    border-radius: 4px;
+}
+
+.pdf-textLayer .highlight.begin {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.pdf-textLayer .highlight.end {
+    border-radius: 0px 4px 4px 0px;
+}
+
+.pdf-textLayer .highlight.middle {
+    border-radius: 0px;
+}
+
+.pdf-textLayer .highlight.selected {
+    background-color: rgb(0, 100, 0);
+}
+
+/* PDF canvas */
+.pdf-canvas {
+    width: 100%;
+    height: auto;
+    border: none;
+    direction: ltr;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Nút bookmark và settings */
+.action-button {
+    background-color: transparent;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: #f3f4f6;
+}
+
+.action-button.active .fa-heart {
+    color: #dc2626;
+}
+
+/* Settings dropdown */
+.settings-dropdown {
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+    width: 200px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    display: none;
+}
+
+.settings-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+/* Zoom controls */
+.zoom-controls {
+    display: flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.zoom-button {
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem;
+    width: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.zoom-button:hover:not(:disabled) {
+    background-color: #e5e7eb;
+}
+
+.zoom-info {
+    padding: 0 0.5rem;
+    font-weight: 500;
+}
+
+/* Dark mode toggle */
+.dark-mode-switch {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.dark-mode-label {
+    font-weight: 500;
+}
+
+.toggle {
+    position: relative;
+    width: 40px;
+    height: 24px;
+    background-color: #dee2e6;
+    border-radius: 34px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+body.dark-mode .toggle {
+    background-color: var(--button-bg);
+}
+
+body.dark-mode .toggle-handle {
+    transform: translateX(16px);
+}
+
+/* Stats button */
+.stats-button {
+    width: 100%;
+    padding: 8px;
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.stats-button:hover {
+    background-color: #e5e7eb;
+}
+
+/* Reading stats panel - Thu nhỏ kích thước */
+.reading-stats {
+    position: fixed;
+    right: 15px;
+    top: 70px;
+    width: 180px; /* Giảm chiều rộng */
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 90;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-size: 0.85rem; /* Giảm font size */
+}
+
+.reading-stats.minimized {
+    transform: translateX(150px); /* Điều chỉnh để phù hợp với kích thước mới */
+}
+
+.reading-stats-title {
+    position: relative;
+    background-color: #4f46e5;
+    color: white;
+    padding: 8px 12px; /* Giảm padding */
+    font-weight: 500;
+    font-size: 0.9rem; /* Giảm font size */
+}
+
+.reading-stats-close {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.reading-stats-close:before,
+.reading-stats-close:after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+}
+
+.reading-stats-close:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.reading-stats-close:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.reading-stats-item {
+    padding: 8px 12px; /* Giảm padding */
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reading-stats-item:last-child {
+    border-bottom: none;
+}
+
+/* Point alert */
+.point-alert {
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #10b981;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    animation: fadeInOut 3s ease forwards;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    85% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}
+
+/* Animation cho điểm tăng */
+.points-increase {
+    animation: pulse 0.6s ease;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Reader status toast */
+.reader-status {
+    position: fixed;
+    bottom: 75px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    background-color: rgba(55, 65, 81, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    opacity: 0;
+    z-index: 100;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    text-align: center;
+}
+
+.reader-status.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Header container - Sửa vị trí để không đè lên header chính */
+.header-container {
+    position: fixed; /* Thay đổi từ sticky sang fixed */
+    top: 60px; /* Đặt vị trí bên dưới header chính */
+    left: 0;
+    right: 0;
+    background-color: white;
+    z-index: 99; /* Z-index nhỏ hơn header chính */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.header-container.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+/* Điều chỉnh hiển thị khi ở chế độ dark mode cho header */
+html.dark-mode .header-container {
+    background-color: var(--card-bg);
+}
+
+/* UI hiding */
+.hide-ui .header-container {
+    transform: translateY(-100%);
+}
+
+.hide-ui .pdf-controls {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    .reader-container {
+        max-width: 95%;
+        padding: 10px;
+        padding-top: 70px; /* Tăng padding-top trên thiết bị nhỏ */
+    }
+    
+    .pdf-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .book-title {
+        font-size: 1.5rem;
+    }
+    
+    .header-container {
+        top: 50px; /* Điều chỉnh vị trí trên thiết bị nhỏ */
+    }
+}
+
+@media (max-width: 768px) {
+    .pdf-controls {
+        padding: 10px;
+    }
+    
+    .pdf-pagination-info {
+        margin: 5px;
+    }
+    
+    .action-button {
+        margin: 0 3px;
+    }
+    
+    .settings-dropdown {
+        right: -50px;
+        width: 250px;
+    }
+    
+    .reading-stats {
+        width: 150px; /* Giảm thêm trên mobile */
+        right: 10px;
+    }
+    
+    .reading-stats.minimized {
+        transform: translateX(120px);
+    }
+}
+
+@media (max-width: 576px) {
+    .reader-container {
+        max-width: 100%;
+        padding: 8px;
+        padding-top: 60px; /* Điều chỉnh padding trên thiết bị rất nhỏ */
+    }
+    
+    .pdf-pagination-info {
+        font-size: 0.8rem;
+    }
+    
+    .pdf-button {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .reading-stats {
+        max-width: 140px;
+        font-size: 0.75rem;
+    }
+    
+    .reading-stats-item {
+        padding: 6px 10px;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .header-container,
+    .pdf-controls,
+    body.hide-ui header.sticky.top-0.z-40 {
+        transition-duration: 0.1s;
+        transition-timing-function: ease-in-out;
+    }
+    
+    .point-alert {
+        animation: none;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .points-increase {
+        animation: none;
+    }
+}
+
+/* Hiệu ứng chuyển trang */
+@keyframes pageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ẩn hiện panel tương tác */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reading-stats, .reader-status, .point-alert {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+/* Cải thiện hiển thị khi cuộn */
+.pdf-content {
+    padding-top: 70px; /* Tăng padding-top cho pdf-content để không bị đè bởi header-container */
+    padding-bottom: 80px; /* Tăng padding-bottom để tránh bị đè bởi pdf-controls */
+}
+
+/* Chế độ tối - cho toàn bộ trang */
+html.dark-mode {
+    --bg-color: #1f2937;
+    --text-color: #e5e7eb;
+    --border-color: #374151;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --primary-color: #4f46e5;
+    --hover-color: #4338ca;
+    --card-bg: #111827;
+    --secondary-bg: #374151;
+}
+
+/* Áp dụng chế độ tối cho các phần tử chính của trang */
+html.dark-mode body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+html.dark-mode .container,
+html.dark-mode main {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+html.dark-mode .card, 
+html.dark-mode .alert,
+html.dark-mode .nav-item,
+html.dark-mode .dropdown-menu {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .btn-light {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode a {
+    color: #93c5fd;
+}
+
+html.dark-mode a:hover {
+    color: #bfdbfe;
+}
+
+/* Chế độ tối cho trình đọc PDF */
+html.dark-mode .header-container {
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+html.dark-mode .book-title {
+    color: var(--text-color);
+}
+
+html.dark-mode .pdf-controls {
+    background-color: var(--card-bg);
+    box-shadow: 0 -2px 10px var(--shadow-color);
+}
+
+html.dark-mode .pdf-button, 
+html.dark-mode .pdf-pagination-info, 
+html.dark-mode .zoom-controls {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .pdf-button:hover:not(:disabled) {
+    background-color: #4b5563;
+}
+
+html.dark-mode .zoom-button:hover:not(:disabled) {
+    background-color: #4b5563;
+}
+
+html.dark-mode .action-button {
+    color: var(--text-color);
+}
+
+html.dark-mode .action-button:hover {
+    background-color: var(--secondary-bg);
+}
+
+html.dark-mode .settings-dropdown {
+    background-color: var(--card-bg);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+html.dark-mode .settings-item {
+    border-color: var(--border-color);
+}
+
+html.dark-mode .stats-button {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .stats-button:hover {
+    background-color: #4b5563;
+}
+
+html.dark-mode .reading-stats {
+    background-color: var(--card-bg);
+    box-shadow: 0 4px 15px var(--shadow-color);
+}
+
+html.dark-mode .reading-stats-item {
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Chế độ tối cho navbar, footer và các phần tử khác */
+html.dark-mode .navbar,
+html.dark-mode .footer {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+html.dark-mode .dropdown-item:hover {
+    background-color: var(--secondary-bg);
+}
+
+html.dark-mode .form-control, 
+html.dark-mode .form-select {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+html.dark-mode .close,
+html.dark-mode .modal-header,
+html.dark-mode .modal-footer {
+    border-color: var(--border-color);
+}
+
+html.dark-mode .table {
+    color: var(--text-color);
+}
+
+html.dark-mode .table th,
+html.dark-mode .table td {
+    border-color: var(--border-color);
+}
+
+html.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(75, 85, 99, 0.2);
+}
+
+html.dark-mode .breadcrumb {
+    background-color: var(--secondary-bg);
+}
+
+html.dark-mode .breadcrumb-item.active {
+    color: #9ca3af;
+}
+
+html.dark-mode .page-link {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Màu cho flash messages trong chế độ tối */
+html.dark-mode .alert-success {
+    background-color: rgba(16, 185, 129, 0.2);
+    color: #a7f3d0;
+    border-color: #065f46;
+}
+
+html.dark-mode .alert-danger {
+    background-color: rgba(239, 68, 68, 0.2);
+    color: #fca5a5;
+    border-color: #b91c1c;
+}
+
+html.dark-mode .alert-warning {
+    background-color: rgba(245, 158, 11, 0.2);
+    color: #fcd34d;
+    border-color: #b45309;
+}
+
+html.dark-mode .alert-info {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border-color: #1e40af;
+}
+
+/* Thêm hiệu ứng chuyển động mượt mà cho trang PDF */
+.page-transition {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Ẩn UI (Header và Controls) khi cuộn */
+.hidden {
+    transform: translateY(100%) !important;
+    opacity: 0 !important;
+}
+
+.hide-ui .page-number {
+    opacity: 0.3;
+}
+
+/* Fix cho header.blade.php trong reader - đảm bảo không bị đè */
+.reader-container .navbar, 
+.reader-container nav {
+    z-index: 1000 !important; /* Đảm bảo cao hơn z-index của header-container */
+}
+
+/* Thêm CSS cho class book-header-fixed */
+.book-header-fixed {
+    margin-top: 20px; /* Thêm khoảng cách với header chính */
+    max-width: 95%; /* Giới hạn chiều rộng */
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 8px;
+} 

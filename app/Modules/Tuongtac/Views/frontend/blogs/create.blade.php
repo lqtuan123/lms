@@ -10,8 +10,35 @@
 
     <!-- Tom Select JS -->
     <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-    
+
     <style>
+        /* Container chính */
+        .container {
+
+            margin: 0 auto;
+        }
+
+        /* Form controls */
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        /* Dropzone styling */
         .dropzone {
             border: 2px dashed #0087F7;
             border-radius: 5px;
@@ -19,18 +46,26 @@
             min-height: 150px;
             padding: 20px;
             margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
-        
+
         .dropzone .dz-message {
             font-weight: 400;
             font-size: 16px;
             color: #646c9a;
+            text-align: center;
+            margin: 2em 0;
         }
-        
+
+        .dropzone .dz-preview {
+            margin: 10px;
+        }
+
         .dropzone .dz-preview .dz-error-message {
             font-size: 12px;
         }
-        
+
         .upload-status {
             display: none;
             margin-top: 10px;
@@ -38,100 +73,230 @@
             border-radius: 5px;
             text-align: center;
         }
-        
+
         .success-msg {
             background-color: #d4edda;
             color: #155724;
         }
-        
+
         .error-msg {
             background-color: #f8d7da;
             color: #721c24;
         }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            text-align: center;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #0087F7;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #ddd;
+            text-decoration: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 3px;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+        }
+
+        /* Tags */
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag-button {
+            background-color: #e9f5ff;
+            color: #0087F7;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .tag-button:hover {
+            background-color: #cce8ff;
+        }
+
+        .help-span {
+            display: block;
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        /* Custom radio buttons */
+        .custom-control {
+            position: relative;
+            padding-left: 25px;
+            margin-right: 15px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .custom-control-input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .custom-control-label {
+            position: relative;
+            cursor: pointer;
+            font-size: 16px;
+            padding-left: 10px;
+        }
+
+        .custom-control-label:before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 2px;
+            width: 16px;
+            height: 16px;
+            border: 1px solid #adb5bd;
+            border-radius: 50%;
+            background-color: white;
+        }
+
+        .custom-control-input:checked~.custom-control-label:after {
+            content: '';
+            position: absolute;
+            left: -11px;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #0087F7;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
     </style>
 @endsection
 @section('inner-content')
-    <div class="back-button">
-        <a href="{{ url()->previous() }}" class=" btn-secondary">
-            ← Quay lại
-        </a>
-    </div>
-    <h1 class="mb-4">Thêm bài viết mới</h1>
-
-    {{-- @if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif --}}
-
-    <form action="{{ route('front.tblogs.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-
-        <!-- Upload ảnh đầu bài -->
-        <div class="">
-            <label>Upload hình ảnh</label>
-            <div class="dropzone" id="imageDropzone"></div>
-            <div id="uploadStatus" class="upload-status"></div>
+    <div  >
+        <div class="back-button">
+            <a href="{{ url()->previous() }}" class="btn-secondary">
+                ← Quay lại
+            </a>
         </div>
-        <!-- Ẩn input để lưu tên file ảnh -->
-        <input type="hidden" name="photo" id="uploadedImages">
-        <!-- Tiêu đề bài viết -->
-        <div class="form-group mb-4 mt-4">
-            <input type="text" name="title" class="form-control post-title" placeholder="tiêu đề ..." required>
-        </div>
+        <h1 class="mb-4">Thêm bài viết mới</h1>
 
-        <!-- Thẻ bài viết -->
-        <div class="form-group mb-4">
+        <form action="{{ route('front.tblogs.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
 
-            <select id="tags" name="tags[]" multiple class="form-control">
-                <!-- Nếu có tags trước đó -->
-                @if (!empty($tags))
-                    @foreach ($tags as $tag)
-                        <option value="{{ $tag->id }}">{{ $tag->title }}</option>
-                    @endforeach
-                @endif
-            </select>
-            <span class="help-span"> Tối đa 5 tag </span>
-            <div class="buttons-container">
-
-                @foreach ($toptags as $tag)
-                    <button type="button" class="tag-button" data-tag-id="{{ $tag->id }}"
-                        data-tag-name="{{ $tag->title }}">
-                        #{{ $tag->title }}
-                    </button>
-                @endforeach
-
+            <!-- Upload ảnh đầu bài -->
+            <div class="form-group">
+                <label class="form-label">Upload hình ảnh</label>
+                <div class="dropzone" id="imageDropzone"></div>
+                <div id="uploadStatus" class="upload-status"></div>
             </div>
-        </div>
+            <!-- Ẩn input để lưu tên file ảnh -->
+            <input type="hidden" name="photo" id="uploadedImages">
+            <!-- Tiêu đề bài viết -->
+            <div class="form-group">
+                <label class="form-label">Tiêu đề</label>
+                <input type="text" name="title" class="form-control post-title" placeholder="Nhập tiêu đề..." required>
+            </div>
 
-        <!-- Nội dung bài viết -->
-        <div class="form-group mb-4">
-            <textarea name="content" id="editor" class="form-control" placeholder="Nội dung bài viết"></textarea>
-        </div>
+            <!-- Thẻ bài viết -->
+            <div class="form-group">
+                <label class="form-label">Tags</label>
+                <select id="tags" name="tags[]" multiple class="form-control">
+                    <!-- Nếu có tags trước đó -->
+                    @if (!empty($tags))
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}">{{ $tag->title }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                <span class="help-span">Tối đa 5 tag</span>
+                <div class="buttons-container">
+                    @foreach ($toptags as $tag)
+                        <button type="button" class="tag-button" data-tag-id="{{ $tag->id }}"
+                            data-tag-name="{{ $tag->title }}">
+                            #{{ $tag->title }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
 
+            <!-- Nội dung bài viết -->
+            <div class="form-group">
+                <label class="form-label">Nội dung bài viết</label>
+                <textarea name="content" id="editor" class="form-control" placeholder="Nội dung bài viết"></textarea>
+            </div>
 
-        <div class="mt-3">
-            <label for="document" class="form-label">Tài Liệu</label>
-            <input type="file" name="document[]" id="document" class="form-control" multiple>
-            @error('document')
-                <div class="text-red-600">{{ $message }}</div>
-            @enderror
+            <!-- Tài liệu -->
+            <div class="form-group">
+                <label for="document" class="form-label">Tài liệu</label>
+                <input type="file" name="document[]" id="document" class="form-control" multiple>
+                @error('document')
+                    <div class="text-red-600">{{ $message }}</div>
+                @enderror
 
-            <input type="text" name="urls[]" class="form-control mt-2" placeholder="URL file 1" id="book-url">
+                <input type="text" name="urls[]" class="form-control mt-2" placeholder="URL file (nếu có)"
+                    id="book-url">
+            </div>
 
-        </div>
+            <input type='hidden' value='{{ isset($page_id) ? $page_id : 0 }}' name="page_id" />
+            <!-- Thêm input hidden cho group_id -->
+            <input type='hidden' value='{{ isset($group_id) ? $group_id : (request()->get('group_id') ? request()->get('group_id') : 0) }}'
+                name="group_id" />
 
-        <input type='hidden' value='{{ isset($page_id) ? $page_id : 0 }}' name="page_id" />
-        <!-- Thêm input hidden cho group_id -->
-        <input type='hidden' value='{{ request()->get("group_id") ? request()->get("group_id") : 0 }}' name="group_id" />
-        <!-- Nút hành động -->
-        <div class="form-actions d-flex justify-content-between align-items-center mt-4">
-            <button type="submit" class="btn btn-primary">Đăng bài</button>
+            <!-- Thêm trường trạng thái -->
+            <div class="form-group">
+                <label for="status" class="form-label">Trạng thái bài viết</label>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="status_public" name="status" value="1" class="custom-control-input"
+                        checked>
+                    <label class="custom-control-label" for="status_public"><i class="fas fa-globe-americas mr-1"></i> Công
+                        khai</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="status_private" name="status" value="0" class="custom-control-input">
+                    <label class="custom-control-label" for="status_private"><i class="fas fa-lock mr-1"></i> Chỉ mình
+                        tôi</label>
+                </div>
+            </div>
 
-        </div>
-    </form>
-
-
+            <!-- Nút hành động -->
+            <div class="form-actions d-flex justify-content-between align-items-center mt-4">
+                <button type="submit" class="btn btn-primary">Đăng bài</button>
+            </div>
+        </form>
+    </div>
 @endsection
 
 @section('botscript')
@@ -174,7 +339,7 @@
                 console.log("Các file hợp lệ:", validFiles);
             }
         });
-    
+
         // CKSource.Editor
         ClassicEditor.create(document.querySelector('#editor'), {
                 ckfinder: {
@@ -226,20 +391,22 @@
                 this.on("addedfile", function(file) {
                     uploadStatus.style.display = "none";
                 });
-                
+
                 this.on("error", function(file, errorMessage) {
                     uploadStatus.className = "upload-status error-msg";
                     uploadStatus.textContent = "Lỗi tải lên: " + errorMessage;
                     uploadStatus.style.display = "block";
                 });
-                
+
                 this.on("success", function(file) {
                     uploadStatus.className = "upload-status success-msg";
                     uploadStatus.textContent = "Tải lên thành công!";
                     uploadStatus.style.display = "block";
-                    setTimeout(() => { uploadStatus.style.display = "none"; }, 3000);
+                    setTimeout(() => {
+                        uploadStatus.style.display = "none";
+                    }, 3000);
                 });
-                
+
                 this.on("maxfilesexceeded", function(file) {
                     this.removeFile(file);
                     alert("Bạn chỉ có thể tải lên tối đa 5 ảnh!");
@@ -254,14 +421,14 @@
             removedfile: function(file) {
                 // Xóa file khỏi mảng khi người dùng xóa ảnh
                 let filename = '';
-                
+
                 if (file.xhr) {
                     let response = JSON.parse(file.xhr.response);
                     filename = response.link;
                 } else if (file.upload && file.upload.filename) {
                     filename = file.upload.filename;
                 }
-                
+
                 if (filename && uploadedImages.includes(filename)) {
                     uploadedImages.splice(uploadedImages.indexOf(filename), 1);
                     document.getElementById('uploadedImages').value = JSON.stringify(

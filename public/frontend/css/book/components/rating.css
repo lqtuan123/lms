@@ -1,0 +1,226 @@
+/* ===== Đánh giá và xếp hạng ===== */
+/* Rating indicator display */
+.book-rating-container, .rating-container {
+    display: flex;
+    align-items: center;
+}
+
+.book-rating-container {
+    margin-bottom: var(--spacing-3);
+    max-width: fit-content;
+}
+
+.rating-container {
+    margin-bottom: var(--spacing-3);
+}
+
+.book-rating-stars, .rating-stars {
+    display: flex;
+    margin-right: var(--spacing-2);
+}
+
+.rating-stars {
+    margin-right: var(--spacing-2);
+}
+
+.book-rating-text {
+    font-weight: 500;
+    color: var(--color-gray-700);
+    font-size: var(--text-sm);
+}
+
+.rating-count {
+    color: var(--color-gray-500);
+    font-size: var(--text-sm);
+    margin-left: var(--spacing-1);
+}
+
+.rating-star {
+    color: var(--color-gray-300);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.rating-star.filled {
+    color: var(--color-secondary);
+}
+
+.rating-star.half {
+    position: relative;
+}
+
+.rating-star.half:after {
+    content: '★';
+    color: var(--color-secondary);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+}
+
+/* Rating statistics */
+.rating-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    background-color: var(--color-gray-50);
+    padding: var(--spacing-3);
+    border-radius: var(--radius-md);
+}
+
+.rating-average {
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    color: var(--color-gray-800);
+    min-width: 60px;
+    text-align: center;
+    position: relative;
+}
+
+.rating-average::after {
+    content: '/5';
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    position: absolute;
+    bottom: 0.25rem;
+    right: -8px;
+}
+
+.rating-distribution {
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.rating-bar {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr auto auto;
+    align-items: center;
+    margin-bottom: 0.2rem;
+    gap: 0.5rem;
+}
+
+.rating-bar-label {
+    text-align: center;
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+    font-weight: 500;
+}
+
+.rating-bar-track {
+    background-color: var(--color-gray-200);
+    height: 0.3rem;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    position: relative;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    transition: width 0.5s ease-out;
+    border-radius: var(--radius-full);
+    position: relative;
+    background-color: var(--color-secondary);
+}
+
+/* Màu các thanh rating */
+.rating-bar:nth-child(1) .rating-bar-fill { background-color: var(--color-primary); }
+.rating-bar:nth-child(2) .rating-bar-fill { background-color: var(--color-primary); opacity: 0.9; }
+.rating-bar:nth-child(3) .rating-bar-fill { background-color: var(--color-primary); opacity: 0.8; }
+.rating-bar:nth-child(4) .rating-bar-fill { background-color: var(--color-primary); opacity: 0.7; }
+.rating-bar:nth-child(5) .rating-bar-fill { background-color: var(--color-primary); opacity: 0.6; }
+
+.rating-bar-count {
+    min-width: 1.5rem;
+    text-align: right;
+    font-size: var(--text-xs);
+    color: var(--color-gray-700);
+    font-weight: 500;
+}
+
+.rating-bar-percent {
+    min-width: 2.25rem;
+    text-align: left;
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+}
+
+/* Rating form */
+.rating-form {
+    background-color: white;
+    border-radius: var(--radius-md);
+    padding: var(--spacing-4);
+    margin-top: var(--spacing-4);
+    border: 1px solid var(--color-gray-200);
+}
+
+.rating-form-header {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.rating-form-label {
+    display: block;
+    margin-bottom: var(--spacing-1);
+    color: var(--color-gray-700);
+    font-weight: 500;
+    font-size: var(--text-sm);
+}
+
+.rating-stars-input {
+    display: flex;
+    margin-bottom: var(--spacing-3);
+}
+
+.rating-stars-input .rating-star {
+    font-size: 1.5rem;
+    margin-right: var(--spacing-1);
+}
+
+.rating-form input,
+.rating-form textarea,
+.comment-form textarea {
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--radius-md);
+    transition: var(--transition-normal);
+}
+
+.rating-form textarea,
+.comment-form textarea {
+    width: 100%;
+    padding: var(--spacing-3);
+    font-size: var(--text-sm);
+    resize: vertical;
+    margin-bottom: var(--spacing-3);
+}
+
+.rating-form textarea {
+    min-height: 100px;
+}
+
+.comment-form textarea {
+    min-height: 80px;
+}
+
+.rating-form input:focus,
+.rating-form textarea:focus,
+.comment-form textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.rating-submit {
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: 500;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    font-size: var(--text-sm);
+} 

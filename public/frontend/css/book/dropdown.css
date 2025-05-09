@@ -1,0 +1,110 @@
+/* 
+* CSS cho trang book - Dropdown components
+* Phần này chứa các style liên quan đến dropdown và menu
+*/
+
+/* Dropdown menu */
+.dropdown-menu {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 0;
+    z-index: 50;
+    background-color: white;
+}
+
+.dropdown-menu.active {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Mobile menu */
+.mobile-menu {
+    display: none;
+}
+
+.mobile-menu.active {
+    display: flex;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    display: none;
+}
+
+.loading-spinner.active {
+    display: block;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+/* Dropdown menus trong các phần khác */
+.sort-dropdown,
+.filter-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background: white;
+    z-index: 20;
+}
+
+.sort-dropdown a,
+.filter-dropdown a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #4b5563;
+    font-size: 0.875rem;
+    transition: all 0.15s ease;
+}
+
+.sort-dropdown a:hover,
+.filter-dropdown a:hover {
+    background-color: #f3f4f6;
+    color: #4f46e5;
+}
+
+/* Menu overlay */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.menu-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+} 

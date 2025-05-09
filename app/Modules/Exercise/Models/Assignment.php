@@ -22,11 +22,11 @@ class Assignment extends Model
 
     public function quizTracNghiem()
     {
-        return $this->belongsTo(BodeTracNghiem::class, 'quiz_id');
+        return $this->belongsTo(BoDeTracNghiem::class, 'quiz_id');
     }
 
     public function quizTuLuan()
     {
-        return $this->belongsTo(BodeTuluan::class, 'quiz_id');
+        return $this->belongsTo(BoDeTuLuan::class, 'quiz_id');
     }
 }

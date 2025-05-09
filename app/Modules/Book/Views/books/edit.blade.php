@@ -23,10 +23,12 @@
 
             <div class="mt-3">
                 <label>Ảnh bìa</label>
-                <div id="photoDropzone" class="dropzone"></div>
-                <input type="hidden" name="photo" id="photo_input" value="{{ $book->photo }}">
+                <input type="file" name="photo_file" id="photo_file" class="form-control">
+                <input type="hidden" name="photo" id="photo_input" value="{{ $book->photo }}" data-url="{{route('admin.upload.avatar')}}">
                 @if ($book->photo)
-                    <img src="{{ $book->photo }}" id="photoPreview" style="width: 100px; height: auto; margin-top:10px;">
+                    <div class="mt-2">
+                        <img src="{{ $book->photo }}" id="photoPreview" style="width: 100px; height: auto; margin-top:10px;">
+                    </div>
                 @endif
             </div>
 
@@ -101,6 +103,7 @@
                 </select>
             </div>
 
+
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Lưu</button>
                 <a href="{{ route('admin.books.index') }}" class="btn btn-secondary">Quay lại</a>
@@ -110,30 +113,7 @@
 @endsection
 
 @section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js"></script>
     <script>
-        Dropzone.autoDiscover = false;
-        var photoDropzone = new Dropzone("#photoDropzone", {
-            url: "{{ route('front.upload.avatar') }}",
-            paramName: "photo",
-            maxFiles: 1,
-            acceptedFiles: "image/*",
-            addRemoveLinks: true,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            init: function() {
-                this.on("success", function(file, response) {
-                    document.querySelector("#photo_input").value = response.path;
-                    document.querySelector("#photoPreview").src = response.path;
-                });
-                this.on("removedfile", function(file) {
-                    document.querySelector("#photo_input").value = "";
-                });
-            }
-        });
         var select = new TomSelect('#select-junk', {
             maxItems: null,
             allowEmptyOption: true,
@@ -147,49 +127,113 @@
                 this.refreshOptions();
             },
             create: true
+
         });
-        @if (count($tag_ids) == 0)
-            select.clear();
-        @endif
+       
+    </script>
 
-        $('.dltBtn').click(function(e) {
-            var url = $(this).data('url');
-            var fileName = $(this).data('name');
-            var resourceItem = $(this).closest('li'); // Lưu trữ phần tử 'li' chứa nút xóa
-            e.preventDefault();
-
-            Swal.fire({
-                title: 'Bạn có chắc muốn xóa không?',
-                text: "Bạn không thể lấy lại dữ liệu sau khi xóa: " + fileName,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Vâng, tôi muốn xóa!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Gửi yêu cầu AJAX để xóa tài nguyên
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            _method: 'DELETE'
-                        },
-                        success: function(response) {
-                            if (response.success) {
-                                Swal.fire('Đã xóa!', 'Tệp đã được xóa thành công.', 'success');
-                                resourceItem.remove(); // Loại bỏ phần tử li khỏi giao diện
-                            } else {
-                                Swal.fire('Lỗi!', 'Đã có lỗi xảy ra khi xóa tệp.', 'error');
+<script>
+    // Xử lý tải lên ảnh thông thường
+    document.addEventListener('DOMContentLoaded', function() {
+        const photoFileInput = document.getElementById('photo_file');
+        const photoInput = document.getElementById('photo_input');
+        const photoPreview = document.getElementById('photoPreview');
+        const previewContainer = photoPreview ? photoPreview.parentElement : null;
+        const uploadUrl = photoInput.getAttribute('data-url');
+        
+        photoFileInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const formData = new FormData();
+                formData.append('photo', this.files[0]);
+                
+                // Sử dụng csrf token từ meta tag
+                const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                fetch(uploadUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status == "true" || data.link) {
+                        // Cập nhật giá trị input hidden
+                        photoInput.value = data.link;
+                        
+                        // Hiển thị ảnh xem trước
+                        if (!photoPreview && !previewContainer) {
+                            // Tạo phần tử xem trước nếu chưa có
+                            const newPreviewContainer = document.createElement('div');
+                            newPreviewContainer.className = 'mt-2';
+                            
+                            const newPhotoPreview = document.createElement('img');
+                            newPhotoPreview.id = 'photoPreview';
+                            newPhotoPreview.style.width = '100px';
+                            newPhotoPreview.style.height = 'auto';
+                            newPhotoPreview.style.marginTop = '10px';
+                            newPhotoPreview.src = data.link;
+                            
+                            newPreviewContainer.appendChild(newPhotoPreview);
+                            photoFileInput.parentNode.appendChild(newPreviewContainer);
+                        } else if (photoPreview) {
+                            // Cập nhật ảnh xem trước nếu đã có
+                            photoPreview.src = data.link;
+                            if (previewContainer) {
+                                previewContainer.style.display = 'block';
                             }
-                        },
-                        error: function() {
-                            Swal.fire('Lỗi!', 'Đã có lỗi khi gửi yêu cầu.', 'error');
                         }
+                        
+                        console.log('Tải ảnh thành công: ' + data.link);
+                    } else {
+                        console.error('Lỗi tải ảnh lên');
+                        alert('Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi tải ảnh lên. Vui lòng thử lại.');
+                });
+            }
+        });
+
+        // Xử lý nút xóa tài liệu
+        const deleteButtons = document.querySelectorAll('.dltBtn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const resourceName = this.getAttribute('data-name');
+                
+                if (confirm(`Bạn có chắc chắn muốn xóa tài liệu "${resourceName}"?`)) {
+                    // Sử dụng csrf token từ meta tag
+                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Xóa phần tử khỏi DOM
+                            this.closest('li').remove();
+                            alert('Đã xóa tài liệu thành công');
+                        } else {
+                            alert(data.message || 'Có lỗi xảy ra khi xóa tài liệu');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Có lỗi xảy ra khi xóa tài liệu');
                     });
                 }
             });
         });
-    </script>
+    });
+</script>
+
 @endsection

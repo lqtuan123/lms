@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('item_code');
             $table->json('motions')->nullable();
             $table->json('user_motions')->nullable();
+            $table->integer('shares')->default(0);
             $table->timestamps();
         });
     }

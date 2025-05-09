@@ -1,0 +1,173 @@
+/* CSS cho tính năng responsive của trang hồ sơ */
+
+/* Mobile (small devices - < 768px) */
+@media (max-width: 768px) {
+    /* Mobile menu */
+    .mobile-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        z-index: 50;
+        padding: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        flex-direction: column;
+    }
+
+    /* Sidebar mobile */
+    .sidebar {
+        width: 100%;
+    }
+
+    .sidebar.collapsed {
+        width: 0;
+    }
+    
+    .mobile-sidebar-toggle {
+        display: block;
+    }
+
+    /* Right sidebar mobile */
+    .right-sidebar {
+        display: none;
+    }
+
+    .right-sidebar-mobile {
+        display: block;
+    }
+
+    /* Profile cover & avatar responsive */
+    .profile-cover {
+        height: 200px;
+    }
+
+    .profile-avatar {
+        margin-top: -50px;
+        width: 80px;
+        height: 80px;
+    }
+
+    /* Profile actions responsive */
+    .profile-actions-mobile {
+        display: flex;
+    }
+
+    .profile-actions-desktop {
+        display: none;
+    }
+
+    /* Book grid responsive */
+    .book-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    /* Tab buttons */
+    .tab-button {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Post card responsive */
+    .post-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .post-card-header {
+        align-items: center;
+    }
+    
+    .avatar-img {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .post-title {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+    
+    .post-summary {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+    
+    .post-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+    
+    .post-stats {
+        font-size: 12px;
+        padding: 8px 0;
+    }
+    
+    .post-action-btn {
+        font-size: 13px;
+    }
+    
+    .post-action-btn i {
+        margin-right: 3px;
+    }
+    
+    .post-action-icon {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .comment-input {
+        padding: 8px 12px;
+    }
+}
+
+/* Tablet & Desktop (≥ 769px) */
+@media (min-width: 769px) {
+    /* Right sidebar display */
+    .right-sidebar {
+        display: block;
+    }
+    
+    .right-sidebar-mobile {
+        display: none;
+    }
+
+    /* Profile actions responsive */
+    .profile-actions-mobile {
+        display: none;
+    }
+
+    .profile-actions-desktop {
+        display: flex;
+    }
+    
+    /* Columns layout */
+    .lg\:w-1\/5 {
+        width: 20%;
+    }
+    
+    .lg\:w-3\/5 {
+        width: 60%;
+    }
+    
+    /* Post card responsive */
+    .post-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Extra Large devices */
+@media (min-width: 1280px) {
+    .container {
+        max-width: 1200px;
+    }
+    
+    /* Post grid on large screens */
+    .posts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+} 

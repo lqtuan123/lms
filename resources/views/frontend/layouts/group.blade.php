@@ -11,7 +11,7 @@ $groupPages = \App\Modules\Tuongtac\Models\TPage::where('item_code', 'group')->w
         @foreach ($groupPages as $page)
           <div class="col-md-2">
             <figure class="instagram-item position-relative rounded-3">
-              <a href="{{ route('front.tpage.view', $page->slug) }}" class="image-link position-relative">
+              <a href="{{ route('group.show', $page->item_id) }}" class="image-link position-relative">
                 <div class="icon-overlay position-absolute d-flex justify-content-center">
                     {{$page->title  }}
                 </div>

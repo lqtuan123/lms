@@ -38,7 +38,7 @@ class RoleController extends Controller
         $active_menu="role_list";
         $breadcrumb = '
         <li class="breadcrumb-item"><a href="#">/</a></li>
-        <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.admin.role.index').'">roles</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.role.index').'">roles</a></li>
         <li class="breadcrumb-item active" aria-current="page"> điều chỉnh roles </li>';
    
         return view('backend.roles.cfunction',compact('role','breadcrumb','active_menu','role_functions'));
@@ -151,14 +151,14 @@ class RoleController extends Controller
             ->paginate($this->pagesize)->withQueryString();
             $breadcrumb = '
             <li class="breadcrumb-item"><a href="#">/</a></li>
-            <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.admin.role.index').'">roles</a></li>
+            <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.role.index').'">roles</a></li>
             <li class="breadcrumb-item active" aria-current="page"> tìm kiếm </li>';
             
             return view('backend.roles.search',compact('roles','breadcrumb','searchdata','active_menu'));
         }
         else
         {
-            return redirect()->route('admin.admin.role.index')->with('success','Không có thông tin tìm kiếm!');
+            return redirect()->route('admin.role.index')->with('success','Không có thông tin tìm kiếm!');
         }
 
     }
@@ -193,7 +193,7 @@ class RoleController extends Controller
         $active_menu="role_add";
         $breadcrumb = '
         <li class="breadcrumb-item"><a href="#">/</a></li>
-        <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.admin.role.index').'">roles</a></li>
+        <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.role.index').'">roles</a></li>
         <li class="breadcrumb-item active" aria-current="page"> tạo roles </li>';
         return view('backend.roles.create',compact('breadcrumb','active_menu'));
     }
@@ -218,7 +218,7 @@ class RoleController extends Controller
         $data = $request->all();
         $status = Role::create($data);
         if($status){
-            return redirect()->route('admin.admin.role.index')->with('success','Tạo role thành công!');
+            return redirect()->route('admin.role.index')->with('success','Tạo role thành công!');
         }
         else
         {
@@ -251,7 +251,7 @@ class RoleController extends Controller
             $active_menu="role_list";
             $breadcrumb = '
             <li class="breadcrumb-item"><a href="#">/</a></li>
-            <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.admin.role.index').'">roles</a></li>
+            <li class="breadcrumb-item  " aria-current="page"><a href="'.route('admin.role.index').'">roles</a></li>
             <li class="breadcrumb-item active" aria-current="page"> điều chỉnh roles </li>';
             return view('backend.roles.edit',compact('breadcrumb','role','active_menu'));
         }
@@ -282,7 +282,7 @@ class RoleController extends Controller
             $data = $request->all();
             $status = $role->fill($data)->save();
             if($status){
-                return redirect()->route('admin.admin.role.index')->with('success','Cập nhật thành công');
+                return redirect()->route('admin.role.index')->with('success','Cập nhật thành công');
             }
             else
             {
@@ -322,7 +322,7 @@ class RoleController extends Controller
            
             $status = $role->delete();
             if($status){
-                return redirect()->route('admin.admin.role.index')->with('success','Xóa role thành công!');
+                return redirect()->route('admin.role.index')->with('success','Xóa role thành công!');
             }
             else
             {

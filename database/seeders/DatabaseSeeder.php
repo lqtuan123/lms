@@ -22,12 +22,14 @@ class DatabaseSeeder extends Seeder
 
         DB::table('setting_details')->insert([
             [   
-                'company_name'=>"Bookly-LMS",
-                'web_title'=>"Bookly-LMS",
+                'company_name'=>"ReadSocial",
+                'web_title'=>"ReadSocial",
                 'phone'=>'0384339011',
                 'address'=>'Ywang Buôn Ma Thuột, Đăk Lăk',
             ],
         ]);
+        
+        // Admin, manager users
         DB::table('users')->insert([
             [
                 'full_name'=>"admin",
@@ -72,6 +74,7 @@ class DatabaseSeeder extends Seeder
             ],
 
         ]);
+        
         DB::table('roles')->insert([
             [   
                 'alias'=>'admin',
@@ -102,13 +105,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-        
-            ResourceSeeder::class,
-            TMotionSeeder::class,
-
+            UserSeeder::class,
+            BookTypeSeeder::class,
+            BookSeeder::class,
+            GroupTypeSeeder::class,
+            GroupSeeder::class,
+            TBlogSeeder::class,
         ]);
-
-    
-
     }
 }

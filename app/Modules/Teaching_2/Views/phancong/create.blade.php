@@ -13,19 +13,19 @@
                     
                     <!-- Giảng viên -->
                     <div class="mb-4">
-    <label for="giangvien_id" class="form-label">Giảng viên</label>
-    <select name="giangvien_id" id="giangvien_id" class="form-control">
-        <option value="">Chọn Giảng viên</option>
-        @foreach($giangviens as $giangvien)
-            <option value="{{ $giangvien->id }}" {{ old('giangvien_id') == $giangvien->id ? 'selected' : '' }}>
-                {{ $giangvien->user->full_name }}
-            </option>
-        @endforeach 
-    </select>
-    @error('giangvien_id')
-        <div class="text-red-600 mt-1">{{ $message }}</div>
-    @enderror
-</div>
+                        <label for="giangvien_id" class="form-label">Giảng viên</label>
+                        <select name="giangvien_id" id="giangvien_id" class="form-control">
+                            <option value="">Chọn Giảng viên</option>
+                            @foreach($giangviens as $giangvien)
+                                <option value="{{ $giangvien->id }}" {{ old('giangvien_id') == $giangvien->id ? 'selected' : '' }}>
+                                    {{ $giangvien->user->full_name }}
+                                </option>
+                            @endforeach 
+                        </select>
+                        @error('giangvien_id')
+                            <div class="text-red-600 mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
 
 
                     <!-- Học phần -->

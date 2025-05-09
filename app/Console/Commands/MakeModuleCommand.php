@@ -33,12 +33,13 @@ class MakeModuleCommand extends Command
         $this->files->makeDirectory("$modulePath/Views", 0755, true);
         $this->files->makeDirectory("$modulePath/Routes", 0755, true);
         $this->files->makeDirectory("$modulePath/Migrations", 0755, true);
+        $this->files->makeDirectory("$modulePath/Services", 0755, true);
         
         // Tạo file route
         $this->files->put("$modulePath/Routes/web.php", "<?php\n\nuse Illuminate\Support\Facades\Route;\n\n// Define routes here\n");
 
         // Tạo controller mẫu
-        $controllerTemplate = "<?php\n\nnamespace App\Modules\\$name\Controllers;\n\nuse App\Http\Controllers\Controller;\n\nclass {$name}Controller extends Controller\n{\n    public function index()\n    {\n        return view('$name::index');\n    }\n}";
+        $controllerTemplate = "<?php\n\nnamespace App\Modules\\$name\Controllers;\n\nuse App\Http\Controllers\Controller;\nuse App\Modules\Tuongtac\Services\SocialService;\n\nclass {$name}Controller extends Controller\n{\n    protected $socialService;\n\n    public function __construct(SocialService $socialService)\n    {\n        $this->socialService = $socialService;\n    }\n\n    public function index()\n    {\n        return view('$name::index');\n    }\n}";
         $this->files->put("$modulePath/Controllers/{$name}Controller.php", $controllerTemplate);
 
         // Tạo view mẫu

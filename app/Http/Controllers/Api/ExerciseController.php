@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Modules\Exercise\Models\Assignment;
 use App\Modules\Exercise\Models\TracNghiemCauhoi;
 use App\Modules\Exercise\Models\TracNghiemDapan;
-use App\Modules\Exercise\Models\BodeTracNghiem;
+use App\Modules\Exercise\Models\BoDeTracNghiem;
 use App\Modules\Exercise\Models\BoDeTuLuan;
 use App\Modules\Exercise\Models\TracNghiemSubmission;
 use App\Modules\Exercise\Models\TuLuanCauHoi;
@@ -120,7 +120,7 @@ class ExerciseController extends Controller
             ], 400);
         }
 
-        $quiz = BodeTracNghiem::create([
+        $quiz = BoDeTracNghiem::create([
             'title' => $request->title,
             'hocphan_id' => $request->hocphan_id,
             'slug' => Str::slug($request->title . '-' . time()),
@@ -308,7 +308,7 @@ public function storeEssayQuestion(Request $request)
             ]);
 
             // Find the quiz or fail
-            $quiz = BodeTracNghiem::findOrFail($id);
+            $quiz = BoDeTracNghiem::findOrFail($id);
 
             // Check total points if questions are provided
             if ($request->has('questions') && $request->has('total_points')) {
@@ -477,7 +477,7 @@ public function storeEssayQuestion(Request $request)
     public function showQuiz($id): JsonResponse
 {
     try {
-        $quiz = BodeTracNghiem::query()
+        $quiz = BoDeTracNghiem::query()
             ->with([]) // Không load quan hệ nào cả
             ->findOrFail($id);
 
@@ -560,14 +560,14 @@ public function showEssayQuiz($id): JsonResponse
         ]);
 
         try {
-            $tracNghiemQuizzes = BodeTracNghiem::where('user_id', $request->user_id)
+            $tracNghiemQuizzes = BoDeTracNghiem::where('user_id', $request->user_id)
                 ->where('hocphan_id', $request->hocphan_id) // Lọc theo hocphan_id
                 ->get(['id', 'title', 'hocphan_id', 'total_points', 'start_time', 'end_time', 'time'])
                 ->map(function ($quiz) {
                     return array_merge($quiz->toArray(), ['type' => 'trac_nghiem']);
                 });
 
-            $tuluanQuizzes = BodeTuluan::where('user_id', $request->user_id)
+            $tuluanQuizzes = BoDeTuLuan::where('user_id', $request->user_id)
                 ->where('hocphan_id', $request->hocphan_id) // Lọc theo hocphan_id
                 ->get(['id', 'title', 'hocphan_id', 'total_points', 'start_time', 'end_time', 'time'])
                 ->map(function ($quiz) {
@@ -604,10 +604,10 @@ public function showEssayQuiz($id): JsonResponse
         try {
             // Lấy thông tin bộ đề
             $quiz = $request->quiz_type === 'trac_nghiem'
-                ? BodeTracNghiem::where('id', $request->quiz_id)
+                ? BoDeTracNghiem::where('id', $request->quiz_id)
                     ->where('user_id', $request->user_id)
                     ->first()
-                : BodeTuluan::where('id', $request->quiz_id)
+                : BoDeTuluan::where('id', $request->quiz_id)
                     ->where('user_id', $request->user_id)
                     ->first();
 
@@ -739,7 +739,7 @@ public function showEssayQuiz($id): JsonResponse
             }
 
             // Lấy bộ đề trắc nghiệm
-            $quiz = BodeTracNghiem::findOrFail($assignment->quiz_id);
+            $quiz = BoDeTracNghiem::findOrFail($assignment->quiz_id);
             $questionIds = json_decode($quiz->questions, true) ?? [];
 
             // Làm phẳng mảng nếu có lồng nhau
@@ -816,7 +816,7 @@ public function showEssayQuiz($id): JsonResponse
                 ], 400);
             }
 
-            $quiz = BodeTracNghiem::findOrFail($assignment->quiz_id);
+            $quiz = BoDeTracNghiem::findOrFail($assignment->quiz_id);
             $questionIds = collect(json_decode($quiz->questions, true) ?? [])->flatten()->all();
 
             $submittedQuestionIds = collect($request->answers)->pluck('question_id')->all();
@@ -873,7 +873,7 @@ public function showEssayQuiz($id): JsonResponse
                 ], 400);
             }
 
-            $quiz = BodeTuluan::findOrFail($assignment->quiz_id);
+            $quiz = BoDeTuLuan::findOrFail($assignment->quiz_id);
             $questionIds = collect(json_decode($quiz->questions, true) ?? [])->flatten()->all();
 
             if (empty($questionIds)) {
@@ -942,7 +942,7 @@ public function showEssayQuiz($id): JsonResponse
                 ], 400);
             }
 
-            $quiz = BodeTuluan::findOrFail($assignment->quiz_id);
+            $quiz = BoDeTuLuan::findOrFail($assignment->quiz_id);
             $questionIds = collect(json_decode($quiz->questions, true) ?? [])->flatten()->all();
 
             $submittedQuestionIds = collect($request->answers)->pluck('question_id')->all();
@@ -1000,7 +1000,7 @@ public function showEssayQuiz($id): JsonResponse
                 ->get();
 
             // Tính điểm cho bài trắc nghiệm (nếu chưa có điểm)
-            $quiz = BodeTracNghiem::findOrFail($assignment->quiz_id);
+            $quiz = BoDeTracNghiem::findOrFail($assignment->quiz_id);
             $totalPoints = $quiz->total_points;
             $questionIds = collect(json_decode($quiz->questions, true) ?? [])->flatten()->all();
             $questions = TracNghiemCauhoi::whereIn('id', $questionIds)
@@ -1047,10 +1047,10 @@ public function showEssayQuiz($id): JsonResponse
                 Log::info('No submissions found for assignment_id: ' . $assignment->id);
             }
 
-            // Lấy danh sách question_id từ BodeTuLuan
-            $quiz = BodeTuLuan::findOrFail($assignment->quiz_id);
+            // Lấy danh sách question_id từ BoDeTuLuan
+            $quiz = BoDeTuLuan::findOrFail($assignment->quiz_id);
             $questionIds = collect(json_decode($quiz->questions, true) ?? [])->flatten()->all();
-            Log::info('Question IDs from BodeTuLuan: ' . json_encode($questionIds)); // Debug
+            Log::info('Question IDs from BoDeTuLuan: ' . json_encode($questionIds)); // Debug
 
             // Lấy nội dung câu hỏi từ TuLuanCauHoi
             $questions = TuLuanCauHoi::whereIn('id', $questionIds)
@@ -1181,7 +1181,7 @@ public function deleteQuiz(Request $request)
 
         // Xóa bộ đề dựa trên quiz_type
         if ($request->quiz_type === 'trac_nghiem') {
-            $quiz = BodeTracNghiem::find($request->quiz_id);
+            $quiz = BoDeTracNghiem::find($request->quiz_id);
             if (!$quiz) {
                 return response()->json([
                     'success' => false,
@@ -1190,7 +1190,7 @@ public function deleteQuiz(Request $request)
             }
             $quiz->delete();
         } else {
-            $quiz = BodeTuluan::find($request->quiz_id);
+            $quiz = BoDeTuLuan::find($request->quiz_id);
             if (!$quiz) {
                 return response()->json([
                     'success' => false,
