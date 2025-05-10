@@ -3,7 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
+use App\Modules\Teaching_1\Models\Student;
+use App\Modules\Teaching_1\Models\Teacher;
 use App\Modules\Tuongtac\Models\TBlog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -245,6 +246,29 @@ class User extends Authenticatable
     public function privacySettings()
     {
         return $this->hasOne(\App\Models\UserPrivacySetting::class);
+    }
+  /**
+     * Cập nhật ảnh đại diện cho người dùng
+     *
+     * @param string $photoPath
+     * @return void
+     */
+    public function updatePhoto($photoPath)
+    {
+        // Cập nhật giá trị 'photo' trong bảng users
+        $this->photo = $photoPath;
+        $this->save();
+    }
+    // Khai báo quan hệ
+    public function student()
+    {
+        return $this->hasOne(Student::class, 'user_id'); // 'user_id' là khóa ngoại trong bảng 'students'
+    }
+    
+    // Khai báo quan hệ
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class, 'user_id'); // 'user_id' là khóa ngoại trong bảng 'teachers'
     }
 }
 
